@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns="http://java.sun.com/xml/ns/javaee"
+xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+	<servlet>
+		<servlet-name>RestrantSample</servlet-name>
+		<servlet-class>net.infopeers.restrant.ControllerServlet</servlet-class>
+		<init-param>
+			<!-- ルートパッケージを指定すること。この中にActionを実装したクラスを入れる -->
+			<param-name>RootPackage</param-name>
+			<param-value>net.infopeers.restrant.sample.controller</param-value>
+		</init-param>
+		
+		<init-param>
+			<!-- リクエストパラメータのエンコーディングを指定できる。 指定されていれば変換が行われる-->
+			<param-name>Encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		
+		<!-- RoRに倣ったURLルート情報。上から順に合致したものが実行される -->
+		<init-param>
+			<param-name>RouteFormat0</param-name>
+			<param-value>/:controller/args/:id :action=post</param-value>
+		</init-param>
+		<init-param>
+			<param-name>RouteFormat5</param-name>
+			<param-value>/:controller?id=:id :action=put</param-value>
+		</init-param>
+		<init-param>
+			<param-name>RouteFormat10</param-name>
+			<param-value>/test/:action/:id :controller=samples</param-value>
+		</init-param>
+		<init-param>
+			<param-name>RouteFormat20</param-name>
+			<param-value>/:controller/:action/:id</param-value>
+		</init-param>
+		<init-param>
+			<!-- @restfulはactionの選び方がRESTFULな方式（get post put delete）になる -->
+			<param-name>RouteFormat30</param-name>
+			<param-value>/:controller/:id @restful</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>RestrantSample</servlet-name>
+		<url-pattern>/*</url-pattern>
+	</servlet-mapping>
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+</web-app>
