@@ -14,6 +14,10 @@ public class ParserManagerTest extends TestCase {
 	public void testSenario() throws Exception {
 
 		List<Parser> parsers = new ArrayList<Parser>();
+		DefaultParser index = new DefaultParser(
+				"/ :action=index", phFormatter);
+		parsers.add(index);
+		
 		DefaultParser getter = new DefaultParser(
 				"/:controller?id=:id :action=get", phFormatter);
 		parsers.add(getter);
@@ -35,6 +39,24 @@ public class ParserManagerTest extends TestCase {
 				"/:controller :action=perform", phFormatter);
 		parsers.add(perform);
 
+		//インデクス
+		{
+			ParserManager pm = new ParserManager() {
+
+				EditableParams createParams() {
+					TestParams params = new TestParams();
+					return params;
+				}
+			};
+
+			pm.setParsers(parsers);
+			pm.execute("/");
+			
+			//indexがコールされる
+			assertEquals(index, pm.getSelectedParser());
+		}
+		
+		
 		//editorに値が入っている場合
 		{
 			ParserManager pm = new ParserManager() {
