@@ -36,6 +36,19 @@ public class BasicController implements Controller {
 	protected Params getParams() {
 		return params;
 	}
+	
+	/**
+	 * フォワードする
+	 * 
+	 * @param name
+	 *            フォワード先servlet-name
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	protected void forward(String name) throws ServletException, IOException{
+		RequestDispatcher rd = getServlet().getServletContext().getNamedDispatcher(name);
+		rd.forward(getRequest(), getResponse());
+	}
 
 	/**
 	 * フォワードする
