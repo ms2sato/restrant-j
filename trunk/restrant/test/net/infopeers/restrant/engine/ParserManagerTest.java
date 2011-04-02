@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.TestCase;
+import net.infopeers.restrant.Params;
 import net.infopeers.restrant.TestParams;
 
 public class ParserManagerTest extends TestCase {
@@ -34,6 +35,11 @@ public class ParserManagerTest extends TestCase {
 				"/:controller?content=:content&comment=:comment :action=post",
 				phFormatter);
 		parsers.add(content);
+
+		DefaultParser withDot = new DefaultParser(
+				"/:controller/:id.json :action=get",
+				phFormatter);
+		parsers.add(withDot);
 
 		DefaultParser perform = new DefaultParser(
 				"/:controller :action=perform", phFormatter);
@@ -113,6 +119,7 @@ public class ParserManagerTest extends TestCase {
 			assertEquals(byEditor, pm.getSelectedParser());
 		}
 
+		
 		//パラメータが無い場合
 		{
 			ParserManager pm = new ParserManager() {
@@ -130,5 +137,25 @@ public class ParserManagerTest extends TestCase {
 			assertEquals(perform, pm.getSelectedParser());
 		}
 	
+		//ドットの含まれているケース
+		{
+			ParserManager pm = new ParserManager() {
+
+				EditableParams createParams() {
+					TestParams params = new TestParams();
+					return params;
+				}
+			};
+
+			pm.setParsers(parsers);
+			pm.execute("/contents/1111.json");
+			
+			//withDotがコールされる
+			assertEquals(withDot, pm.getSelectedParser());
+			
+			Params params = pm.getSelectedParam();
+			assertNull(params.get("id.json"));
+			assertEquals("1111", params.get("id"));
+		}
 	}
 }
