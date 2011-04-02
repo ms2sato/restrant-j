@@ -68,7 +68,7 @@ public class DefaultParser implements Parser {
 			throw new IllegalArgumentException("「?」が複数存在してはいけません");
 		}
 
-		formatPathParts = pathAndQuery[0].split("/");
+		formatPathParts = pathAndQuery[0].split("[/\\.]");
 	}
 
 	/**
@@ -97,7 +97,7 @@ public class DefaultParser implements Parser {
 
 	private boolean parsePath(EditableParams params, String path) {
 
-		String[] pathParts = path.split("/");
+		String[] pathParts = path.split("[/\\.]");
 
 		// 長さが違うなら一致しない
 		if (formatPathParts.length != pathParts.length)
