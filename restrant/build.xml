@@ -20,6 +20,7 @@
 			<classpath>
 				<pathelement path="lib/servlet-api.jar"/>
 				<pathelement path="lib/google-collect-1.0.jar"/>
+				<pathelement path="lib/appengine-api-1.0-sdk-1.4.3.jar"/>
 			</classpath>
     	</javac>
     	
