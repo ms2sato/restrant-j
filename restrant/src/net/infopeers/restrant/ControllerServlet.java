@@ -18,12 +18,10 @@ import javax.servlet.http.HttpServletResponse;
 import net.infopeers.restrant.engine.DefaultParser;
 import net.infopeers.restrant.engine.DefaultPlaceholderFormatter;
 import net.infopeers.restrant.engine.ExtensionPolicy;
-import net.infopeers.restrant.engine.GoogleCollectionExtensionPolicy;
 import net.infopeers.restrant.engine.Invoker;
 import net.infopeers.restrant.engine.InvokerBuilder;
 import net.infopeers.restrant.engine.PlaceholderFormatter;
 import net.infopeers.restrant.engine.RouteInfo;
-import net.infopeers.restrant.engine.gae.GaeExtensionPolicy;
 
 /**
  * このシステムのサーブレット

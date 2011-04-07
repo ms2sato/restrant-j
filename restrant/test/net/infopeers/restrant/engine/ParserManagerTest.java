@@ -11,6 +11,7 @@ public class ParserManagerTest extends TestCase {
 
 
 	private DefaultPlaceholderFormatter phFormatter = new DefaultPlaceholderFormatter();
+	private ExtensionPolicy exPolicy = new GoogleCollectionExtensionPolicy();
 
 	public void testSenario() throws Exception {
 
@@ -47,7 +48,7 @@ public class ParserManagerTest extends TestCase {
 
 		//インデクス
 		{
-			ParserManager pm = new ParserManager() {
+			ParserManager pm = new ParserManager(exPolicy) {
 
 				EditableParams createParams() {
 					TestParams params = new TestParams();
@@ -65,7 +66,7 @@ public class ParserManagerTest extends TestCase {
 		
 		//editorに値が入っている場合
 		{
-			ParserManager pm = new ParserManager() {
+			ParserManager pm = new ParserManager(exPolicy) {
 
 				EditableParams createParams() {
 					TestParams params = new TestParams();
@@ -83,7 +84,7 @@ public class ParserManagerTest extends TestCase {
 
 		//content、commentに値が入っている場合
 		{
-			ParserManager pm = new ParserManager() {
+			ParserManager pm = new ParserManager(exPolicy) {
 
 				EditableParams createParams() {
 					TestParams params = new TestParams();
@@ -102,7 +103,7 @@ public class ParserManagerTest extends TestCase {
 
 		//editorに値が入っていて、他の値も存在する場合
 		{
-			ParserManager pm = new ParserManager() {
+			ParserManager pm = new ParserManager(exPolicy) {
 
 				EditableParams createParams() {
 					TestParams params = new TestParams();
@@ -122,7 +123,7 @@ public class ParserManagerTest extends TestCase {
 		
 		//パラメータが無い場合
 		{
-			ParserManager pm = new ParserManager() {
+			ParserManager pm = new ParserManager(exPolicy) {
 
 				EditableParams createParams() {
 					TestParams params = new TestParams();
@@ -139,7 +140,7 @@ public class ParserManagerTest extends TestCase {
 	
 		//ドットの含まれているケース
 		{
-			ParserManager pm = new ParserManager() {
+			ParserManager pm = new ParserManager(exPolicy) {
 
 				EditableParams createParams() {
 					TestParams params = new TestParams();

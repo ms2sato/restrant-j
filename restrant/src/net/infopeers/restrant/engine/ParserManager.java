@@ -15,6 +15,12 @@ public class ParserManager {
 	private EditableParams params;
 	private Parser selectedParser;
 	
+	private final ExtensionPolicy exPolicy;
+	
+	public ParserManager(ExtensionPolicy exPolicy){
+		this.exPolicy = exPolicy;
+	}
+	
 	public void setRequest(HttpServletRequest req){
 		this.req = req;
 	}
@@ -43,7 +49,7 @@ public class ParserManager {
 	}
 	
 	EditableParams createParams(){
-		return new ParamsImpl(new GaeExtensionPolicy(), req);
+		return new ParamsImpl(exPolicy, req);
 	}
 	
 	
