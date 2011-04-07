@@ -5,11 +5,16 @@ import java.util.HashMap;
 import java.util.Set;
 
 import net.infopeers.restrant.engine.AbstractParams;
+import net.infopeers.restrant.engine.gae.GaeExtensionPolicy;
 
 public class TestParams extends AbstractParams {
 
 	private HashMap<String, String> ps = new HashMap<String, String>();
 	private String method;
+
+	public TestParams() {
+		super(new GaeExtensionPolicy());
+	}
 	
 	@Override
 	public String getParameter(String key) {

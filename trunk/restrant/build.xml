@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<project name="project" default="all">
+	
+	<property name="version" value="1.0"/>
+	<property name="name" value="restrant"/>
+	
+	<property name="jarname" value="${name}-${version}.jar"/>
+	<property name="build" value="build"/>
+	<property name="dist" value="dist"/>
+	
+	<property name="jardest" value="${dist}/${jarname}"/>
+	<property name="classes" value="${build}/classes"/>
+
+    <target name="all">
+    	
+    	<mkdir dir="${classes}"/>
+    	
+    	<javac destdir="${classes}" encoding="UTF-8">
+    		<src path="src"/>
+			<classpath>
+				<pathelement path="lib/servlet-api.jar"/>
+				<pathelement path="lib/google-collect-1.0.jar"/>
+			</classpath>
+    	</javac>
+    	
+    	<mkdir dir="${dist}"/>
+		<jar destfile="${jardest}" basedir="${classes}"/>
+    	
+    	<delete dir="${classes}"/>
+    </target>
+</project>
+

@@ -35,15 +35,19 @@ public class InvokerBuilder {
 	private List<Parser> parsers = new ArrayList<Parser>();
 
 	private PlaceholderFormatter phFormatter;
+	
+	private final ExtensionPolicy exPolicy;
 
 	/**
 	 * コンストラクタ
+	 * @param exPolicy 
 	 * 
 	 * @param phFormatter
 	 *            　PlaceholderFormatter
 	 */
-	public InvokerBuilder(PlaceholderFormatter phFormatter) {
+	public InvokerBuilder(ExtensionPolicy exPolicy, PlaceholderFormatter phFormatter) {
 		this.phFormatter = phFormatter;
+		this.exPolicy = exPolicy;
 	}
 
 	/**
