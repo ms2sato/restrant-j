@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import net.infopeers.restrant.Params;
+import net.infopeers.restrant.engine.gae.GaeExtensionPolicy;
 
 public class ParserManager {
 
@@ -42,7 +43,7 @@ public class ParserManager {
 	}
 	
 	EditableParams createParams(){
-		return new ParamsImpl(req);
+		return new ParamsImpl(new GaeExtensionPolicy(), req);
 	}
 	
 	

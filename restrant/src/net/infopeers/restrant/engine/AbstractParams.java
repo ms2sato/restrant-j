@@ -3,13 +3,10 @@ package net.infopeers.restrant.engine;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import net.infopeers.util.Convertor;
-
-import com.google.appengine.repackaged.com.google.common.collect.ArrayListMultimap;
 
 /**
  * Paramsの共通実装。Extensionはもともとのパラメータを上書きする概念。
@@ -19,14 +16,27 @@ import com.google.appengine.repackaged.com.google.common.collect.ArrayListMultim
  */
 public abstract class AbstractParams implements EditableParams {
 
-	private ArrayListMultimap<String, String> extensions = ArrayListMultimap
-			.create();
+	private final ExtensionPolicy exPolicy;
+
+	protected List<String> getExtensionListOf(String key) {
+		return exPolicy.getExtensionListOf(key);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see net.infopeers.restrant.Params#getExtensionNames()
+	 */
+	public Set<String> getExtensionNames() {
+		return exPolicy.getExtensionNames();
+	}
 
 	/**
 	 * 
 	 */
-	public AbstractParams() {
+	public AbstractParams(ExtensionPolicy exPolicy) {
 		super();
+		this.exPolicy = exPolicy;
 	}
 
 	/*
@@ -35,7 +45,7 @@ public abstract class AbstractParams implements EditableParams {
 	 * @see net.infopeers.restrant.Params#getExtension(java.lang.String)
 	 */
 	public String getExtension(String key) {
-		List<String> list = extensions.get(key);
+		List<String> list = getExtensionListOf(key);
 		if (list == null)
 			return null;
 		if (list.size() == 0)
@@ -49,19 +59,10 @@ public abstract class AbstractParams implements EditableParams {
 	 * @see net.infopeers.restrant.Params#getExtensions(java.lang.String)
 	 */
 	public String[] getExtensions(String key) {
-		List<String> list = extensions.get(key);
+		List<String> list = getExtensionListOf(key);
 		if (list == null)
 			return new String[] {};
 		return list.toArray(new String[] {});
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see net.infopeers.restrant.Params#getExtensionNames()
-	 */
-	public Set<String> getExtensionNames() {
-		return new HashSet<String>(extensions.keySet());
 	}
 
 	/*
@@ -99,14 +100,16 @@ public abstract class AbstractParams implements EditableParams {
 	public Object asObject(Class<?> cls, String key) {
 
 		if (cls.isArray()) {
-			if(!nameSet().contains(key)){
+			if (!nameSet().contains(key)) {
 				throw new IllegalStateException(key + "に一致する値がありません");
 			}
-			
+
 			String[] values = gets(key);
-			Object res = Array.newInstance(cls.getComponentType(), values.length);
+			Object res = Array.newInstance(cls.getComponentType(),
+					values.length);
 			for (int i = 0; i < values.length; ++i) {
-				Array.set(res, i, Convertor.convert(values[i], cls.getComponentType()));
+				Array.set(res, i,
+						Convertor.convert(values[i], cls.getComponentType()));
 			}
 			return res;
 		}
@@ -245,7 +248,7 @@ public abstract class AbstractParams implements EditableParams {
 	 * , java.lang.String)
 	 */
 	public void addExtension(String key, String value) {
-		extensions.put(key, value);
+		exPolicy.addExtension(key, value);
 	}
 
 }

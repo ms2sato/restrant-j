@@ -7,6 +7,8 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
 
+
+
 /**
  * 一般的なParamsの実装
  * @author ms2
@@ -18,9 +20,11 @@ public class ParamsImpl extends AbstractParams {
 	
 	/**
 	 * コンストラクタ
+	 * @param exPolicy ExtensionPolicy
 	 * @param req HttpServletRequest
 	 */
-	public ParamsImpl(HttpServletRequest req){
+	public ParamsImpl(ExtensionPolicy exPolicy, HttpServletRequest req){
+		super(exPolicy);
 		this.req = req;
 	}
 	
@@ -49,8 +53,8 @@ public class ParamsImpl extends AbstractParams {
 		//TODO: より効率の良い実装があるだろう。頻度が低いはずなので今はこの実装
 		Set<String> names = getExtensionNames();
 		
-		for(Enumeration e = req.getParameterNames(); e.hasMoreElements();){
-			names.add((String)e.nextElement());
+		for(Enumeration<String> e = req.getParameterNames(); e.hasMoreElements();){
+			names.add(e.nextElement());
 		}
 		return names;
 	}

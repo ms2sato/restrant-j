@@ -3,6 +3,8 @@ package net.infopeers.restrant;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,10 +17,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.infopeers.restrant.engine.DefaultParser;
 import net.infopeers.restrant.engine.DefaultPlaceholderFormatter;
+import net.infopeers.restrant.engine.ExtensionPolicy;
+import net.infopeers.restrant.engine.GoogleCollectionExtensionPolicy;
 import net.infopeers.restrant.engine.Invoker;
 import net.infopeers.restrant.engine.InvokerBuilder;
 import net.infopeers.restrant.engine.PlaceholderFormatter;
 import net.infopeers.restrant.engine.RouteInfo;
+import net.infopeers.restrant.engine.gae.GaeExtensionPolicy;
 
 /**
  * このシステムのサーブレット
@@ -94,7 +99,35 @@ public class ControllerServlet extends HttpServlet {
 			}
 		}
 
-		invokerBuilder = new InvokerBuilder(phFormatter);
+		Map<String, String> multimap2exPolicy = new HashMap<String, String>();
+		multimap2exPolicy
+				.put("com.google.appengine.repackaged.com.google.common.collect.ArrayListMultimap",
+						"net.infopeers.restrant.engine.gae.GaeExtensionPolicy");
+		multimap2exPolicy
+				.put("com.google.common.collect.ArrayListMultimap",
+						"net.infopeers.restrant.engine.GoogleCollectionExtensionPolicy");
+
+		ExtensionPolicy exPolicy = null;
+		for (String key : multimap2exPolicy.keySet()) {
+			try {
+				Class.forName(key);
+				try {
+					exPolicy = (ExtensionPolicy) Class.forName(
+							multimap2exPolicy.get(key)).newInstance();
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			} catch (ClassNotFoundException e) {
+				// continue;
+			}
+		}
+
+		if (exPolicy == null) {
+			throw new IllegalStateException(
+					"GoogleCollection's ArrayListMultimap was not found.");
+		}
+
+		invokerBuilder = new InvokerBuilder(exPolicy, phFormatter);
 
 		if (routes.isEmpty()) {
 			invokerBuilder.addParser(new DefaultParser(defaultRouteFormat,
@@ -139,7 +172,7 @@ public class ControllerServlet extends HttpServlet {
 		} catch (Exception e) {
 			logger.log(Level.WARNING, e.getMessage(), e);
 			resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		} finally{
+		} finally {
 			afterExecute(req, resp);
 		}
 	}
@@ -159,17 +192,19 @@ public class ControllerServlet extends HttpServlet {
 
 	/**
 	 * 処理を開始する際に必ず呼ばれる
+	 * 
 	 * @param req
 	 * @param resp
 	 * @throws IOException
 	 */
 	protected void beforeExecute(HttpServletRequest req,
 			HttpServletResponse resp) throws IOException {
-		
+
 	}
 
 	/**
 	 * 処理が終了した際に必ず呼ばれる
+	 * 
 	 * @param req
 	 * @param resp
 	 */
