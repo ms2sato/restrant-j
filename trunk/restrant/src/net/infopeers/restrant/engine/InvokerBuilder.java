@@ -86,7 +86,7 @@ public class InvokerBuilder {
 		String path = req.getRequestURI().substring(
 				req.getContextPath().length());
 		
-		ParserManager pm = new ParserManager();
+		ParserManager pm = new ParserManager(exPolicy);
 		pm.setParsers(parsers);
 		pm.setRequest(req);
 		pm.execute(path);
