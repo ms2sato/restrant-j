@@ -35,7 +35,7 @@
 		<link>
 			<name>framework</name>
 			<type>2</type>
-			<location>C:/work/infopeers/commix/commixserv/restrant/src</location>
+			<locationURI>WORKSPACE_LOC/restrant/src</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>
