@@ -1,13 +1,19 @@
-package net.infopeers.restrant.engine;
+package net.infopeers.restrant.engine.gae;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.google.common.collect.ArrayListMultimap;
+import net.infopeers.restrant.engine.params.ExtensionParamPolicy;
 
+import com.google.appengine.repackaged.com.google.common.collect.ArrayListMultimap;
 
-public class GoogleCollectionExtensionPolicy implements ExtensionPolicy {
+/**
+ * GAEのコレクションを利用した拡張パラメータポリシー
+ * @author ms2
+ *
+ */
+public class GaeExtensionParamPolicy implements ExtensionParamPolicy {
 
 	private ArrayListMultimap<String, String> extensions = ArrayListMultimap
 			.create();

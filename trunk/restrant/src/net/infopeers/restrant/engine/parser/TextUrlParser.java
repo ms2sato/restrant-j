@@ -1,12 +1,16 @@
-package net.infopeers.restrant.engine;
+package net.infopeers.restrant.engine.parser;
 
 import java.util.HashMap;
 
+import net.infopeers.restrant.engine.InvokerBuilder;
+import net.infopeers.restrant.engine.PlaceholderFormatter;
+import net.infopeers.restrant.engine.params.EditableParams;
+
 
 /**
- * デフォルトのParser。
+ * テキスト表現のUrlParser。
  * <p>
- * デフォルトでは下記のようにRoR表記にならって判断される。
+ * 下記のようにRoR表記にならって判断される。
  * 「@restful」はactionの選別をHTTPメソッドで行う。
  * </p>
  * <ol>
@@ -19,7 +23,7 @@ import java.util.HashMap;
  * @author ms2
  *
  */
-public class TextParser implements Parser {
+public class TextUrlParser implements UrlParser {
 
 	private static final String RESTFUL_ATTRIBUTE = "@restful";
 	
@@ -47,7 +51,6 @@ public class TextParser implements Parser {
 	private String fullFormat;
 
 	private String[] section; // {/:controller/:action/:id?test1=1&test2=2, @restful, :action=qqqq}
-	// private String pathFormat;// /:controller/:action/:id?test1=1&test2=2
 
 	private UrlPathParser urlPathParser;
 	
@@ -56,7 +59,7 @@ public class TextParser implements Parser {
 	 * @param fullFormat フォーマット文字列
 	 * @param phFormatter PlaceholderFormatter
 	 */
-	public TextParser(String fullFormat, PlaceholderFormatter phFormatter) {
+	public TextUrlParser(String fullFormat, PlaceholderFormatter phFormatter) {
 		this.fullFormat = fullFormat;
 		this.phFormatter = phFormatter;
 

@@ -4,8 +4,8 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Set;
 
-import net.infopeers.restrant.engine.AbstractParams;
-import net.infopeers.restrant.engine.gae.GaeExtensionPolicy;
+import net.infopeers.restrant.engine.gae.GaeExtensionParamPolicy;
+import net.infopeers.restrant.engine.params.AbstractParams;
 
 public class TestParams extends AbstractParams {
 
@@ -13,7 +13,7 @@ public class TestParams extends AbstractParams {
 	private String method;
 
 	public TestParams() {
-		super(new GaeExtensionPolicy());
+		super(new GaeExtensionParamPolicy());
 	}
 	
 	@Override

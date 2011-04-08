@@ -1,7 +1,9 @@
-package net.infopeers.restrant.engine;
+package net.infopeers.restrant.engine.parser;
 
 import junit.framework.TestCase;
 import net.infopeers.restrant.TestParams;
+import net.infopeers.restrant.engine.DefaultPlaceholderFormatter;
+import net.infopeers.restrant.engine.parser.TextUrlParser;
 
 public class DefaultParserTest extends TestCase {
 
@@ -10,7 +12,7 @@ public class DefaultParserTest extends TestCase {
 	public void testNonHttpMethod() throws Exception {
 
 		//フォーマットにHTTPメソッドの指定が無い
-		TextParser content = new TextParser(
+		TextUrlParser content = new TextUrlParser(
 				"/:controller?content=:content&comment=:comment :action=post",
 				phFormatter);
 		
@@ -36,7 +38,7 @@ public class DefaultParserTest extends TestCase {
 	public void testWithHttpMethod() throws Exception {
 
 		//フォーマットにHTTPメソッド（@post）が指定されている
-		TextParser content = new TextParser(
+		TextUrlParser content = new TextUrlParser(
 				"/:controller?content=:content&comment=:comment :action=post @post",
 				phFormatter);
 		
@@ -60,7 +62,7 @@ public class DefaultParserTest extends TestCase {
 	}
 	
 	public void testCombine() throws Exception{
-		TextParser content = new TextParser(
+		TextUrlParser content = new TextUrlParser(
 				"/moba/location?datum=:datum&unit=:unit&lat=:lat&lon=:lon :controller=info :action=location @get",
 				phFormatter);
 		
@@ -75,7 +77,7 @@ public class DefaultParserTest extends TestCase {
 	}
 	
 	public void testSplit() throws Exception{
-		TextParser content = new TextParser(
+		TextUrlParser content = new TextUrlParser(
 				"/moba/:topic/augps?lat=:lat&lon=:lon :controller=info :action=auGps @get",
 				phFormatter);
 		

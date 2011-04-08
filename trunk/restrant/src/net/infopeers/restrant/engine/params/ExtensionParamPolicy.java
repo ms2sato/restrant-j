@@ -1,4 +1,4 @@
-package net.infopeers.restrant.engine;
+package net.infopeers.restrant.engine.params;
 
 import java.util.List;
 import java.util.Set;
@@ -10,7 +10,7 @@ import java.util.Set;
  * @author ms2
  *
  */
-public interface ExtensionPolicy {
+public interface ExtensionParamPolicy {
 
 	List<String> getExtensionListOf(String key);
 

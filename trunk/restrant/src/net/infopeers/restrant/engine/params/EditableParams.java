@@ -1,4 +1,4 @@
-package net.infopeers.restrant.engine;
+package net.infopeers.restrant.engine.params;
 
 import net.infopeers.restrant.Params;
 
