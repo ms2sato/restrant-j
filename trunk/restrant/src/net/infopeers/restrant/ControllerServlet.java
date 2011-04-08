@@ -22,7 +22,8 @@ import net.infopeers.restrant.engine.PlaceholderFormatter;
 import net.infopeers.restrant.engine.params.ExtensionParamPolicy;
 import net.infopeers.restrant.engine.parser.CompositeUrlParserArranger;
 import net.infopeers.restrant.engine.parser.UrlParserArranger;
-import net.infopeers.restrant.util.ServletConfigParserArranger;
+import net.infopeers.restrant.route.RouteClassUrlParserArranger;
+import net.infopeers.restrant.util.ServletConfigUrlParserArranger;
 
 /**
  * このシステムのサーブレット
@@ -37,6 +38,7 @@ public class ControllerServlet extends HttpServlet {
 			.getLogger(ControllerServlet.class.getName());
 
 	private static final String ROOT_PACKAGE_LABEL = "RootPackage"; // Web.xmlのルートパッケージ指定ラベル
+	private static final String ROUTE_CLASS_LABEL = "RouteClass"; // Web.xmlのRouteクラス指定ラベル
 
 	private static final String ENCODING = "Encoding"; // Web.xmlのエンコーディング指定ラベル
 
@@ -79,7 +81,21 @@ public class ControllerServlet extends HttpServlet {
 
 	private CompositeUrlParserArranger createParserArranger(ServletConfig config) {
 		CompositeUrlParserArranger arranger = new CompositeUrlParserArranger();
-		arranger.add(new ServletConfigParserArranger(phFormatter, config));
+
+		String routeClass = config.getInitParameter(ROUTE_CLASS_LABEL);
+		if (routeClass != null) {
+			try {
+				Class<?> cls = Class.forName(routeClass);
+				RouteClassUrlParserArranger cdarranger = new RouteClassUrlParserArranger(phFormatter, cls);
+				arranger.add(cdarranger);
+			} catch (ClassNotFoundException e) {
+				throw new RuntimeException(
+						"document(web.xml)/web-app/servlet/init-paramに"
+								+ ROUTE_CLASS_LABEL + "で指定されたクラスが見つかりません。", e);
+			}
+		}
+
+		arranger.add(new ServletConfigUrlParserArranger(phFormatter, config));
 		return arranger;
 	}
 
@@ -152,11 +168,11 @@ public class ControllerServlet extends HttpServlet {
 	private Invoker getInvoker(HttpServletRequest req)
 			throws ResourceNotFoundException, MalformedURLException {
 
-		//TODO: 柔軟にするには切り出す。
+		// TODO: 柔軟にするには切り出す。
 		URL url = new URL(req.getRequestURL().toString());
 		String host = url.getHost();
 		invokerBuilderFactory.setEvery(host.equals("localhost"));
-		
+
 		Invoker invoker = invokerBuilderFactory.getInvokerBuilder().build(this,
 				req);
 		return invoker;
