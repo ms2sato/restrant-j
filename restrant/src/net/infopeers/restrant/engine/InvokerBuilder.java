@@ -2,6 +2,7 @@ package net.infopeers.restrant.engine;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -21,6 +22,9 @@ import net.infopeers.restrant.engine.parser.UrlParser;
  */
 public class InvokerBuilder {
 
+	private static final Logger logger = Logger.getLogger(InvokerBuilder.class
+			.getName());
+
 	private static final String CONTROLLER_SUFFIX = "Controller";
 
 	/**
@@ -33,7 +37,6 @@ public class InvokerBuilder {
 	 */
 	public static final String CONTROLLER_PLACEHOLDER_LABEL = "controller";
 
-	
 	// 各HTTPメソッドの場合のactionの値
 	public static final String GET = "get";
 
@@ -46,19 +49,17 @@ public class InvokerBuilder {
 	public static final String HEAD = "head";
 
 	public static final String OPTIONS = "options";
-	
-	
-	
+
 	private String rootPackage;
 
 	private List<UrlParser> parsers = new ArrayList<UrlParser>();
 
 	private final ExtensionParamPolicy exPolicy;
 
-
 	/**
 	 * コンストラクタ
-	 * @param exPolicy 
+	 * 
+	 * @param exPolicy
 	 */
 	public InvokerBuilder(ExtensionParamPolicy exPolicy) {
 		this.exPolicy = exPolicy;
@@ -106,6 +107,7 @@ public class InvokerBuilder {
 		pm.execute(path);
 		Params params = pm.getSelectedParam();
 		UrlParser selectedParser = pm.getSelectedParser();
+		logger.info("selectedParser: " + selectedParser);
 
 		if (params == null) {
 			throw new ResourceNotFoundException(path + "に対応するフォーマットがありません");
@@ -139,5 +141,4 @@ public class InvokerBuilder {
 			throw new RuntimeException(e);
 		}
 	}
-
 }

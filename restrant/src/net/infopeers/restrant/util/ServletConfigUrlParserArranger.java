@@ -11,7 +11,7 @@ import net.infopeers.restrant.engine.PlaceholderFormatter;
 import net.infopeers.restrant.engine.parser.TextUrlParser;
 import net.infopeers.restrant.engine.parser.UrlParserArranger;
 
-public class ServletConfigParserArranger implements UrlParserArranger {
+public class ServletConfigUrlParserArranger implements UrlParserArranger {
 
 	private static final String ROUTE_FORMAT_LABEL = "RouteFormat"; // Web.xmlのURLテンプレート指定ラベル
 	
@@ -27,7 +27,7 @@ public class ServletConfigParserArranger implements UrlParserArranger {
 		return config.getInitParameter(name);
 	}
 
-	public ServletConfigParserArranger(PlaceholderFormatter phFormatter,
+	public ServletConfigUrlParserArranger(PlaceholderFormatter phFormatter,
 			ServletConfig config) {
 		this.phFormatter = phFormatter;
 		this.config = config;
