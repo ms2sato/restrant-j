@@ -14,7 +14,7 @@ public class RouteMap {
 		this.phFormatter = phFormatter;
 	}
 
-	public Mapper format(String format) {
+	public Mapper path(String format) {
 		return new Mapper(this, format, phFormatter);
 	}
 
