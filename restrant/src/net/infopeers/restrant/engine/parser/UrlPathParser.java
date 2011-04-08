@@ -1,4 +1,7 @@
-package net.infopeers.restrant.engine;
+package net.infopeers.restrant.engine.parser;
+
+import net.infopeers.restrant.engine.PlaceholderFormatter;
+import net.infopeers.restrant.engine.params.EditableParams;
 
 /**
  * URLのパス表現を読み込み、パラメータを取りだすサブパーサー
@@ -6,7 +9,7 @@ package net.infopeers.restrant.engine;
  * @author ms2
  * 
  */
-public class UrlPathParser implements Parser {
+public class UrlPathParser implements UrlParser {
 
 	private PlaceholderFormatter phFormatter;
 	private String[] pathAndQuery; // {/:controller/:action/:id,

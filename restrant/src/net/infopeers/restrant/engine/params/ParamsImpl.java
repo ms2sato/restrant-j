@@ -1,4 +1,4 @@
-package net.infopeers.restrant.engine;
+package net.infopeers.restrant.engine.params;
 
 
 import java.util.Enumeration;
@@ -23,7 +23,7 @@ public class ParamsImpl extends AbstractParams {
 	 * @param exPolicy ExtensionPolicy
 	 * @param req HttpServletRequest
 	 */
-	public ParamsImpl(ExtensionPolicy exPolicy, HttpServletRequest req){
+	public ParamsImpl(ExtensionParamPolicy exPolicy, HttpServletRequest req){
 		super(exPolicy);
 		this.req = req;
 	}

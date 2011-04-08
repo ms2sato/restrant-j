@@ -1,4 +1,4 @@
-package net.infopeers.restrant.engine;
+package net.infopeers.restrant.engine.util;
 
 import java.util.Comparator;
 import java.util.Enumeration;
@@ -6,7 +6,12 @@ import java.util.TreeSet;
 
 import javax.servlet.ServletConfig;
 
-public class ServletConfigParserArranger implements ParserArranger {
+import net.infopeers.restrant.engine.InvokerBuilder;
+import net.infopeers.restrant.engine.PlaceholderFormatter;
+import net.infopeers.restrant.engine.parser.TextUrlParser;
+import net.infopeers.restrant.engine.parser.UrlParserArranger;
+
+public class ServletConfigParserArranger implements UrlParserArranger {
 
 	private static final String ROUTE_FORMAT_LABEL = "RouteFormat"; // Web.xmlのURLテンプレート指定ラベル
 	
@@ -56,7 +61,7 @@ public class ServletConfigParserArranger implements ParserArranger {
 		}
 
 		for (RouteInfo route : routes) {
-			invokerBuilder.addParser(new TextParser(route.format, phFormatter));
+			invokerBuilder.addParser(new TextUrlParser(route.format, phFormatter));
 		}
 
 	}

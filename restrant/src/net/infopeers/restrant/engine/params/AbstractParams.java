@@ -1,4 +1,4 @@
-package net.infopeers.restrant.engine;
+package net.infopeers.restrant.engine.params;
 
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
@@ -16,7 +16,7 @@ import net.infopeers.util.Convertor;
  */
 public abstract class AbstractParams implements EditableParams {
 
-	private final ExtensionPolicy exPolicy;
+	private final ExtensionParamPolicy exPolicy;
 
 	protected List<String> getExtensionListOf(String key) {
 		return exPolicy.getExtensionListOf(key);
@@ -34,7 +34,7 @@ public abstract class AbstractParams implements EditableParams {
 	/**
 	 * 
 	 */
-	public AbstractParams(ExtensionPolicy exPolicy) {
+	public AbstractParams(ExtensionParamPolicy exPolicy) {
 		super();
 		this.exPolicy = exPolicy;
 	}

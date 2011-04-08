@@ -1,11 +1,11 @@
-package net.infopeers.restrant.engine;
+package net.infopeers.restrant.engine.util;
 
 /**
  * URLフォーマット情報
  * @author ms2
  *
  */
-public class RouteInfo {
+class RouteInfo {
 
 	/**
 	 * インデクス

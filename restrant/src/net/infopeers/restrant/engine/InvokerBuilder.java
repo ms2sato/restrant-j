@@ -9,6 +9,9 @@ import net.infopeers.restrant.Controller;
 import net.infopeers.restrant.ControllerServlet;
 import net.infopeers.restrant.Params;
 import net.infopeers.restrant.ResourceNotFoundException;
+import net.infopeers.restrant.engine.params.ExtensionParamPolicy;
+import net.infopeers.restrant.engine.parser.ParserManager;
+import net.infopeers.restrant.engine.parser.UrlParser;
 
 /**
  * Invokerの生成器
@@ -48,16 +51,16 @@ public class InvokerBuilder {
 	
 	private String rootPackage;
 
-	private List<Parser> parsers = new ArrayList<Parser>();
+	private List<UrlParser> parsers = new ArrayList<UrlParser>();
 
-	private final ExtensionPolicy exPolicy;
+	private final ExtensionParamPolicy exPolicy;
 
 
 	/**
 	 * コンストラクタ
 	 * @param exPolicy 
 	 */
-	public InvokerBuilder(ExtensionPolicy exPolicy) {
+	public InvokerBuilder(ExtensionParamPolicy exPolicy) {
 		this.exPolicy = exPolicy;
 	}
 
@@ -77,7 +80,7 @@ public class InvokerBuilder {
 	 * @param parser
 	 *            Parser
 	 */
-	public void addParser(Parser parser) {
+	public void addParser(UrlParser parser) {
 		parsers.add(parser);
 	}
 
@@ -102,7 +105,7 @@ public class InvokerBuilder {
 		pm.setRequest(req);
 		pm.execute(path);
 		Params params = pm.getSelectedParam();
-		Parser selectedParser = pm.getSelectedParser();
+		UrlParser selectedParser = pm.getSelectedParser();
 
 		if (params == null) {
 			throw new ResourceNotFoundException(path + "に対応するフォーマットがありません");

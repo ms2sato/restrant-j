@@ -1,14 +1,18 @@
-package net.infopeers.restrant.engine;
+package net.infopeers.restrant.engine.parser;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CodableParser implements Parser {
+import net.infopeers.restrant.engine.InvokerBuilder;
+import net.infopeers.restrant.engine.PlaceholderFormatter;
+import net.infopeers.restrant.engine.params.EditableParams;
 
-	List<Parser> parts = new ArrayList<Parser>();
+public class BasicUrlParser implements UrlParser {
+
+	List<UrlParser> parts = new ArrayList<UrlParser>();
 	UrlPathParser urlPathParser;
 
-	public class WithParam implements Parser {
+	public class WithParam implements UrlParser {
 
 		String key;
 		String value;
@@ -26,7 +30,7 @@ public class CodableParser implements Parser {
 
 	}
 
-	public class OnRestful implements Parser {
+	public class OnRestful implements UrlParser {
 
 		@Override
 		public boolean parse(EditableParams params, String path) {
@@ -37,58 +41,58 @@ public class CodableParser implements Parser {
 
 	}
 
-	public CodableParser(String pathFormat, PlaceholderFormatter phFormatter) {
+	public BasicUrlParser(String pathFormat, PlaceholderFormatter phFormatter) {
 		this.urlPathParser = new UrlPathParser(phFormatter, pathFormat);
 
 		this.parts.add(urlPathParser);
 	}
 
-	public CodableParser add(Parser parser) {
+	public BasicUrlParser add(UrlParser parser) {
 		this.parts.add(parser);
 		return this;
 	}
 
-	public CodableParser withParam(String key, String value) {
+	public BasicUrlParser withParam(String key, String value) {
 		this.parts.add(new WithParam(key, value));
 		return this;
 	}
 
-	public CodableParser onGet() {
+	public BasicUrlParser onGet() {
 		return action(InvokerBuilder.GET);
 	}
 
-	public CodableParser onPost() {
+	public BasicUrlParser onPost() {
 		return action(InvokerBuilder.POST);
 	}
 
-	public CodableParser onHead() {
+	public BasicUrlParser onHead() {
 		return action(InvokerBuilder.HEAD);
 	}
 
-	public CodableParser onOptions() {
+	public BasicUrlParser onOptions() {
 		return action(InvokerBuilder.OPTIONS);
 	}
 
-	public CodableParser onDelete() {
+	public BasicUrlParser onDelete() {
 		return action(InvokerBuilder.DELETE);
 	}
 
-	public CodableParser onPut() {
+	public BasicUrlParser onPut() {
 		return action(InvokerBuilder.PUT);
 	}
 
-	public CodableParser onRestful() {
+	public BasicUrlParser onRestful() {
 		this.parts.add(new OnRestful());
 		return this;
 	}
 
-	public CodableParser controller(String controller) {
+	public BasicUrlParser controller(String controller) {
 		this.parts.add(new WithParam(
 				InvokerBuilder.CONTROLLER_PLACEHOLDER_LABEL, controller));
 		return this;
 	}
 
-	public CodableParser action(String action) {
+	public BasicUrlParser action(String action) {
 		this.parts.add(new WithParam(InvokerBuilder.ACTION_PLACEHOLDER_LABEL,
 				action));
 		return this;
@@ -97,7 +101,7 @@ public class CodableParser implements Parser {
 	@Override
 	public boolean parse(EditableParams params, String path) {
 
-		for (Parser part : parts) {
+		for (UrlParser part : parts) {
 			if (!part.parse(params, path))
 				return false;
 		}

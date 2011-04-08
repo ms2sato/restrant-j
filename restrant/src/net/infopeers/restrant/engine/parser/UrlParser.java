@@ -1,11 +1,13 @@
-package net.infopeers.restrant.engine;
+package net.infopeers.restrant.engine.parser;
+
+import net.infopeers.restrant.engine.params.EditableParams;
 
 /**
  * パーサ
  * @author ms2
  *
  */
-public interface Parser {
+public interface UrlParser {
 
 	/**
 	 * パースする

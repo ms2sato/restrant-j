@@ -1,23 +1,25 @@
-package net.infopeers.restrant.engine;
+package net.infopeers.restrant.engine.parser;
 
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import net.infopeers.restrant.Params;
-import net.infopeers.restrant.engine.gae.GaeExtensionPolicy;
+import net.infopeers.restrant.engine.params.EditableParams;
+import net.infopeers.restrant.engine.params.ExtensionParamPolicy;
+import net.infopeers.restrant.engine.params.ParamsImpl;
 
 public class ParserManager {
 
-	private List<Parser> parsers;
+	private List<UrlParser> parsers;
 	private HttpServletRequest req;
 	
 	private EditableParams params;
-	private Parser selectedParser;
+	private UrlParser selectedParser;
 	
-	private final ExtensionPolicy exPolicy;
+	private final ExtensionParamPolicy exPolicy;
 	
-	public ParserManager(ExtensionPolicy exPolicy){
+	public ParserManager(ExtensionParamPolicy exPolicy){
 		this.exPolicy = exPolicy;
 	}
 	
@@ -25,11 +27,11 @@ public class ParserManager {
 		this.req = req;
 	}
 	
-	public void setParsers(List<Parser> parsers){
+	public void setParsers(List<UrlParser> parsers){
 		this.parsers = parsers;
 	}
 	
-	public Parser getSelectedParser(){
+	public UrlParser getSelectedParser(){
 		return selectedParser;
 	}
 	
@@ -38,7 +40,7 @@ public class ParserManager {
 	}
 	
 	public void execute(String path){
-		for (Parser parser : parsers) {
+		for (UrlParser parser : parsers) {
 			 EditableParams p = createParams();
 			if (parser.parse(p, path)) {
 				params = p;

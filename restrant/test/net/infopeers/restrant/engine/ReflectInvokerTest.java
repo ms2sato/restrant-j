@@ -7,9 +7,6 @@ import net.infopeers.restrant.TestParams;
 
 public class ReflectInvokerTest extends TestCase {
 	
-	private PlaceholderFormatter phFormatter = new DefaultPlaceholderFormatter();
-	
-	
 	public void testSenario() throws Exception{
 		
 		TestController controller = new TestController();

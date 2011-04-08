@@ -13,14 +13,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.infopeers.restrant.engine.CompositeParserArranger;
 import net.infopeers.restrant.engine.DefaultPlaceholderFormatter;
-import net.infopeers.restrant.engine.ExtensionPolicy;
 import net.infopeers.restrant.engine.Invoker;
 import net.infopeers.restrant.engine.InvokerBuilder;
-import net.infopeers.restrant.engine.ParserArranger;
 import net.infopeers.restrant.engine.PlaceholderFormatter;
-import net.infopeers.restrant.engine.ServletConfigParserArranger;
+import net.infopeers.restrant.engine.params.ExtensionParamPolicy;
+import net.infopeers.restrant.engine.parser.CompositeUrlParserArranger;
+import net.infopeers.restrant.engine.parser.UrlParserArranger;
+import net.infopeers.restrant.engine.util.ServletConfigParserArranger;
 
 /**
  * このシステムのサーブレット
@@ -43,9 +43,9 @@ public class ControllerServlet extends HttpServlet {
 
 	private PlaceholderFormatter phFormatter = new DefaultPlaceholderFormatter();
 
-	private ExtensionPolicy exPolicy;
+	private ExtensionParamPolicy exPolicy;
 	
-	private ParserArranger parserArranger;
+	private UrlParserArranger parserArranger;
 	
 	private String rootPackage;
 	
@@ -85,13 +85,13 @@ public class ControllerServlet extends HttpServlet {
 		return invokerBuilder;
 	}
 
-	private CompositeParserArranger createParserArranger(ServletConfig config) {
-		CompositeParserArranger arranger = new CompositeParserArranger();
+	private CompositeUrlParserArranger createParserArranger(ServletConfig config) {
+		CompositeUrlParserArranger arranger = new CompositeUrlParserArranger();
 		arranger.add(new ServletConfigParserArranger(phFormatter, config));
 		return arranger;
 	}
 
-	private ExtensionPolicy createExtensionPolicy() {
+	private ExtensionParamPolicy createExtensionPolicy() {
 		Map<String, String> multimap2exPolicy = new HashMap<String, String>();
 		multimap2exPolicy
 				.put("com.google.appengine.repackaged.com.google.common.collect.ArrayListMultimap",
@@ -100,12 +100,12 @@ public class ControllerServlet extends HttpServlet {
 				.put("com.google.common.collect.ArrayListMultimap",
 						"net.infopeers.restrant.engine.GoogleCollectionExtensionPolicy");
 
-		ExtensionPolicy exPolicy = null;
+		ExtensionParamPolicy exPolicy = null;
 		for (String key : multimap2exPolicy.keySet()) {
 			try {
 				Class.forName(key);
 				try {
-					exPolicy = (ExtensionPolicy) Class.forName(
+					exPolicy = (ExtensionParamPolicy) Class.forName(
 							multimap2exPolicy.get(key)).newInstance();
 				} catch (Exception e) {
 					throw new RuntimeException(e);
