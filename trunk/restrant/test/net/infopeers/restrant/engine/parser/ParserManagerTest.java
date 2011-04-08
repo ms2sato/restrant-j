@@ -9,10 +9,10 @@ import net.infopeers.restrant.TestParams;
 import net.infopeers.restrant.engine.DefaultPlaceholderFormatter;
 import net.infopeers.restrant.engine.params.EditableParams;
 import net.infopeers.restrant.engine.params.ExtensionParamPolicy;
-import net.infopeers.restrant.engine.params.GoogleCollectionExtensionParamPolicy;
 import net.infopeers.restrant.engine.parser.ParserManager;
 import net.infopeers.restrant.engine.parser.TextUrlParser;
 import net.infopeers.restrant.engine.parser.UrlParser;
+import net.infopeers.restrant.util.GoogleCollectionExtensionParamPolicy;
 
 public class ParserManagerTest extends TestCase {
 

@@ -1,4 +1,4 @@
-package net.infopeers.restrant.engine.gae;
+package net.infopeers.restrant.util.gae;
 
 import java.util.HashSet;
 import java.util.List;
@@ -9,7 +9,8 @@ import net.infopeers.restrant.engine.params.ExtensionParamPolicy;
 import com.google.appengine.repackaged.com.google.common.collect.ArrayListMultimap;
 
 /**
- * GAEのコレクションを利用した拡張パラメータポリシー
+ * GAEを使用したExtensionParamPolicy
+ * ControllerServletでClass.forNameで呼ばれるのでリファクタは注意
  * @author ms2
  *
  */

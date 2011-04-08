@@ -20,7 +20,7 @@ import net.infopeers.restrant.engine.PlaceholderFormatter;
 import net.infopeers.restrant.engine.params.ExtensionParamPolicy;
 import net.infopeers.restrant.engine.parser.CompositeUrlParserArranger;
 import net.infopeers.restrant.engine.parser.UrlParserArranger;
-import net.infopeers.restrant.engine.util.ServletConfigParserArranger;
+import net.infopeers.restrant.util.ServletConfigParserArranger;
 
 /**
  * このシステムのサーブレット
@@ -95,10 +95,10 @@ public class ControllerServlet extends HttpServlet {
 		Map<String, String> multimap2exPolicy = new HashMap<String, String>();
 		multimap2exPolicy
 				.put("com.google.appengine.repackaged.com.google.common.collect.ArrayListMultimap",
-						"net.infopeers.restrant.engine.gae.GaeExtensionPolicy");
+						"net.infopeers.restrant.util.gae.GaeExtensionParamPolicy");
 		multimap2exPolicy
 				.put("com.google.common.collect.ArrayListMultimap",
-						"net.infopeers.restrant.engine.GoogleCollectionExtensionPolicy");
+						"net.infopeers.restrant.util.GoogleCollectionExtensionParamPolicy");
 
 		ExtensionParamPolicy exPolicy = null;
 		for (String key : multimap2exPolicy.keySet()) {

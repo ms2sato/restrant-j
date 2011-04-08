@@ -1,12 +1,19 @@
-package net.infopeers.restrant.engine.params;
+package net.infopeers.restrant.util;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.infopeers.restrant.engine.params.ExtensionParamPolicy;
+
 import com.google.common.collect.ArrayListMultimap;
 
-
+/**
+ * GoogleCollectionを使用したExtensionParamPolicy
+ * ControllerServletでClass.forNameで呼ばれるのでリファクタは注意
+ * @author ms2
+ *
+ */
 public class GoogleCollectionExtensionParamPolicy implements ExtensionParamPolicy {
 
 	private ArrayListMultimap<String, String> extensions = ArrayListMultimap

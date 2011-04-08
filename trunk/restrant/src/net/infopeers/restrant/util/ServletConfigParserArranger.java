@@ -1,4 +1,4 @@
-package net.infopeers.restrant.engine.util;
+package net.infopeers.restrant.util;
 
 import java.util.Comparator;
 import java.util.Enumeration;
