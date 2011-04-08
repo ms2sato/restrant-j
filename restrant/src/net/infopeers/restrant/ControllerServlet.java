@@ -1,11 +1,9 @@
 package net.infopeers.restrant;
 
 import java.io.IOException;
-import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,13 +13,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.infopeers.restrant.engine.TextParser;
+import net.infopeers.restrant.engine.CompositeParserArranger;
 import net.infopeers.restrant.engine.DefaultPlaceholderFormatter;
 import net.infopeers.restrant.engine.ExtensionPolicy;
 import net.infopeers.restrant.engine.Invoker;
 import net.infopeers.restrant.engine.InvokerBuilder;
+import net.infopeers.restrant.engine.ParserArranger;
 import net.infopeers.restrant.engine.PlaceholderFormatter;
-import net.infopeers.restrant.engine.RouteInfo;
+import net.infopeers.restrant.engine.ServletConfigParserArranger;
 
 /**
  * このシステムのサーブレット
@@ -37,19 +36,20 @@ public class ControllerServlet extends HttpServlet {
 
 	private static final String ROOT_PACKAGE_LABEL = "RootPackage"; // Web.xmlのルートパッケージ指定ラベル
 
-	private static final String ROUTE_FORMAT_LABEL = "RouteFormat"; // Web.xmlのURLテンプレート指定ラベル
 
 	private static final String ENCODING = "Encoding"; // Web.xmlのエンコーディング指定ラベル
-
-	/**
-	 * デフォルトのルートフォーマット
-	 */
-	private static final String defaultRouteFormat = "/:controller/:action/:id";
 
 	private InvokerBuilder invokerBuilder;
 
 	private PlaceholderFormatter phFormatter = new DefaultPlaceholderFormatter();
 
+	private ExtensionPolicy exPolicy;
+	
+	private ParserArranger parserArranger;
+	
+	private String rootPackage;
+	
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -61,10 +61,9 @@ public class ControllerServlet extends HttpServlet {
 		initInvokerBuilder(config);
 	}
 
-	@SuppressWarnings("unchecked")
 	private void initInvokerBuilder(ServletConfig config) {
 
-		String rootPackage = config.getInitParameter(ROOT_PACKAGE_LABEL);
+		rootPackage = config.getInitParameter(ROOT_PACKAGE_LABEL);
 		if (rootPackage == null) {
 			throw new RuntimeException(
 					"document(web.xml)/web-app/servlet/init-paramに"
@@ -72,46 +71,24 @@ public class ControllerServlet extends HttpServlet {
 							+ "の指定でコントローラーの格納されたパッケージを設定してください。");
 		}
 
-		TreeSet<RouteInfo> routes = new TreeSet<RouteInfo>(
-				new Comparator<RouteInfo>() {
-					@Override
-					public int compare(RouteInfo lhv, RouteInfo rhv) {
-						return lhv.index - rhv.index;
-					}
-				});
+		
+		parserArranger = createParserArranger(config);
+		exPolicy = createExtensionPolicy();
 
-		for (Enumeration<String> e = config.getInitParameterNames(); e
-				.hasMoreElements();) {
-			String name = e.nextElement();
-			if (name.startsWith(ROUTE_FORMAT_LABEL)) {
+		invokerBuilder = createInvokerBuilder();
+	}
 
-				String suffix = name.substring(ROUTE_FORMAT_LABEL.length());
-				try {
-					RouteInfo info = new RouteInfo();
-					info.index = Integer.parseInt(suffix);
-					info.format = config.getInitParameter(name);
-					routes.add(info);
-				} catch (NumberFormatException ex) {
-					// 例外なら無視する
-				}
-			}
-		}
-
-		ExtensionPolicy exPolicy = createExtensionPolicy();
-
-		invokerBuilder = new InvokerBuilder(exPolicy, phFormatter);
-
-		if (routes.isEmpty()) {
-			invokerBuilder.addParser(new TextParser(defaultRouteFormat,
-					phFormatter));
-		} else {
-			for (RouteInfo route : routes) {
-				invokerBuilder.addParser(new TextParser(route.format,
-						phFormatter));
-			}
-		}
-
+	private InvokerBuilder createInvokerBuilder() {
+		InvokerBuilder invokerBuilder = new InvokerBuilder(exPolicy);
 		invokerBuilder.setRootPackage(rootPackage);
+		parserArranger.arrange(invokerBuilder);
+		return invokerBuilder;
+	}
+
+	private CompositeParserArranger createParserArranger(ServletConfig config) {
+		CompositeParserArranger arranger = new CompositeParserArranger();
+		arranger.add(new ServletConfigParserArranger(phFormatter, config));
+		return arranger;
 	}
 
 	private ExtensionPolicy createExtensionPolicy() {
@@ -167,7 +144,7 @@ public class ControllerServlet extends HttpServlet {
 		beforeExecute(req, resp);
 
 		try {
-			Invoker invoker = invokerBuilder.build(this, req);
+			Invoker invoker = getInvoker(req);
 			invoker.invoke(req, resp);
 		} catch (ResourceNotFoundException e) {
 			logger.log(Level.WARNING, e.getMessage(), e);
@@ -178,6 +155,12 @@ public class ControllerServlet extends HttpServlet {
 		} finally {
 			afterExecute(req, resp);
 		}
+	}
+
+	private Invoker getInvoker(HttpServletRequest req)
+			throws ResourceNotFoundException {
+		Invoker invoker = invokerBuilder.build(this, req);
+		return invoker;
 	}
 
 	@SuppressWarnings("unchecked")

@@ -40,14 +40,13 @@ public class ReflectInvoker implements Invoker {
 	/**
 	 * コンストラクタ
 	 * @param servlet ControllerServlet
-	 * @param phFormatter PlaceholderFormatter
 	 * @param controller Controller
 	 * @param methodName コールするメソッド名
 	 * @param params パラメータ
 	 * @throws ResourceNotFoundException
 	 */
-	public ReflectInvoker(ControllerServlet servlet, PlaceholderFormatter phFormatter, Controller controller,
-			String methodName, Params params){
+	public ReflectInvoker(ControllerServlet servlet, Controller controller, String methodName,
+			Params params){
 		this.servlet = servlet;
 		this.controller = controller;
 		this.params = params;

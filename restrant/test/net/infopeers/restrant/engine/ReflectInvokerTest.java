@@ -16,7 +16,7 @@ public class ReflectInvokerTest extends TestCase {
 		TestParams params = new TestParams();
 		
 		//"test"はメソッドとして存在する
-		ReflectInvoker invoker = new ReflectInvoker(null, phFormatter, controller, "test", params);
+		ReflectInvoker invoker = new ReflectInvoker(null, controller, "test", params);
 		invoker.invoke(null, null);
 		
 		assertTrue(controller.isTestCalled);
@@ -29,7 +29,7 @@ public class ReflectInvokerTest extends TestCase {
 		params.addExtension("id", "12345");
 		
 		// idは@Method({"id"})で指定されている
-		ReflectInvoker invoker = new ReflectInvoker(null, phFormatter, controller, "testAnnotated", params);
+		ReflectInvoker invoker = new ReflectInvoker(null, controller, "testAnnotated", params);
 		invoker.invoke(null, null);
 		
 		assertEquals(12345, controller.testAnnotatedId);
@@ -43,7 +43,7 @@ public class ReflectInvokerTest extends TestCase {
 		params.addExtension("label", "LABEL");
 		
 		// idは@Method({"id", "label"})で指定されている
-		ReflectInvoker invoker = new ReflectInvoker(null, phFormatter, controller, "testAnnotated", params);
+		ReflectInvoker invoker = new ReflectInvoker(null, controller, "testAnnotated", params);
 		invoker.invoke(null, null);
 		
 		assertEquals(12345, controller.testAnnotatedId);
@@ -57,7 +57,7 @@ public class ReflectInvokerTest extends TestCase {
 		params.addExtension("id", "12345");
 		
 		// "namedMethod"は@Method(name="namedMethod")で指定されている
-		ReflectInvoker invoker = new ReflectInvoker(null, phFormatter, controller, "namedMethod", params);
+		ReflectInvoker invoker = new ReflectInvoker(null, controller, "namedMethod", params);
 		invoker.invoke(null, null);
 		
 		assertEquals(12345, controller.namedMethodId);
@@ -71,7 +71,7 @@ public class ReflectInvokerTest extends TestCase {
 		params.addExtension("values", "12346");
 		
 		// "namedMethod"は@Method(name="namedMethod")で指定されている
-		ReflectInvoker invoker = new ReflectInvoker(null, phFormatter, controller, "testArray", params);
+		ReflectInvoker invoker = new ReflectInvoker(null, controller, "testArray", params);
 		invoker.invoke(null, null);
 		
 		assertEquals(2, controller.arrayValues.length);
@@ -88,7 +88,7 @@ public class ReflectInvokerTest extends TestCase {
 		params.addExtension("nokey", "12346");
 		
 		try{
-			ReflectInvoker invoker = new ReflectInvoker(null, phFormatter, controller, "testArray", params);
+			ReflectInvoker invoker = new ReflectInvoker(null, controller, "testArray", params);
 			invoker.invoke(null, null);
 			fail("値が合致しない場合には例外");
 		}catch(IllegalStateException e){
@@ -106,7 +106,7 @@ public class ReflectInvokerTest extends TestCase {
 
 		// "namedMethod"及び、複数の引数で、かつメソッド名一致条件。
 		// @Method(name="namedMethod", args={"id", "label"})で指定されている
-		ReflectInvoker invoker = new ReflectInvoker(null, phFormatter, controller, "namedMethod", params);
+		ReflectInvoker invoker = new ReflectInvoker(null, controller, "namedMethod", params);
 		invoker.invoke(null, null);
 		
 		assertEquals(12345, controller.namedMethodId);
@@ -120,7 +120,7 @@ public class ReflectInvokerTest extends TestCase {
 		TestParams params = new TestParams();
 		
 		try{
-			new ReflectInvoker(null, phFormatter, controller, "NotFound", params);
+			new ReflectInvoker(null, controller, "NotFound", params);
 			fail("メソッドが見つからなければ例外");
 		}catch(IllegalStateException e){
 			//ここにくれば良い。
@@ -134,7 +134,7 @@ public class ReflectInvokerTest extends TestCase {
 		
 		try{
 			 //testNamedは見つからない名前。メソッドとしては存在するが、nameで隠されている
-			new ReflectInvoker(null, phFormatter, controller, "testNamed", params);
+			new ReflectInvoker(null, controller, "testNamed", params);
 			fail("メソッドが見つからなければ例外");
 		}catch(IllegalStateException e){
 			//ここにくれば良い。
