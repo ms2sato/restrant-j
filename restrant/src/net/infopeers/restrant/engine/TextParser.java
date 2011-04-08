@@ -19,7 +19,7 @@ import java.util.HashMap;
  * @author ms2
  *
  */
-public class DefaultParser implements Parser {
+public class TextParser implements Parser {
 
 	private static final String RESTFUL_ATTRIBUTE = "@restful";
 	
@@ -33,12 +33,12 @@ public class DefaultParser implements Parser {
 	private static HashMap<String, String> httpMethods = new HashMap<String, String>();
 	
 	static{
-		httpMethods.put(GET_METHOD_ATTRIBUTE, "get");
-		httpMethods.put(POST_METHOD_ATTRIBUTE, "post");
-		httpMethods.put(PUT_METHOD_ATTRIBUTE, "put");
-		httpMethods.put(DELETE_METHOD_ATTRIBUTE, "delete");
-		httpMethods.put(HEAD_METHOD_ATTRIBUTE, "head");
-		httpMethods.put(OPTIONS_METHOD_ATTRIBUTE, "options");
+		httpMethods.put(GET_METHOD_ATTRIBUTE, InvokerBuilder.GET);
+		httpMethods.put(POST_METHOD_ATTRIBUTE, InvokerBuilder.POST);
+		httpMethods.put(PUT_METHOD_ATTRIBUTE, InvokerBuilder.PUT);
+		httpMethods.put(DELETE_METHOD_ATTRIBUTE, InvokerBuilder.DELETE);
+		httpMethods.put(HEAD_METHOD_ATTRIBUTE, InvokerBuilder.HEAD);
+		httpMethods.put(OPTIONS_METHOD_ATTRIBUTE, InvokerBuilder.OPTIONS);
 	}
 	
 
@@ -48,27 +48,22 @@ public class DefaultParser implements Parser {
 
 	private String[] section; // {/:controller/:action/:id?test1=1&test2=2, @restful, :action=qqqq}
 	// private String pathFormat;// /:controller/:action/:id?test1=1&test2=2
-	private String[] pathAndQuery; // {/:controller/:action/:id, test1=1&test2=2}
-	private String[] formatPathParts; // {:controller, :action, :id}
 
+	private UrlPathParser urlPathParser;
+	
 	/**
 	 * コンストラクタ
 	 * @param fullFormat フォーマット文字列
 	 * @param phFormatter PlaceholderFormatter
 	 */
-	public DefaultParser(String fullFormat, PlaceholderFormatter phFormatter) {
+	public TextParser(String fullFormat, PlaceholderFormatter phFormatter) {
 		this.fullFormat = fullFormat;
 		this.phFormatter = phFormatter;
 
 		section = fullFormat.split("[\\s]+");
 
 		String pathFormat = section[0];
-		pathAndQuery = pathFormat.split("\\?");
-		if (pathAndQuery.length > 2) {
-			throw new IllegalArgumentException("「?」が複数存在してはいけません");
-		}
-
-		formatPathParts = pathAndQuery[0].split("[/\\.]");
+		this.urlPathParser = new UrlPathParser(phFormatter, pathFormat);
 	}
 
 	/**
@@ -94,77 +89,11 @@ public class DefaultParser implements Parser {
 
 		return true;
 	}
-
+	
 	private boolean parsePath(EditableParams params, String path) {
-
-		String[] pathParts = path.split("[/\\.]");
-
-		// 長さが違うなら一致しない
-		if (formatPathParts.length != pathParts.length)
-			return false;
-
-		for (int i = 0; i < formatPathParts.length; ++i) {
-			String formatPart = formatPathParts[i];
-			String pathPart = pathParts[i];
-
-			if (phFormatter.isPlaceholder(formatPart)) {
-				addExtension(params, formatPart, pathPart);
-				continue;
-			}
-
-			if (!formatPart.equals(pathPart)) {
-				return false;
-			}
-		}
-
-		if (pathAndQuery.length == 2) {
-			return parseReqParams(params, pathAndQuery[1].split("&"));
-		}
-
-		return true;
+		return this.urlPathParser.parse(params, path);
 	}
 
-	private boolean parseReqParams(EditableParams params, String[] reqParams) {
-
-		for (int i = 0; i < reqParams.length; ++i) {
-
-			String reqParam = reqParams[i];
-			String[] kv = reqParam.split("=");
-			String key = kv[0];
-			String value = kv[1];
-			
-			String paramValue = params.getParameter(key);
-			if(paramValue == null){
-				//フォーマットに含まれるキーに対応する値が無いなら一致していない
-				return false;
-			}
-
-			if (phFormatter.isPlaceholder(value)) {
-				
-				String[] reqValues = params.gets(key);
-				if(reqValues != null && reqValues.length != 0){
-					for(String reqValue: reqValues){
-						addExtension(params, value, reqValue);
-					}
-				}
-				else{
-					String reqValue = params.get(key);
-					if (reqValue == null)
-						return false;
-					addExtension(params, value, reqValue);
-				}
-			}
-			else{
-				if(!value.equals(paramValue)){
-					//プレースホルダでないならばフォーマットとリクエスト値が一致しなければならない
-					return false;
-				}
-				
-			}
-		}
-
-		return true;
-	}
 
 	/**
 	 * attributesはインデクス1以上が対象

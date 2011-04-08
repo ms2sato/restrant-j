@@ -16,33 +16,33 @@ public class ParserManagerTest extends TestCase {
 	public void testSenario() throws Exception {
 
 		List<Parser> parsers = new ArrayList<Parser>();
-		DefaultParser index = new DefaultParser(
+		TextParser index = new TextParser(
 				"/ :action=index", phFormatter);
 		parsers.add(index);
 		
-		DefaultParser getter = new DefaultParser(
+		TextParser getter = new TextParser(
 				"/:controller?id=:id :action=get", phFormatter);
 		parsers.add(getter);
 
-		DefaultParser byEditor = new DefaultParser(
+		TextParser byEditor = new TextParser(
 				"/:controller?editor=:editor :action=getByEditor", phFormatter);
 		parsers.add(byEditor);
 
-		DefaultParser byRel = new DefaultParser(
+		TextParser byRel = new TextParser(
 				"/:controller?mode=relation :action=getByRelation", phFormatter);
 		parsers.add(byRel);
 
-		DefaultParser content = new DefaultParser(
+		TextParser content = new TextParser(
 				"/:controller?content=:content&comment=:comment :action=post",
 				phFormatter);
 		parsers.add(content);
 
-		DefaultParser withDot = new DefaultParser(
+		TextParser withDot = new TextParser(
 				"/:controller/:id.json :action=get",
 				phFormatter);
 		parsers.add(withDot);
 
-		DefaultParser perform = new DefaultParser(
+		TextParser perform = new TextParser(
 				"/:controller :action=perform", phFormatter);
 		parsers.add(perform);
 
