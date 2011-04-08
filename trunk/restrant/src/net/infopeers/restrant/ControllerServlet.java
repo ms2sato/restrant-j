@@ -1,6 +1,8 @@
 package net.infopeers.restrant;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,9 +15,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.infopeers.restrant.engine.DefaultInvokerBuilderFactory;
 import net.infopeers.restrant.engine.DefaultPlaceholderFormatter;
 import net.infopeers.restrant.engine.Invoker;
-import net.infopeers.restrant.engine.InvokerBuilder;
 import net.infopeers.restrant.engine.PlaceholderFormatter;
 import net.infopeers.restrant.engine.params.ExtensionParamPolicy;
 import net.infopeers.restrant.engine.parser.CompositeUrlParserArranger;
@@ -36,20 +38,12 @@ public class ControllerServlet extends HttpServlet {
 
 	private static final String ROOT_PACKAGE_LABEL = "RootPackage"; // Web.xmlのルートパッケージ指定ラベル
 
-
 	private static final String ENCODING = "Encoding"; // Web.xmlのエンコーディング指定ラベル
-
-	private InvokerBuilder invokerBuilder;
 
 	private PlaceholderFormatter phFormatter = new DefaultPlaceholderFormatter();
 
-	private ExtensionParamPolicy exPolicy;
-	
-	private UrlParserArranger parserArranger;
-	
-	private String rootPackage;
-	
-	
+	private DefaultInvokerBuilderFactory invokerBuilderFactory;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -58,12 +52,17 @@ public class ControllerServlet extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 
-		initInvokerBuilder(config);
+		try {
+			initInvokerBuilder(config);
+		} catch (MalformedURLException e) {
+			throw new ServletException(e);
+		}
 	}
 
-	private void initInvokerBuilder(ServletConfig config) {
+	private void initInvokerBuilder(ServletConfig config)
+			throws MalformedURLException {
 
-		rootPackage = config.getInitParameter(ROOT_PACKAGE_LABEL);
+		String rootPackage = config.getInitParameter(ROOT_PACKAGE_LABEL);
 		if (rootPackage == null) {
 			throw new RuntimeException(
 					"document(web.xml)/web-app/servlet/init-paramに"
@@ -71,18 +70,11 @@ public class ControllerServlet extends HttpServlet {
 							+ "の指定でコントローラーの格納されたパッケージを設定してください。");
 		}
 
-		
-		parserArranger = createParserArranger(config);
-		exPolicy = createExtensionPolicy();
+		UrlParserArranger parserArranger = createParserArranger(config);
+		ExtensionParamPolicy exPolicy = createExtensionPolicy();
 
-		invokerBuilder = createInvokerBuilder();
-	}
-
-	private InvokerBuilder createInvokerBuilder() {
-		InvokerBuilder invokerBuilder = new InvokerBuilder(exPolicy);
-		invokerBuilder.setRootPackage(rootPackage);
-		parserArranger.arrange(invokerBuilder);
-		return invokerBuilder;
+		invokerBuilderFactory = new DefaultInvokerBuilderFactory(rootPackage,
+				parserArranger, exPolicy);
 	}
 
 	private CompositeUrlParserArranger createParserArranger(ServletConfig config) {
@@ -158,8 +150,15 @@ public class ControllerServlet extends HttpServlet {
 	}
 
 	private Invoker getInvoker(HttpServletRequest req)
-			throws ResourceNotFoundException {
-		Invoker invoker = invokerBuilder.build(this, req);
+			throws ResourceNotFoundException, MalformedURLException {
+
+		//TODO: 柔軟にするには切り出す。
+		URL url = new URL(req.getRequestURL().toString());
+		String host = url.getHost();
+		invokerBuilderFactory.setEvery(host.equals("localhost"));
+		
+		Invoker invoker = invokerBuilderFactory.getInvokerBuilder().build(this,
+				req);
 		return invoker;
 	}
 
