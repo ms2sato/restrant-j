@@ -4,8 +4,8 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Set;
 
-import net.infopeers.restrant.engine.gae.GaeExtensionParamPolicy;
 import net.infopeers.restrant.engine.params.AbstractParams;
+import net.infopeers.restrant.util.gae.GaeExtensionParamPolicy;
 
 public class TestParams extends AbstractParams {
 
