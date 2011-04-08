@@ -12,6 +12,13 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 			<param-name>RootPackage</param-name>
 			<param-value>net.infopeers.restrant.sample.controller</param-value>
 		</init-param>
+
+		<init-param>
+			<!-- RoRに倣ったURLルート情報。Routeクラスを実装することで定義できる -->
+			<param-name>RouteClass</param-name>
+			<param-value>net.infopeers.restrant.sample.Route</param-value>
+		</init-param>
+
 		
 		<init-param>
 			<!-- リクエストパラメータのエンコーディングを指定できる。 指定されていれば変換が行われる-->
