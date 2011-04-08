@@ -50,20 +50,14 @@ public class InvokerBuilder {
 
 	private List<Parser> parsers = new ArrayList<Parser>();
 
-	private PlaceholderFormatter phFormatter;
-	
 	private final ExtensionPolicy exPolicy;
 
 
 	/**
 	 * コンストラクタ
 	 * @param exPolicy 
-	 * 
-	 * @param phFormatter
-	 *            　PlaceholderFormatter
 	 */
-	public InvokerBuilder(ExtensionPolicy exPolicy, PlaceholderFormatter phFormatter) {
-		this.phFormatter = phFormatter;
+	public InvokerBuilder(ExtensionPolicy exPolicy) {
 		this.exPolicy = exPolicy;
 	}
 
@@ -131,8 +125,7 @@ public class InvokerBuilder {
 		try {
 			Class<?> clazz = Class.forName(fullClassName);
 			Controller controller = (Controller) clazz.newInstance();
-			return new ReflectInvoker(servlet, phFormatter, controller, actionName,
-					params);
+			return new ReflectInvoker(servlet, controller, actionName, params);
 
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(path + "に対応する" + fullClassName
