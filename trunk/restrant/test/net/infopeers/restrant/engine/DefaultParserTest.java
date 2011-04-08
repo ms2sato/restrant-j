@@ -10,7 +10,7 @@ public class DefaultParserTest extends TestCase {
 	public void testNonHttpMethod() throws Exception {
 
 		//フォーマットにHTTPメソッドの指定が無い
-		DefaultParser content = new DefaultParser(
+		TextParser content = new TextParser(
 				"/:controller?content=:content&comment=:comment :action=post",
 				phFormatter);
 		
@@ -36,7 +36,7 @@ public class DefaultParserTest extends TestCase {
 	public void testWithHttpMethod() throws Exception {
 
 		//フォーマットにHTTPメソッド（@post）が指定されている
-		DefaultParser content = new DefaultParser(
+		TextParser content = new TextParser(
 				"/:controller?content=:content&comment=:comment :action=post @post",
 				phFormatter);
 		
@@ -60,7 +60,7 @@ public class DefaultParserTest extends TestCase {
 	}
 	
 	public void testCombine() throws Exception{
-		DefaultParser content = new DefaultParser(
+		TextParser content = new TextParser(
 				"/moba/location?datum=:datum&unit=:unit&lat=:lat&lon=:lon :controller=info :action=location @get",
 				phFormatter);
 		
@@ -75,7 +75,7 @@ public class DefaultParserTest extends TestCase {
 	}
 	
 	public void testSplit() throws Exception{
-		DefaultParser content = new DefaultParser(
+		TextParser content = new TextParser(
 				"/moba/:topic/augps?lat=:lat&lon=:lon :controller=info :action=auGps @get",
 				phFormatter);
 		

@@ -30,6 +30,22 @@ public class InvokerBuilder {
 	 */
 	public static final String CONTROLLER_PLACEHOLDER_LABEL = "controller";
 
+	
+	// 各HTTPメソッドの場合のactionの値
+	public static final String GET = "get";
+
+	public static final String POST = "post";
+
+	public static final String PUT = "put";
+
+	public static final String DELETE = "delete";
+
+	public static final String HEAD = "head";
+
+	public static final String OPTIONS = "options";
+	
+	
+	
 	private String rootPackage;
 
 	private List<Parser> parsers = new ArrayList<Parser>();
@@ -37,6 +53,7 @@ public class InvokerBuilder {
 	private PlaceholderFormatter phFormatter;
 	
 	private final ExtensionPolicy exPolicy;
+
 
 	/**
 	 * コンストラクタ

@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.infopeers.restrant.engine.DefaultParser;
+import net.infopeers.restrant.engine.TextParser;
 import net.infopeers.restrant.engine.DefaultPlaceholderFormatter;
 import net.infopeers.restrant.engine.ExtensionPolicy;
 import net.infopeers.restrant.engine.Invoker;
@@ -69,7 +69,7 @@ public class ControllerServlet extends HttpServlet {
 			throw new RuntimeException(
 					"document(web.xml)/web-app/servlet/init-paramに"
 							+ ROOT_PACKAGE_LABEL
-							+ "の指定でアクションの格納されたパッケージを設定してください。");
+							+ "の指定でコントローラーの格納されたパッケージを設定してください。");
 		}
 
 		TreeSet<RouteInfo> routes = new TreeSet<RouteInfo>(
@@ -97,6 +97,24 @@ public class ControllerServlet extends HttpServlet {
 			}
 		}
 
+		ExtensionPolicy exPolicy = createExtensionPolicy();
+
+		invokerBuilder = new InvokerBuilder(exPolicy, phFormatter);
+
+		if (routes.isEmpty()) {
+			invokerBuilder.addParser(new TextParser(defaultRouteFormat,
+					phFormatter));
+		} else {
+			for (RouteInfo route : routes) {
+				invokerBuilder.addParser(new TextParser(route.format,
+						phFormatter));
+			}
+		}
+
+		invokerBuilder.setRootPackage(rootPackage);
+	}
+
+	private ExtensionPolicy createExtensionPolicy() {
 		Map<String, String> multimap2exPolicy = new HashMap<String, String>();
 		multimap2exPolicy
 				.put("com.google.appengine.repackaged.com.google.common.collect.ArrayListMultimap",
@@ -124,20 +142,7 @@ public class ControllerServlet extends HttpServlet {
 			throw new IllegalStateException(
 					"GoogleCollection's ArrayListMultimap was not found.");
 		}
-
-		invokerBuilder = new InvokerBuilder(exPolicy, phFormatter);
-
-		if (routes.isEmpty()) {
-			invokerBuilder.addParser(new DefaultParser(defaultRouteFormat,
-					phFormatter));
-		} else {
-			for (RouteInfo route : routes) {
-				invokerBuilder.addParser(new DefaultParser(route.format,
-						phFormatter));
-			}
-		}
-
-		invokerBuilder.setRootPackage(rootPackage);
+		return exPolicy;
 	}
 
 	/*
