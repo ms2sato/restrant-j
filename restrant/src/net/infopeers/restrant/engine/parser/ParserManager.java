@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import net.infopeers.restrant.Params;
 import net.infopeers.restrant.engine.params.EditableParams;
-import net.infopeers.restrant.engine.params.ExtensionParamPolicy;
+import net.infopeers.restrant.engine.params.ExtensionMultimapFactory;
 import net.infopeers.restrant.engine.params.ParamsImpl;
 
 public class ParserManager {
@@ -17,9 +17,9 @@ public class ParserManager {
 	private EditableParams params;
 	private UrlParser selectedParser;
 	
-	private final ExtensionParamPolicy exPolicy;
+	private final ExtensionMultimapFactory exPolicy;
 	
-	public ParserManager(ExtensionParamPolicy exPolicy){
+	public ParserManager(ExtensionMultimapFactory exPolicy){
 		this.exPolicy = exPolicy;
 	}
 	
@@ -51,7 +51,7 @@ public class ParserManager {
 	}
 	
 	EditableParams createParams(){
-		return new ParamsImpl(exPolicy, req);
+		return new ParamsImpl(exPolicy.create(), req);
 	}
 	
 	

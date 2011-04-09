@@ -8,17 +8,14 @@ import net.infopeers.restrant.Params;
 import net.infopeers.restrant.TestParams;
 import net.infopeers.restrant.engine.DefaultPlaceholderFormatter;
 import net.infopeers.restrant.engine.params.EditableParams;
-import net.infopeers.restrant.engine.params.ExtensionParamPolicy;
-import net.infopeers.restrant.engine.parser.ParserManager;
-import net.infopeers.restrant.engine.parser.TextUrlParser;
-import net.infopeers.restrant.engine.parser.UrlParser;
-import net.infopeers.restrant.util.GoogleCollectionExtensionParamPolicy;
+import net.infopeers.restrant.engine.params.ExtensionMultimapFactory;
+import net.infopeers.restrant.util.GoogleCollectionExtensionMultimapFactory;
 
 public class ParserManagerTest extends TestCase {
 
 
 	private DefaultPlaceholderFormatter phFormatter = new DefaultPlaceholderFormatter();
-	private ExtensionParamPolicy exPolicy = new GoogleCollectionExtensionParamPolicy();
+	private ExtensionMultimapFactory exPolicy = new GoogleCollectionExtensionMultimapFactory();
 
 	public void testSenario() throws Exception {
 

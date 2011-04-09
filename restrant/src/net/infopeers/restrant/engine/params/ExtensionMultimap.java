@@ -10,7 +10,7 @@ import java.util.Set;
  * @author ms2
  *
  */
-public interface ExtensionParamPolicy {
+public interface ExtensionMultimap {
 
 	List<String> getExtensionListOf(String key);
 
