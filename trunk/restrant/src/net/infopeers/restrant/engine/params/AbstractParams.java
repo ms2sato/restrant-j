@@ -16,10 +16,10 @@ import net.infopeers.util.Convertor;
  */
 public abstract class AbstractParams implements EditableParams {
 
-	private final ExtensionParamPolicy exPolicy;
+	private final ExtensionMultimap exMultimap;
 
 	protected List<String> getExtensionListOf(String key) {
-		return exPolicy.getExtensionListOf(key);
+		return exMultimap.getExtensionListOf(key);
 	}
 
 	/*
@@ -28,15 +28,15 @@ public abstract class AbstractParams implements EditableParams {
 	 * @see net.infopeers.restrant.Params#getExtensionNames()
 	 */
 	public Set<String> getExtensionNames() {
-		return exPolicy.getExtensionNames();
+		return exMultimap.getExtensionNames();
 	}
 
 	/**
 	 * 
 	 */
-	public AbstractParams(ExtensionParamPolicy exPolicy) {
+	public AbstractParams(ExtensionMultimap exMultimap) {
 		super();
-		this.exPolicy = exPolicy;
+		this.exMultimap = exMultimap;
 	}
 
 	/*
@@ -248,7 +248,7 @@ public abstract class AbstractParams implements EditableParams {
 	 * , java.lang.String)
 	 */
 	public void addExtension(String key, String value) {
-		exPolicy.addExtension(key, value);
+		exMultimap.addExtension(key, value);
 	}
 
 }

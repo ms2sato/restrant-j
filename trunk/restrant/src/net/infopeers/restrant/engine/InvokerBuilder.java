@@ -10,7 +10,7 @@ import net.infopeers.restrant.Controller;
 import net.infopeers.restrant.ControllerServlet;
 import net.infopeers.restrant.Params;
 import net.infopeers.restrant.ResourceNotFoundException;
-import net.infopeers.restrant.engine.params.ExtensionParamPolicy;
+import net.infopeers.restrant.engine.params.ExtensionMultimapFactory;
 import net.infopeers.restrant.engine.parser.ParserManager;
 import net.infopeers.restrant.engine.parser.UrlParser;
 
@@ -54,14 +54,14 @@ public class InvokerBuilder {
 
 	private List<UrlParser> parsers = new ArrayList<UrlParser>();
 
-	private final ExtensionParamPolicy exPolicy;
+	private final ExtensionMultimapFactory exPolicy;
 
 	/**
 	 * コンストラクタ
 	 * 
 	 * @param exPolicy
 	 */
-	public InvokerBuilder(ExtensionParamPolicy exPolicy) {
+	public InvokerBuilder(ExtensionMultimapFactory exPolicy) {
 		this.exPolicy = exPolicy;
 	}
 

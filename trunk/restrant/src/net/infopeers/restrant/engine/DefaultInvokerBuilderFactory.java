@@ -3,7 +3,7 @@ package net.infopeers.restrant.engine;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import net.infopeers.restrant.engine.params.ExtensionParamPolicy;
+import net.infopeers.restrant.engine.params.ExtensionMultimapFactory;
 import net.infopeers.restrant.engine.parser.UrlParserArranger;
 
 /**
@@ -18,13 +18,13 @@ public class DefaultInvokerBuilderFactory implements InvokerBuilderFactory {
 
 	private InvokerBuilder invokerBuilder;
 
-	private ExtensionParamPolicy exPolicy;
+	private ExtensionMultimapFactory exPolicy;
 	private UrlParserArranger parserArranger;
 	private String rootPackage;
 	private boolean isEvery = false;
 
 	public DefaultInvokerBuilderFactory(String rootPackage,
-			UrlParserArranger parserArranger, ExtensionParamPolicy exPolicy) {
+			UrlParserArranger parserArranger, ExtensionMultimapFactory exPolicy) {
 
 		this.exPolicy = exPolicy;
 		this.parserArranger = parserArranger;

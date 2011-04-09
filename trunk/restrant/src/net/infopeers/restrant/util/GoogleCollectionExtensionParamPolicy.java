@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.infopeers.restrant.engine.params.ExtensionParamPolicy;
+import net.infopeers.restrant.engine.params.ExtensionMultimap;
 
 import com.google.common.collect.ArrayListMultimap;
 
@@ -14,7 +14,7 @@ import com.google.common.collect.ArrayListMultimap;
  * @author ms2
  *
  */
-public class GoogleCollectionExtensionParamPolicy implements ExtensionParamPolicy {
+public class GoogleCollectionExtensionParamPolicy implements ExtensionMultimap {
 
 	private ArrayListMultimap<String, String> extensions = ArrayListMultimap
 			.create();

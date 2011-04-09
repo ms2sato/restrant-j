@@ -19,7 +19,7 @@ import net.infopeers.restrant.engine.DefaultInvokerBuilderFactory;
 import net.infopeers.restrant.engine.DefaultPlaceholderFormatter;
 import net.infopeers.restrant.engine.Invoker;
 import net.infopeers.restrant.engine.PlaceholderFormatter;
-import net.infopeers.restrant.engine.params.ExtensionParamPolicy;
+import net.infopeers.restrant.engine.params.ExtensionMultimapFactory;
 import net.infopeers.restrant.engine.parser.CompositeUrlParserArranger;
 import net.infopeers.restrant.engine.parser.UrlParserArranger;
 import net.infopeers.restrant.route.RouteClassUrlParserArranger;
@@ -73,7 +73,7 @@ public class ControllerServlet extends HttpServlet {
 		}
 
 		UrlParserArranger parserArranger = createParserArranger(config);
-		ExtensionParamPolicy exPolicy = createExtensionPolicy();
+		ExtensionMultimapFactory exPolicy = createExtensionPolicy();
 
 		invokerBuilderFactory = new DefaultInvokerBuilderFactory(rootPackage,
 				parserArranger, exPolicy);
@@ -99,21 +99,21 @@ public class ControllerServlet extends HttpServlet {
 		return arranger;
 	}
 
-	private ExtensionParamPolicy createExtensionPolicy() {
+	private ExtensionMultimapFactory createExtensionPolicy() {
 		Map<String, String> multimap2exPolicy = new HashMap<String, String>();
 		multimap2exPolicy
 				.put("com.google.appengine.repackaged.com.google.common.collect.ArrayListMultimap",
-						"net.infopeers.restrant.util.gae.GaeExtensionParamPolicy");
+						"net.infopeers.restrant.util.gae.GaeExtensionMultimapFactory");
 		multimap2exPolicy
 				.put("com.google.common.collect.ArrayListMultimap",
-						"net.infopeers.restrant.util.GoogleCollectionExtensionParamPolicy");
+						"net.infopeers.restrant.util.GoogleCollectionExtensionMultimapFactory");
 
-		ExtensionParamPolicy exPolicy = null;
+		ExtensionMultimapFactory exPolicy = null;
 		for (String key : multimap2exPolicy.keySet()) {
 			try {
 				Class.forName(key);
 				try {
-					exPolicy = (ExtensionParamPolicy) Class.forName(
+					exPolicy = (ExtensionMultimapFactory) Class.forName(
 							multimap2exPolicy.get(key)).newInstance();
 				} catch (Exception e) {
 					throw new RuntimeException(e);

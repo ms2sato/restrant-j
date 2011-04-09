@@ -23,7 +23,7 @@ public class ParamsImpl extends AbstractParams {
 	 * @param exPolicy ExtensionPolicy
 	 * @param req HttpServletRequest
 	 */
-	public ParamsImpl(ExtensionParamPolicy exPolicy, HttpServletRequest req){
+	public ParamsImpl(ExtensionMultimap exPolicy, HttpServletRequest req){
 		super(exPolicy);
 		this.req = req;
 	}
