@@ -1,0 +1,9 @@
+taglib
+
+[urlFor]
+<script type="text/javascript" src="<s:urlFor path="/js/lib/jquery.corner.js"/>"></script>
+
+as
+
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/lib/jquery.corner.js"></script>
+ 

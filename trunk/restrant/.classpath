@@ -6,6 +6,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
 	<classpathentry kind="lib" path="lib/google-collect-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/servlet-api.jar"/>
-	<classpathentry kind="lib" path="lib/appengine-api-1.0-sdk-1.4.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/appengine-api-1.0-sdk-1.4.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -140,16 +140,16 @@ public class ControllerServlet extends HttpServlet {
 	public void service(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
 
-		if (logger.isLoggable(Level.INFO)) {
-			outputRequest(req);
-		}
-
 		String enc = getServletConfig().getInitParameter(ENCODING);
 		if (enc != null) {
 			req.setCharacterEncoding(enc);
 		}
 
 		beforeExecute(req, resp);
+
+		if (logger.isLoggable(Level.INFO)) {
+			outputRequest(req);
+		}
 
 		try {
 			Invoker invoker = getInvoker(req);
