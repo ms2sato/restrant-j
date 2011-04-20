@@ -7,6 +7,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.infopeers.util.web.WebUtils;
+
 /**
  * 基本的な機能を実装したController
  * 
@@ -21,10 +23,10 @@ public class BasicController implements Controller {
 	private Params params;
 	private ControllerServlet servlet;
 
-	protected ControllerServlet getServlet(){
+	protected ControllerServlet getServlet() {
 		return servlet;
 	}
-	
+
 	protected HttpServletRequest getRequest() {
 		return request;
 	}
@@ -36,7 +38,7 @@ public class BasicController implements Controller {
 	protected Params getParams() {
 		return params;
 	}
-	
+
 	/**
 	 * フォワードする
 	 * 
@@ -45,8 +47,9 @@ public class BasicController implements Controller {
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	protected void forward(String name) throws ServletException, IOException{
-		RequestDispatcher rd = getServlet().getServletContext().getNamedDispatcher(name);
+	protected void forward(String name) throws ServletException, IOException {
+		RequestDispatcher rd = getServlet().getServletContext()
+				.getNamedDispatcher(name);
 		rd.forward(getRequest(), getResponse());
 	}
 
@@ -104,8 +107,6 @@ public class BasicController implements Controller {
 	public void setParams(Params params) {
 		this.params = params;
 	}
-	
-	
 
 	@Override
 	public void afterInvoke(String method) throws Exception {
@@ -119,5 +120,15 @@ public class BasicController implements Controller {
 	@Override
 	public void setServlet(ControllerServlet servlet) {
 		this.servlet = servlet;
+	}
+
+	/**
+	 * コンテキストルートからのパスを取得する
+	 * 
+	 * @param path
+	 * @return
+	 */
+	protected String urlFor(String path) {
+		return WebUtils.urlFor(getRequest(), path);
 	}
 }

@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.6.1
+Created-By: ms2
+Specification-Title: Restrant Standard Taglib.
+Specification-Version: 0.2
+Implementation-Title: Restrant Standard Taglib.
+Implementation-Version: 0.2
+Implementation-Vendor: ms2
+Implementation-Vendor-Id: net.infopeers.web.taglib
+Extension-Name: net.infopeers.
+

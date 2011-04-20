@@ -1,12 +1,13 @@
 <?xml version="1.0"?>
 <project name="project" default="all">
     
-    <property name="version" value="0.81"/>
-    <property name="name" value="restrant"/>
+    <property name="version" value="0.2"/>
+    <property name="name" value="restrant-taglib"/>
     
     <property name="jarname" value="${name}-${version}.jar"/>
     <property name="build" value="build"/>
     <property name="dist" value="dist"/>
+    <property name="src" value="src"/>
     
     <property name="jardest" value="${dist}/${jarname}"/>
     <property name="classes" value="${build}/classes"/>
@@ -17,18 +18,23 @@
         
         <javac destdir="${classes}" encoding="UTF-8"
          debug="true" debuglevel="lines, vars, and source">
-            <src path="src"/>
+            <src path="${src}"/>
             <classpath>
-                <pathelement path="lib/servlet-api.jar"/>
-                <pathelement path="lib/google-collect-1.0.jar"/>
-                <pathelement path="lib/appengine-api-1.0-sdk-1.4.3.jar"/>
+                <pathelement location="lib/j2ee.jar"/>
+                <pathelement location="lib/standard-1.1.2.jar"/>
+                <pathelement location="../restrant/dist/restrant-0.81.jar"/>
             </classpath>
         </javac>
         
+		<copy todir="${classes}">
+		    <fileset dir="${src}">
+		      <exclude name="**/*.java"/>
+		    </fileset>
+        </copy>
+		  		
         <mkdir dir="${dist}"/>
-        <jar destfile="${jardest}" basedir="${classes}"/>
+        <jar destfile="${jardest}" basedir="${classes}" manifest="MANIFEST.MF"/>
         
-        <delete dir="${classes}"/>
     </target>
 </project>
 
