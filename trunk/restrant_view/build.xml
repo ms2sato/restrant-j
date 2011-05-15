@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <project name="project" default="all">
     
-    <property name="version" value="0.2"/>
+    <property name="version" value="0.3"/>
     <property name="name" value="restrant-taglib"/>
     
     <property name="jarname" value="${name}-${version}.jar"/>
@@ -22,7 +22,7 @@
             <classpath>
                 <pathelement location="lib/j2ee.jar"/>
                 <pathelement location="lib/standard-1.1.2.jar"/>
-                <pathelement location="../restrant/dist/restrant-0.81.jar"/>
+                <pathelement location="../restrant/dist/restrant-0.82.jar"/>
             </classpath>
         </javac>
         
