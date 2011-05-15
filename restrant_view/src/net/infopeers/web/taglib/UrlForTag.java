@@ -14,6 +14,7 @@ public class UrlForTag implements Tag {
 	private PageContext pageContext;
 	private Tag parentTag;
 	private String path;
+	private boolean full = false;
 
 	@Override
 	public int doEndTag() throws JspException {
@@ -26,7 +27,7 @@ public class UrlForTag implements Tag {
 			JspWriter out = pageContext.getOut();
 			HttpServletRequest req = (HttpServletRequest) pageContext
 					.getRequest();
-			out.print(WebUtils.urlFor(req, path));
+			out.print(WebUtils.urlFor(req, path, full));
 			return SKIP_BODY;
 		} catch (IOException e) {
 			throw new JspException(e);
@@ -54,5 +55,9 @@ public class UrlForTag implements Tag {
 
 	public void setPath(String path) {
 		this.path = path;
+	}
+	
+	public void setFull(boolean isFull){
+		this.full = isFull;
 	}
 }
