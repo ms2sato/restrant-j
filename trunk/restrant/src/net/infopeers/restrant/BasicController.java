@@ -128,7 +128,7 @@ public class BasicController implements Controller {
 	 * @param path
 	 * @return
 	 */
-	protected String urlFor(String path) {
+	public String urlFor(String path) {
 		return WebUtils.urlFor(getRequest(), path);
 	}
 }

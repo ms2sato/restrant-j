@@ -2,6 +2,7 @@ package net.infopeers.restrant.engine;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -107,7 +108,7 @@ public class InvokerBuilder {
 		pm.execute(path);
 		Params params = pm.getSelectedParam();
 		UrlParser selectedParser = pm.getSelectedParser();
-		logger.info("selectedParser: " + selectedParser);
+		logger.log(Level.FINE, "selectedParser: " + selectedParser);
 
 		if (params == null) {
 			throw new ResourceNotFoundException(path + "に対応するフォーマットがありません");
