@@ -1,5 +1,7 @@
 package net.infopeers.restrant.kitchen.jpa;
 
+import java.util.Collection;
+
 import javax.persistence.EntityManager;
 
 import net.infopeers.commons.util.Scope;
@@ -24,4 +26,16 @@ public abstract class DBScope<T> implements Scope<T> {
 		}
 	}
 
+	public <O> Collection<O> preload(Collection<O> c){
+		for(O t: c){/*nop*/}
+		return c;
+	}
+	
+	public <O> Collection<O> preload(Collection<O> c, PreloadHandler<O> handler){
+		for(O t: c){
+			handler.handle(t);
+		}
+		return c;
+	}
+	
 }
