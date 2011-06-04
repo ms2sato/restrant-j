@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <project name="project" default="all">
     
-    <property name="version" value="0.31"/>
+    <property name="version" value="0.32"/>
     <property name="name" value="restrant-kitchen"/>
     
     <property name="jarname" value="${name}-${version}.jar"/>
@@ -19,6 +19,7 @@
          debug="true" debuglevel="lines, vars, and source">
             <src path="src"/>
             <classpath>
+                <pathelement path="lib/commons-lang-2.4.jar"/>
                 <pathelement path="lib/persistence-api-1.0.jar"/>
             </classpath>
         </javac>
