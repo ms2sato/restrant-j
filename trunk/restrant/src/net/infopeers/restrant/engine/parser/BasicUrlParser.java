@@ -7,12 +7,12 @@ import net.infopeers.restrant.engine.PatternInvokerBuilder;
 import net.infopeers.restrant.engine.PlaceholderFormatter;
 import net.infopeers.restrant.engine.params.EditableParams;
 
-public class BasicUrlParser implements UrlParserWithPathFormat {
+public class BasicUrlParser implements PatternParserWithPathFormat {
 
-	List<UrlParser> parts = new ArrayList<UrlParser>();
+	List<PatternParser> parts = new ArrayList<PatternParser>();
 	UrlPathParser urlPathParser;
 
-	public class WithParam implements UrlParser {
+	public class WithParam implements PatternParser {
 
 		String key;
 		String value;
@@ -36,7 +36,7 @@ public class BasicUrlParser implements UrlParserWithPathFormat {
 
 	}
 
-	public class OnRestful implements UrlParser {
+	public class OnRestful implements PatternParser {
 
 		@Override
 		public boolean parse(EditableParams params, String path) {
@@ -58,7 +58,7 @@ public class BasicUrlParser implements UrlParserWithPathFormat {
 		this.parts.add(urlPathParser);
 	}
 
-	public BasicUrlParser add(UrlParser parser) {
+	public BasicUrlParser add(PatternParser parser) {
 		this.parts.add(parser);
 		return this;
 	}
@@ -112,7 +112,7 @@ public class BasicUrlParser implements UrlParserWithPathFormat {
 	@Override
 	public boolean parse(EditableParams params, String path) {
 
-		for (UrlParser part : parts) {
+		for (PatternParser part : parts) {
 			if (!part.parse(params, path))
 				return false;
 		}
@@ -122,7 +122,7 @@ public class BasicUrlParser implements UrlParserWithPathFormat {
 
 	@Override
 	public String findSpecifiedPlaceHolder(String placeHolder) {
-		for (UrlParser part : parts) {
+		for (PatternParser part : parts) {
 			String ph = part.findSpecifiedPlaceHolder(placeHolder);
 			if(ph != null) return ph;
 		}

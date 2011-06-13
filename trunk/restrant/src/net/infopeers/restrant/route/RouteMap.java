@@ -2,7 +2,7 @@ package net.infopeers.restrant.route;
 
 import net.infopeers.restrant.engine.ParserHolder;
 import net.infopeers.restrant.engine.PlaceholderFormatter;
-import net.infopeers.restrant.engine.parser.UrlParser;
+import net.infopeers.restrant.engine.parser.PatternParser;
 
 public class RouteMap {
 
@@ -23,7 +23,7 @@ public class RouteMap {
 	 * 
 	 * @param parser
 	 */
-	void add(UrlParser parser) {
+	void add(PatternParser parser) {
 		parserHolder.addParser(parser);
 	}
 

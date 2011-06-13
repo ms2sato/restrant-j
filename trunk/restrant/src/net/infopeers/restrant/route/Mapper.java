@@ -2,7 +2,7 @@ package net.infopeers.restrant.route;
 
 import net.infopeers.restrant.engine.PlaceholderFormatter;
 import net.infopeers.restrant.engine.parser.BasicUrlParser;
-import net.infopeers.restrant.engine.parser.UrlParser;
+import net.infopeers.restrant.engine.parser.PatternParser;
 
 public class Mapper extends BasicUrlParser {
 
@@ -18,7 +18,7 @@ public class Mapper extends BasicUrlParser {
 	}
 	
 	@Override
-	public Mapper add(UrlParser parser) {
+	public Mapper add(PatternParser parser) {
 		super.add(parser);
 		return this;
 	}

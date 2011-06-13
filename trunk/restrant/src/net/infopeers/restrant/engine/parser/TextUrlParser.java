@@ -23,7 +23,7 @@ import net.infopeers.restrant.engine.params.EditableParams;
  * @author ms2
  * 
  */
-public class TextUrlParser implements UrlParserWithPathFormat {
+public class TextUrlParser implements PatternParserWithPathFormat {
 
 	private static final String RESTFUL_ATTRIBUTE = "@restful";
 

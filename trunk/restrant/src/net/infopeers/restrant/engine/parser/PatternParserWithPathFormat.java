@@ -1,6 +1,6 @@
 package net.infopeers.restrant.engine.parser;
 
-public interface UrlParserWithPathFormat extends UrlParser {
+public interface PatternParserWithPathFormat extends PatternParser {
 
 	UrlPathParser getUrlPathParser();
 }

@@ -7,12 +7,12 @@ import net.infopeers.restrant.engine.params.EditableParams;
  * @author ms2
  *
  */
-public interface UrlParser {
+public interface PatternParser {
 
 	/**
 	 * パースする
 	 * @param params パラメータ
-	 * @param path URLパス
+	 * @param path URLパターン
 	 * @return パースできたら真。さもなくば偽。
 	 */
 	boolean parse(EditableParams params, String path);

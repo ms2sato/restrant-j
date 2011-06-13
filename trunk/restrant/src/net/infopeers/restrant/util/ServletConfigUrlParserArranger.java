@@ -9,9 +9,9 @@ import javax.servlet.ServletConfig;
 import net.infopeers.restrant.engine.ParserHolder;
 import net.infopeers.restrant.engine.PlaceholderFormatter;
 import net.infopeers.restrant.engine.parser.TextUrlParser;
-import net.infopeers.restrant.engine.parser.UrlParserArranger;
+import net.infopeers.restrant.engine.parser.PatternParserArranger;
 
-public class ServletConfigUrlParserArranger implements UrlParserArranger {
+public class ServletConfigUrlParserArranger implements PatternParserArranger {
 
 	private static final String ROUTE_FORMAT_LABEL = "RouteFormat"; // Web.xmlのURLテンプレート指定ラベル
 	

@@ -13,7 +13,7 @@ import net.infopeers.restrant.Params;
 import net.infopeers.restrant.ResourceNotFoundException;
 import net.infopeers.restrant.engine.params.ExtensionMultimapFactory;
 import net.infopeers.restrant.engine.parser.ParserManager;
-import net.infopeers.restrant.engine.parser.UrlParser;
+import net.infopeers.restrant.engine.parser.PatternParser;
 
 /**
  * フォーマットのパターンに一致すると起動するInvokerの生成器
@@ -61,7 +61,7 @@ public class PatternInvokerBuilder implements ParserHolder, InvokerBuilder{
 	
 	private String rootPackage;
 
-	private List<UrlParser> parsers = new ArrayList<UrlParser>();
+	private List<PatternParser> parsers = new ArrayList<PatternParser>();
 
 	private final ExtensionMultimapFactory exPolicy;
 
@@ -90,7 +90,7 @@ public class PatternInvokerBuilder implements ParserHolder, InvokerBuilder{
 	 * @param parser
 	 *            Parser
 	 */
-	public void addParser(UrlParser parser) {
+	public void addParser(PatternParser parser) {
 		parsers.add(parser);
 	}
 
@@ -109,7 +109,7 @@ public class PatternInvokerBuilder implements ParserHolder, InvokerBuilder{
 		pm.setRequest(req);
 		pm.select(path);
 		Params params = pm.getSelectedParam();
-		UrlParser selectedParser = pm.getSelectedParser();
+		PatternParser selectedParser = pm.getSelectedParser();
 		logger.log(Level.FINE, "selectedParser: " + selectedParser);
 
 		if (params == null) {
