@@ -8,7 +8,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>RestrantSample</servlet-name>
 		<servlet-class>net.infopeers.restrant.ControllerServlet</servlet-class>
 		<init-param>
-			<!-- ルートパッケージを指定すること。この中にControllerを実装したクラスを入れる -->
+			<!-- root package implements of controllers -->
 			<param-name>RootPackage</param-name>
 			<param-value>net.infopeers.restrant.sample.controller</param-value>
 		</init-param>
@@ -19,6 +19,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 			<param-value>net.infopeers.restrant.sample.Route</param-value>
 		</init-param>
 
+		<init-param>
+			<!-- Controller as a JavaScript Service Object -->
+			<param-name>ServiceJs</param-name>
+			<param-value>/service.js</param-value>
+		</init-param>
 		
 		<init-param>
 			<!-- リクエストパラメータのエンコーディングを指定できる。 指定されていれば変換が行われる-->
@@ -52,6 +57,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	<servlet-mapping>
 		<servlet-name>RestrantSample</servlet-name>
 		<url-pattern>/samples</url-pattern>
+		<url-pattern>/service.js</url-pattern>
 	</servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
