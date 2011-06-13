@@ -126,8 +126,8 @@ public class ReflectInvoker implements Invoker {
 	}
 
 	static void removeCorePlaceholders(Set<String> exNames) {
-		exNames.remove(InvokerBuilder.CONTROLLER_PLACEHOLDER_LABEL);
-		exNames.remove(InvokerBuilder.ACTION_PLACEHOLDER_LABEL);
+		exNames.remove(PatternInvokerBuilder.CONTROLLER_PLACEHOLDER_LABEL);
+		exNames.remove(PatternInvokerBuilder.ACTION_PLACEHOLDER_LABEL);
 	}
 
 	/* (non-Javadoc)

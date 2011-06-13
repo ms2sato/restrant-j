@@ -1,14 +1,14 @@
 package net.infopeers.restrant;
 
 import junit.framework.TestCase;
-import net.infopeers.restrant.engine.DefaultPlaceholderFormatter;
+import net.infopeers.restrant.engine.PrefixedPlaceholderFormatter;
 import net.infopeers.restrant.engine.PlaceholderFormatter;
 import net.infopeers.restrant.engine.parser.BasicUrlParser;
 import net.infopeers.restrant.engine.parser.UrlParser;
 
 public class CodableParserTest extends TestCase {
 
-	private PlaceholderFormatter phFormatter = new DefaultPlaceholderFormatter();
+	private PlaceholderFormatter phFormatter = new PrefixedPlaceholderFormatter();
 
 	public void testNormal() throws Exception {
 

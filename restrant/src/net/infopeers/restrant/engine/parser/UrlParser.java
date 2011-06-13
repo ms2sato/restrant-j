@@ -16,4 +16,11 @@ public interface UrlParser {
 	 * @return パースできたら真。さもなくば偽。
 	 */
 	boolean parse(EditableParams params, String path);
+	
+	
+	/**
+	 * praceHolderの値が固定で存在すればその値を返す
+	 * @return
+	 */
+	String findSpecifiedPlaceHolder(String placeHolder);
 }

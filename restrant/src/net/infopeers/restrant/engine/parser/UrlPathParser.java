@@ -12,6 +12,8 @@ import net.infopeers.restrant.engine.params.EditableParams;
 public class UrlPathParser implements UrlParser {
 
 	private PlaceholderFormatter phFormatter;
+	
+	private String pathFormat;
 	private String[] pathAndQuery; // {/:controller/:action/:id,
 									// test1=1&test2=2}
 	private String[] formatPathParts; // {:controller, :action, :id}
@@ -19,10 +21,11 @@ public class UrlPathParser implements UrlParser {
 	/**
 	 * 
 	 * @param format
-	 *            /:controller/test/:action/:id のようなパス表現フォーマット
+	 *            /:controller/test/:action/:id?param=:param のようなパス表現フォーマット
 	 */
-	UrlPathParser(PlaceholderFormatter phFormatter, String pathFormat) {
+	public UrlPathParser(PlaceholderFormatter phFormatter, String pathFormat) {
 		this.phFormatter = phFormatter;
+		this.pathFormat = pathFormat;
 
 		pathAndQuery = pathFormat.split("\\?");
 		if (pathAndQuery.length > 2) {
@@ -104,4 +107,21 @@ public class UrlPathParser implements UrlParser {
 		params.addExtension(phFormatter.dePlaceholder(key), value);
 	}
 
+	@Override
+	public String findSpecifiedPlaceHolder(String placeHolder) {
+		return null;
+	}
+	
+	public String getPathFormat(){
+		return this.pathFormat;
+	}
+	
+	public String getPath(){
+		return this.pathAndQuery[0];
+	}
+	
+	public PlaceholderFormatter getPlaceholderFormatter(){
+		return this.phFormatter;
+	}
+	
 }

@@ -6,7 +6,7 @@ import java.util.List;
 import junit.framework.TestCase;
 import net.infopeers.restrant.Params;
 import net.infopeers.restrant.TestParams;
-import net.infopeers.restrant.engine.DefaultPlaceholderFormatter;
+import net.infopeers.restrant.engine.PrefixedPlaceholderFormatter;
 import net.infopeers.restrant.engine.params.EditableParams;
 import net.infopeers.restrant.engine.params.ExtensionMultimapFactory;
 import net.infopeers.restrant.util.GoogleCollectionExtensionMultimapFactory;
@@ -14,7 +14,7 @@ import net.infopeers.restrant.util.GoogleCollectionExtensionMultimapFactory;
 public class ParserManagerTest extends TestCase {
 
 
-	private DefaultPlaceholderFormatter phFormatter = new DefaultPlaceholderFormatter();
+	private PrefixedPlaceholderFormatter phFormatter = new PrefixedPlaceholderFormatter();
 	private ExtensionMultimapFactory exPolicy = new GoogleCollectionExtensionMultimapFactory();
 
 	public void testSenario() throws Exception {
@@ -61,7 +61,7 @@ public class ParserManagerTest extends TestCase {
 			};
 
 			pm.setParsers(parsers);
-			pm.execute("/");
+			pm.select("/");
 			
 			//indexがコールされる
 			assertEquals(index, pm.getSelectedParser());
@@ -80,7 +80,7 @@ public class ParserManagerTest extends TestCase {
 			};
 
 			pm.setParsers(parsers);
-			pm.execute("/contents");
+			pm.select("/contents");
 			
 			//byEditorがコールされる
 			assertEquals(byEditor, pm.getSelectedParser());
@@ -99,7 +99,7 @@ public class ParserManagerTest extends TestCase {
 			};
 			
 			pm.setParsers(parsers);
-			pm.execute("/contents");
+			pm.select("/contents");
 			
 			//contentがコールされる
 			assertEquals(content, pm.getSelectedParser());
@@ -118,7 +118,7 @@ public class ParserManagerTest extends TestCase {
 			};
 
 			pm.setParsers(parsers);
-			pm.execute("/contents");
+			pm.select("/contents");
 			
 			//editorがコールされる
 			assertEquals(byEditor, pm.getSelectedParser());
@@ -136,7 +136,7 @@ public class ParserManagerTest extends TestCase {
 			};
 
 			pm.setParsers(parsers);
-			pm.execute("/contents");
+			pm.select("/contents");
 			
 			//performがコールされる
 			assertEquals(perform, pm.getSelectedParser());
@@ -153,7 +153,7 @@ public class ParserManagerTest extends TestCase {
 			};
 
 			pm.setParsers(parsers);
-			pm.execute("/contents/1111.json");
+			pm.select("/contents/1111.json");
 			
 			//withDotがコールされる
 			assertEquals(withDot, pm.getSelectedParser());

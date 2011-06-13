@@ -7,4 +7,6 @@ package net.infopeers.restrant.engine;
 public interface InvokerBuilderFactory {
 
 	InvokerBuilder getInvokerBuilder();
+
+	public abstract void setEvery(boolean value);
 }

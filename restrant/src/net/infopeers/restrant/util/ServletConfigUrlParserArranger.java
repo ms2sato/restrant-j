@@ -6,7 +6,7 @@ import java.util.TreeSet;
 
 import javax.servlet.ServletConfig;
 
-import net.infopeers.restrant.engine.InvokerBuilder;
+import net.infopeers.restrant.engine.ParserHolder;
 import net.infopeers.restrant.engine.PlaceholderFormatter;
 import net.infopeers.restrant.engine.parser.TextUrlParser;
 import net.infopeers.restrant.engine.parser.UrlParserArranger;
@@ -34,7 +34,7 @@ public class ServletConfigUrlParserArranger implements UrlParserArranger {
 	}
 
 	@Override
-	public void arrange(InvokerBuilder invokerBuilder) {
+	public void arrange(ParserHolder parserHolder) {
 		
 		TreeSet<RouteInfo> routes = new TreeSet<RouteInfo>(
 				new Comparator<RouteInfo>() {
@@ -61,7 +61,7 @@ public class ServletConfigUrlParserArranger implements UrlParserArranger {
 		}
 
 		for (RouteInfo route : routes) {
-			invokerBuilder.addParser(new TextUrlParser(route.format, phFormatter));
+			parserHolder.addParser(new TextUrlParser(route.format, phFormatter));
 		}
 
 	}
