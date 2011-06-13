@@ -14,9 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 import net.infopeers.commons.io.StreamUtils;
 import net.infopeers.restrant.ControllerServlet;
 import net.infopeers.restrant.ResourceNotFoundException;
-import net.infopeers.restrant.engine.parser.UrlParser;
-import net.infopeers.restrant.engine.parser.UrlParserArranger;
-import net.infopeers.restrant.engine.parser.UrlParserWithPathFormat;
+import net.infopeers.restrant.engine.parser.PatternParser;
+import net.infopeers.restrant.engine.parser.PatternParserArranger;
+import net.infopeers.restrant.engine.parser.PatternParserWithPathFormat;
 import net.infopeers.restrant.engine.parser.UrlPathParser;
 
 public class JsServiceInvokerBuilderFactory extends
@@ -71,15 +71,15 @@ public class JsServiceInvokerBuilderFactory extends
 
 			writer.println(functionTemplate.format(new Object[] { namespace,
 					m.getDeclaringClass().getSimpleName(), name, params,
-					pathParser.getPathFormat() }));
+					pathParser.getPatternFormat() }));
 		}
 	}
 
 	private String rootPackage;
-	private UrlParserArranger parserArranger;
+	private PatternParserArranger parserArranger;
 
 	public JsServiceInvokerBuilderFactory(String rootPackage,
-			UrlParserArranger parserArranger) {
+			PatternParserArranger parserArranger) {
 		this.rootPackage = rootPackage;
 		this.parserArranger = parserArranger;
 	}
@@ -87,11 +87,11 @@ public class JsServiceInvokerBuilderFactory extends
 	@Override
 	protected InvokerBuilder createInvokerBuilder() {
 
-		final List<UrlParser> parsers = new ArrayList<UrlParser>();
+		final List<PatternParser> parsers = new ArrayList<PatternParser>();
 
 		ParserHolder holder = new ParserHolder() {
 			@Override
-			public void addParser(UrlParser parser) {
+			public void addParser(PatternParser parser) {
 				parsers.add(parser);
 			}
 		};
@@ -102,11 +102,11 @@ public class JsServiceInvokerBuilderFactory extends
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
 		try {
-			for (UrlParser p : parsers) {
+			for (PatternParser p : parsers) {
 
 				UrlPathParser pathParser;
-				if (p instanceof UrlParserWithPathFormat) {
-					pathParser = ((UrlParserWithPathFormat) p)
+				if (p instanceof PatternParserWithPathFormat) {
+					pathParser = ((PatternParserWithPathFormat) p)
 							.getUrlPathParser();
 				} else {
 					continue;

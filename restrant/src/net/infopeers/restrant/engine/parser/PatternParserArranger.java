@@ -7,7 +7,7 @@ import net.infopeers.restrant.engine.ParserHolder;
  * @author ms2
  *
  */
-public interface UrlParserArranger {
+public interface PatternParserArranger {
 
 	void arrange(ParserHolder parserHolder);
 }

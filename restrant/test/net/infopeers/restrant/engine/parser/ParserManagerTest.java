@@ -19,7 +19,7 @@ public class ParserManagerTest extends TestCase {
 
 	public void testSenario() throws Exception {
 
-		List<UrlParser> parsers = new ArrayList<UrlParser>();
+		List<PatternParser> parsers = new ArrayList<PatternParser>();
 		TextUrlParser index = new TextUrlParser(
 				"/ :action=index", phFormatter);
 		parsers.add(index);

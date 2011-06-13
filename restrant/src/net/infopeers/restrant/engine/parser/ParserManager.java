@@ -11,11 +11,11 @@ import net.infopeers.restrant.engine.params.ParamsImpl;
 
 public class ParserManager {
 
-	private List<UrlParser> parsers;
+	private List<PatternParser> parsers;
 	private HttpServletRequest req;
 	
 	private EditableParams params;
-	private UrlParser selectedParser;
+	private PatternParser selectedParser;
 	
 	private final ExtensionMultimapFactory exPolicy;
 	
@@ -27,11 +27,11 @@ public class ParserManager {
 		this.req = req;
 	}
 	
-	public void setParsers(List<UrlParser> parsers){
+	public void setParsers(List<PatternParser> parsers){
 		this.parsers = parsers;
 	}
 	
-	public UrlParser getSelectedParser(){
+	public PatternParser getSelectedParser(){
 		return selectedParser;
 	}
 	
@@ -40,7 +40,7 @@ public class ParserManager {
 	}
 	
 	public void select(String path){
-		for (UrlParser parser : parsers) {
+		for (PatternParser parser : parsers) {
 			 EditableParams p = createParams();
 			if (parser.parse(p, path)) {
 				params = p;

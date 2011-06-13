@@ -5,18 +5,18 @@ import java.util.List;
 
 import net.infopeers.restrant.engine.ParserHolder;
 
-public class CompositeUrlParserArranger implements UrlParserArranger {
+public class CompositeUrlParserArranger implements PatternParserArranger {
 
-	private List<UrlParserArranger> arrangers = new ArrayList<UrlParserArranger>();
+	private List<PatternParserArranger> arrangers = new ArrayList<PatternParserArranger>();
 	
-	public void add(UrlParserArranger arranger){
+	public void add(PatternParserArranger arranger){
 		arrangers.add(arranger);
 	}
 	
 	@Override
 	public void arrange(ParserHolder parserHolder) {
 		
-		for(UrlParserArranger arranger: arrangers){
+		for(PatternParserArranger arranger: arrangers){
 			arranger.arrange(parserHolder);
 		}
 		

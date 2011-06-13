@@ -9,11 +9,11 @@ import net.infopeers.restrant.engine.params.EditableParams;
  * @author ms2
  * 
  */
-public class UrlPathParser implements UrlParser {
+public class UrlPathParser implements PatternParser {
 
 	private PlaceholderFormatter phFormatter;
 	
-	private String pathFormat;
+	private String patternFormat;
 	private String[] pathAndQuery; // {/:controller/:action/:id,
 									// test1=1&test2=2}
 	private String[] formatPathParts; // {:controller, :action, :id}
@@ -23,11 +23,11 @@ public class UrlPathParser implements UrlParser {
 	 * @param format
 	 *            /:controller/test/:action/:id?param=:param のようなパス表現フォーマット
 	 */
-	public UrlPathParser(PlaceholderFormatter phFormatter, String pathFormat) {
+	public UrlPathParser(PlaceholderFormatter phFormatter, String patternFormat) {
 		this.phFormatter = phFormatter;
-		this.pathFormat = pathFormat;
+		this.patternFormat = patternFormat;
 
-		pathAndQuery = pathFormat.split("\\?");
+		pathAndQuery = patternFormat.split("\\?");
 		if (pathAndQuery.length > 2) {
 			throw new IllegalArgumentException("「?」が複数存在してはいけません");
 		}
@@ -112,8 +112,8 @@ public class UrlPathParser implements UrlParser {
 		return null;
 	}
 	
-	public String getPathFormat(){
-		return this.pathFormat;
+	public String getPatternFormat(){
+		return this.patternFormat;
 	}
 	
 	public String getPath(){

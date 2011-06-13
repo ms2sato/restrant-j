@@ -3,7 +3,7 @@ package net.infopeers.restrant;
 import net.infopeers.restrant.engine.PrefixedPlaceholderFormatter;
 import net.infopeers.restrant.engine.PlaceholderFormatter;
 import net.infopeers.restrant.engine.parser.TextUrlParser;
-import net.infopeers.restrant.engine.parser.UrlParser;
+import net.infopeers.restrant.engine.parser.PatternParser;
 import junit.framework.TestCase;
 
 public class TextParserTest extends TestCase {
@@ -16,7 +16,7 @@ public class TextParserTest extends TestCase {
 		String format = "/:controller/:action/:id";
 		String path = "/con/act/uid";
 
-		UrlParser parser = new TextUrlParser(format, phFormatter);
+		PatternParser parser = new TextUrlParser(format, phFormatter);
 		assertTrue(parser.parse(params, path));
 		
 		assertEquals("con", params.get("controller"));
@@ -30,7 +30,7 @@ public class TextParserTest extends TestCase {
 		String format = "/:controller/:action/:id";
 		String path = "/con/act";
 		
-		UrlParser parser = new TextUrlParser(format, phFormatter);
+		PatternParser parser = new TextUrlParser(format, phFormatter);
 		assertFalse(parser.parse(params, path));
 	}
 	
@@ -41,7 +41,7 @@ public class TextParserTest extends TestCase {
 		String format = "/con/:id :action=act 	:controller=don";
 		String path = "/con/uid";
 		
-		UrlParser parser = new TextUrlParser(format, phFormatter);
+		PatternParser parser = new TextUrlParser(format, phFormatter);
 		assertTrue(parser.parse(params, path));
 		
 		assertEquals("don", params.get("controller"));
@@ -59,7 +59,7 @@ public class TextParserTest extends TestCase {
 		params.addParams("uid2", "222");
 		assertEquals("222", params.get("uid2"));
 		
-		UrlParser parser = new TextUrlParser(format, phFormatter);
+		PatternParser parser = new TextUrlParser(format, phFormatter);
 		assertTrue(parser.parse(params, path));
 		
 		assertEquals("con", params.get("controller"));
@@ -78,7 +78,7 @@ public class TextParserTest extends TestCase {
 		assertEquals("111", params.get("uid"));
 		
 		try{
-			UrlParser parser = new TextUrlParser(format, phFormatter);
+			PatternParser parser = new TextUrlParser(format, phFormatter);
 			parser.parse(params, path);
 			fail("「?」が複数なら例外");
 		}catch(IllegalArgumentException e){
@@ -96,7 +96,7 @@ public class TextParserTest extends TestCase {
 		
 		//qqqに対応する引数が存在しない
 		
-		UrlParser parser = new TextUrlParser(format, phFormatter);
+		PatternParser parser = new TextUrlParser(format, phFormatter);
 		assertFalse(parser.parse(params, path));
 	}
 
@@ -106,7 +106,7 @@ public class TextParserTest extends TestCase {
 		String format = "/:controller/:id :action=get";
 		String path = "/con/act/111";
 
-		UrlParser parser = new TextUrlParser(format, phFormatter);
+		PatternParser parser = new TextUrlParser(format, phFormatter);
 		assertFalse(parser.parse(params, path));
 	}
 	
@@ -120,7 +120,7 @@ public class TextParserTest extends TestCase {
 		
 		params.setMethod("POST");
 		
-		UrlParser parser = new TextUrlParser(format, phFormatter);
+		PatternParser parser = new TextUrlParser(format, phFormatter);
 		assertTrue(parser.parse(params, path));
 		
 		assertEquals("con", params.get("controller"));
@@ -137,7 +137,7 @@ public class TextParserTest extends TestCase {
 
 		params.addParams("id", "test");
 		
-		UrlParser parser = new TextUrlParser(format, phFormatter);
+		PatternParser parser = new TextUrlParser(format, phFormatter);
 		assertTrue(parser.parse(params, path));
 		
 		assertEquals("con", params.get("controller"));

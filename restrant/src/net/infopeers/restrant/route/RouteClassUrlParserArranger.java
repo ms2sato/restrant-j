@@ -2,9 +2,9 @@ package net.infopeers.restrant.route;
 
 import net.infopeers.restrant.engine.ParserHolder;
 import net.infopeers.restrant.engine.PlaceholderFormatter;
-import net.infopeers.restrant.engine.parser.UrlParserArranger;
+import net.infopeers.restrant.engine.parser.PatternParserArranger;
 
-public class RouteClassUrlParserArranger implements UrlParserArranger {
+public class RouteClassUrlParserArranger implements PatternParserArranger {
 
 	private Route route;
 	PlaceholderFormatter phFormatter;

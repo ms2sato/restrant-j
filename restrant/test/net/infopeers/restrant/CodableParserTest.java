@@ -4,7 +4,7 @@ import junit.framework.TestCase;
 import net.infopeers.restrant.engine.PrefixedPlaceholderFormatter;
 import net.infopeers.restrant.engine.PlaceholderFormatter;
 import net.infopeers.restrant.engine.parser.BasicUrlParser;
-import net.infopeers.restrant.engine.parser.UrlParser;
+import net.infopeers.restrant.engine.parser.PatternParser;
 
 public class CodableParserTest extends TestCase {
 
@@ -16,7 +16,7 @@ public class CodableParserTest extends TestCase {
 		String format = "/:controller/:action/:id";
 		String path = "/con/act/uid";
 
-		UrlParser parser = new BasicUrlParser(format, phFormatter);
+		PatternParser parser = new BasicUrlParser(format, phFormatter);
 		assertTrue(parser.parse(params, path));
 
 		assertEquals("con", params.get("controller"));
@@ -30,7 +30,7 @@ public class CodableParserTest extends TestCase {
 		String format = "/:controller/:action/:id";
 		String path = "/con/act";
 
-		UrlParser parser = new BasicUrlParser(format, phFormatter);
+		PatternParser parser = new BasicUrlParser(format, phFormatter);
 		assertFalse(parser.parse(params, path));
 	}
 
@@ -40,7 +40,7 @@ public class CodableParserTest extends TestCase {
 		String format = "/con/:id";
 		String path = "/con/uid";
 
-		UrlParser parser = new BasicUrlParser(format, phFormatter).action("act")
+		PatternParser parser = new BasicUrlParser(format, phFormatter).action("act")
 				.controller("don");
 		assertTrue(parser.parse(params, path));
 
@@ -59,7 +59,7 @@ public class CodableParserTest extends TestCase {
 		params.addParams("uid2", "222");
 		assertEquals("222", params.get("uid2"));
 
-		UrlParser parser = new BasicUrlParser(format, phFormatter);
+		PatternParser parser = new BasicUrlParser(format, phFormatter);
 		assertTrue(parser.parse(params, path));
 
 		assertEquals("con", params.get("controller"));
@@ -78,7 +78,7 @@ public class CodableParserTest extends TestCase {
 		assertEquals("111", params.get("uid"));
 
 		try {
-			UrlParser parser = new BasicUrlParser(format, phFormatter);
+			PatternParser parser = new BasicUrlParser(format, phFormatter);
 			parser.parse(params, path);
 			fail("「?」が複数なら例外");
 		} catch (IllegalArgumentException e) {
@@ -96,7 +96,7 @@ public class CodableParserTest extends TestCase {
 
 		// qqqに対応する引数が存在しない
 
-		UrlParser parser = new BasicUrlParser(format, phFormatter);
+		PatternParser parser = new BasicUrlParser(format, phFormatter);
 		assertFalse(parser.parse(params, path));
 	}
 
@@ -106,7 +106,7 @@ public class CodableParserTest extends TestCase {
 		String format = "/:controller/:id";
 		String path = "/con/act/111";
 
-		UrlParser parser = new BasicUrlParser(format, phFormatter).action("get");
+		PatternParser parser = new BasicUrlParser(format, phFormatter).action("get");
 		assertFalse(parser.parse(params, path));
 	}
 
@@ -120,7 +120,7 @@ public class CodableParserTest extends TestCase {
 
 		params.setMethod("POST");
 
-		UrlParser parser = new BasicUrlParser(format, phFormatter).onRestful();
+		PatternParser parser = new BasicUrlParser(format, phFormatter).onRestful();
 		assertTrue(parser.parse(params, path));
 
 		assertEquals("con", params.get("controller"));
@@ -137,7 +137,7 @@ public class CodableParserTest extends TestCase {
 
 		params.addParams("id", "test");
 
-		UrlParser parser = new BasicUrlParser(format, phFormatter).onPut();
+		PatternParser parser = new BasicUrlParser(format, phFormatter).onPut();
 		assertTrue(parser.parse(params, path));
 
 		assertEquals("con", params.get("controller"));

@@ -23,7 +23,7 @@ import net.infopeers.restrant.engine.InvokerBuilderFactory;
 import net.infopeers.restrant.engine.PlaceholderFormatter;
 import net.infopeers.restrant.engine.params.ExtensionMultimapFactory;
 import net.infopeers.restrant.engine.parser.CompositeUrlParserArranger;
-import net.infopeers.restrant.engine.parser.UrlParserArranger;
+import net.infopeers.restrant.engine.parser.PatternParserArranger;
 import net.infopeers.restrant.route.RouteClassUrlParserArranger;
 import net.infopeers.restrant.util.ServletConfigUrlParserArranger;
 
@@ -76,7 +76,7 @@ public class ControllerServlet extends HttpServlet {
 							+ "の指定でコントローラーの格納されたパッケージを設定してください。");
 		}
 
-		UrlParserArranger parserArranger = createParserArranger(config);
+		PatternParserArranger parserArranger = createParserArranger(config);
 		ExtensionMultimapFactory exPolicy = createExtensionPolicy();
 		path2ibf.put(ibfDefaultName, new PatternInvokerBuilderFactory(
 				rootPackage, parserArranger, exPolicy));
