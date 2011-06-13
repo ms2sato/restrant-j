@@ -11,19 +11,16 @@ import net.infopeers.restrant.engine.parser.UrlParserArranger;
  * 
  * @author ms2
  */
-public class DefaultInvokerBuilderFactory implements InvokerBuilderFactory {
+public class PatternInvokerBuilderFactory extends AbstractInvokerBuilderFactory {
 
 	private static final Logger logger = Logger
-			.getLogger(DefaultInvokerBuilderFactory.class.getName());
-
-	private InvokerBuilder invokerBuilder;
+			.getLogger(PatternInvokerBuilderFactory.class.getName());
 
 	private ExtensionMultimapFactory exPolicy;
 	private UrlParserArranger parserArranger;
 	private String rootPackage;
-	private boolean isEvery = false;
 
-	public DefaultInvokerBuilderFactory(String rootPackage,
+	public PatternInvokerBuilderFactory(String rootPackage,
 			UrlParserArranger parserArranger, ExtensionMultimapFactory exPolicy) {
 
 		this.exPolicy = exPolicy;
@@ -31,23 +28,10 @@ public class DefaultInvokerBuilderFactory implements InvokerBuilderFactory {
 		this.rootPackage = rootPackage;
 	}
 
-	public void setEvery(boolean value) {
-		this.isEvery = value;
-	}
-
-	@Override
-	public InvokerBuilder getInvokerBuilder() {
-
-		if (isEvery || invokerBuilder == null) {
-			invokerBuilder = createInvokerBuilder();
-		}
-		return invokerBuilder;
-	}
-
-	private InvokerBuilder createInvokerBuilder() {
+	protected InvokerBuilder createInvokerBuilder() {
 		logger.log(Level.FINE, "create");
 
-		InvokerBuilder invokerBuilder = new InvokerBuilder(exPolicy);
+		PatternInvokerBuilder invokerBuilder = new PatternInvokerBuilder(exPolicy);
 		invokerBuilder.setRootPackage(rootPackage);
 		parserArranger.arrange(invokerBuilder);
 		return invokerBuilder;

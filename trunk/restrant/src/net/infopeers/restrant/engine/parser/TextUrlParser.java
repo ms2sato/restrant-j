@@ -1,17 +1,17 @@
 package net.infopeers.restrant.engine.parser;
 
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import net.infopeers.restrant.engine.InvokerBuilder;
+import net.infopeers.restrant.engine.PatternInvokerBuilder;
 import net.infopeers.restrant.engine.PlaceholderFormatter;
 import net.infopeers.restrant.engine.params.EditableParams;
-
 
 /**
  * テキスト表現のUrlParser。
  * <p>
- * 下記のようにRoR表記にならって判断される。
- * 「@restful」はactionの選別をHTTPメソッドで行う。
+ * 下記のようにRoR表記にならって判断される。 「@restful」はactionの選別をHTTPメソッドで行う。
  * </p>
  * <ol>
  * <li>/:controller/args/:id
@@ -21,43 +21,46 @@ import net.infopeers.restrant.engine.params.EditableParams;
  * </ol>
  * 
  * @author ms2
- *
+ * 
  */
-public class TextUrlParser implements UrlParser {
+public class TextUrlParser implements UrlParserWithPathFormat {
 
 	private static final String RESTFUL_ATTRIBUTE = "@restful";
-	
+
 	private static final String GET_METHOD_ATTRIBUTE = "@get";
 	private static final String POST_METHOD_ATTRIBUTE = "@post";
 	private static final String PUT_METHOD_ATTRIBUTE = "@put";
 	private static final String DELETE_METHOD_ATTRIBUTE = "@delete";
 	private static final String HEAD_METHOD_ATTRIBUTE = "@head";
 	private static final String OPTIONS_METHOD_ATTRIBUTE = "@options";
-	
+
 	private static HashMap<String, String> httpMethods = new HashMap<String, String>();
-	
-	static{
-		httpMethods.put(GET_METHOD_ATTRIBUTE, InvokerBuilder.GET);
-		httpMethods.put(POST_METHOD_ATTRIBUTE, InvokerBuilder.POST);
-		httpMethods.put(PUT_METHOD_ATTRIBUTE, InvokerBuilder.PUT);
-		httpMethods.put(DELETE_METHOD_ATTRIBUTE, InvokerBuilder.DELETE);
-		httpMethods.put(HEAD_METHOD_ATTRIBUTE, InvokerBuilder.HEAD);
-		httpMethods.put(OPTIONS_METHOD_ATTRIBUTE, InvokerBuilder.OPTIONS);
+
+	static {
+		httpMethods.put(GET_METHOD_ATTRIBUTE, PatternInvokerBuilder.GET);
+		httpMethods.put(POST_METHOD_ATTRIBUTE, PatternInvokerBuilder.POST);
+		httpMethods.put(PUT_METHOD_ATTRIBUTE, PatternInvokerBuilder.PUT);
+		httpMethods.put(DELETE_METHOD_ATTRIBUTE, PatternInvokerBuilder.DELETE);
+		httpMethods.put(HEAD_METHOD_ATTRIBUTE, PatternInvokerBuilder.HEAD);
+		httpMethods.put(OPTIONS_METHOD_ATTRIBUTE, PatternInvokerBuilder.OPTIONS);
 	}
-	
 
 	private PlaceholderFormatter phFormatter;
 
 	private String fullFormat;
 
-	private String[] section; // {/:controller/:action/:id?test1=1&test2=2, @restful, :action=qqqq}
+	private String[] section; // {/:controller/:action/:id?test1=1&test2=2,
+								// @restful, :action=qqqq}
 
 	private UrlPathParser urlPathParser;
-	
+
 	/**
 	 * コンストラクタ
-	 * @param fullFormat フォーマット文字列
-	 * @param phFormatter PlaceholderFormatter
+	 * 
+	 * @param fullFormat
+	 *            フォーマット文字列
+	 * @param phFormatter
+	 *            PlaceholderFormatter
 	 */
 	public TextUrlParser(String fullFormat, PlaceholderFormatter phFormatter) {
 		this.fullFormat = fullFormat;
@@ -71,14 +74,19 @@ public class TextUrlParser implements UrlParser {
 
 	/**
 	 * フォーマット文字列を取得する
+	 * 
 	 * @return フォーマット文字列
 	 */
 	public String getFormat() {
 		return fullFormat;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.infopeers.restrant.engine.Parser#parse(net.infopeers.restrant.engine.EditableParams, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * net.infopeers.restrant.engine.Parser#parse(net.infopeers.restrant.engine
+	 * .EditableParams, java.lang.String)
 	 */
 	@Override
 	public boolean parse(EditableParams params, String path) {
@@ -92,11 +100,10 @@ public class TextUrlParser implements UrlParser {
 
 		return true;
 	}
-	
+
 	private boolean parsePath(EditableParams params, String path) {
 		return this.urlPathParser.parse(params, path);
 	}
-
 
 	/**
 	 * attributesはインデクス1以上が対象
@@ -111,23 +118,24 @@ public class TextUrlParser implements UrlParser {
 
 			String attribute = attributes[i];
 			if (attribute.equals(RESTFUL_ATTRIBUTE)) {
-				//@restful
-				params.addExtension(InvokerBuilder.ACTION_PLACEHOLDER_LABEL,
-						params.getMethod().toLowerCase());
+				// @restful
+				params.addExtension(
+						PatternInvokerBuilder.ACTION_PLACEHOLDER_LABEL, params
+								.getMethod().toLowerCase());
 
 				continue;
 			}
-			
+
 			String httpMethod = httpMethods.get(attribute);
-			if(httpMethod != null){
-				//@get, @post...
-				
-				if(!httpMethod.equals(params.getMethod().toLowerCase())){
+			if (httpMethod != null) {
+				// @get, @post...
+
+				if (!httpMethod.equals(params.getMethod().toLowerCase())) {
 					return false;
 				}
-				
-				params.addExtension(InvokerBuilder.ACTION_PLACEHOLDER_LABEL,
-						httpMethod);
+
+				params.addExtension(
+						PatternInvokerBuilder.ACTION_PLACEHOLDER_LABEL, httpMethod);
 				continue;
 			}
 
@@ -138,16 +146,34 @@ public class TextUrlParser implements UrlParser {
 				addExtension(params, key, value);
 			}
 		}
-		
+
 		return true;
 	}
 
 	private void addExtension(EditableParams params, String key, String value) {
 		params.addExtension(phFormatter.dePlaceholder(key), value);
 	}
-	
-	public String toString(){
+
+	public String toString() {
 		return getClass().getName() + ":" + fullFormat;
 	}
 
+	@Override
+	public String findSpecifiedPlaceHolder(String placeHolder) {
+
+		String phLabel = phFormatter.enPlaceholder(placeHolder);
+
+		Pattern p = Pattern.compile("[\\s]+" + phLabel
+				+ "[\\s]*=([\\w]+)[\\s]+");
+		Matcher m = p.matcher(fullFormat);
+		if (!m.matches())
+			return null;
+
+		return m.group(1);
+	}
+
+	@Override
+	public UrlPathParser getUrlPathParser() {
+		return this.urlPathParser;
+	}
 }

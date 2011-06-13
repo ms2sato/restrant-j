@@ -1,16 +1,16 @@
 package net.infopeers.restrant.route;
 
-import net.infopeers.restrant.engine.InvokerBuilder;
+import net.infopeers.restrant.engine.ParserHolder;
 import net.infopeers.restrant.engine.PlaceholderFormatter;
 import net.infopeers.restrant.engine.parser.UrlParser;
 
 public class RouteMap {
 
 	PlaceholderFormatter phFormatter;
-	InvokerBuilder invokerBuilder;
+	ParserHolder parserHolder;
 
-	public RouteMap(InvokerBuilder invokerBuilder, PlaceholderFormatter phFormatter) {
-		this.invokerBuilder = invokerBuilder;
+	public RouteMap(ParserHolder parserHolder, PlaceholderFormatter phFormatter) {
+		this.parserHolder = parserHolder;
 		this.phFormatter = phFormatter;
 	}
 
@@ -24,7 +24,7 @@ public class RouteMap {
 	 * @param parser
 	 */
 	void add(UrlParser parser) {
-		invokerBuilder.addParser(parser);
+		parserHolder.addParser(parser);
 	}
 
 }

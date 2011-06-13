@@ -1,6 +1,6 @@
 package net.infopeers.restrant.engine.parser;
 
-import net.infopeers.restrant.engine.InvokerBuilder;
+import net.infopeers.restrant.engine.ParserHolder;
 
 /**
  * InvokerBuilderのURLParserの編集機能
@@ -9,5 +9,5 @@ import net.infopeers.restrant.engine.InvokerBuilder;
  */
 public interface UrlParserArranger {
 
-	void arrange(InvokerBuilder invokerBuilder);
+	void arrange(ParserHolder parserHolder);
 }

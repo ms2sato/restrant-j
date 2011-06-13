@@ -1,6 +1,6 @@
 package net.infopeers.restrant.route;
 
-import net.infopeers.restrant.engine.InvokerBuilder;
+import net.infopeers.restrant.engine.ParserHolder;
 import net.infopeers.restrant.engine.PlaceholderFormatter;
 import net.infopeers.restrant.engine.parser.UrlParserArranger;
 
@@ -20,16 +20,16 @@ public class RouteClassUrlParserArranger implements UrlParserArranger {
 		}
 		
 		if (!(obj instanceof Route)) {
-			throw new RuntimeException(cls.getName() + "は"
-					+ Route.class.getName() + "を実装ていなければならない");
+			throw new RuntimeException(cls.getName() + " must implements "
+					+ Route.class.getName());
 		}
 		
 		route = (Route)obj;
 	}
 
 	@Override
-	public void arrange(InvokerBuilder invokerBuilder) {
-		RouteMap routes = new RouteMap(invokerBuilder, phFormatter);
+	public void arrange(ParserHolder parserHolder) {
+		RouteMap routes = new RouteMap(parserHolder, phFormatter);
 		route.define(routes);
 	}
 

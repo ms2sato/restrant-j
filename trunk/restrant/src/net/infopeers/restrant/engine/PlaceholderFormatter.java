@@ -27,5 +27,13 @@ public interface PlaceholderFormatter {
 	 * @return ラベル
 	 */
 	String dePlaceholder(String placeholder);
+	
+	
+	/**
+	 * プレースホルダーを含む文字列かを確認する
+	 * @param text 文字列
+	 * @return プレースホルダーを含む文字列なら真。さもなくば偽。
+	 */
+	boolean hasPlaceholder(String text);
 
 }

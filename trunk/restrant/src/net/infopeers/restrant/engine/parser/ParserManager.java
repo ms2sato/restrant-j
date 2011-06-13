@@ -39,7 +39,7 @@ public class ParserManager {
 		return params;
 	}
 	
-	public void execute(String path){
+	public void select(String path){
 		for (UrlParser parser : parsers) {
 			 EditableParams p = createParams();
 			if (parser.parse(p, path)) {

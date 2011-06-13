@@ -15,9 +15,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.infopeers.restrant.engine.DefaultInvokerBuilderFactory;
-import net.infopeers.restrant.engine.DefaultPlaceholderFormatter;
+import net.infopeers.restrant.engine.JsServiceInvokerBuilderFactory;
+import net.infopeers.restrant.engine.PatternInvokerBuilderFactory;
+import net.infopeers.restrant.engine.PrefixedPlaceholderFormatter;
 import net.infopeers.restrant.engine.Invoker;
+import net.infopeers.restrant.engine.InvokerBuilderFactory;
 import net.infopeers.restrant.engine.PlaceholderFormatter;
 import net.infopeers.restrant.engine.params.ExtensionMultimapFactory;
 import net.infopeers.restrant.engine.parser.CompositeUrlParserArranger;
@@ -39,12 +41,14 @@ public class ControllerServlet extends HttpServlet {
 
 	private static final String ROOT_PACKAGE_LABEL = "RootPackage"; // Web.xmlのルートパッケージ指定ラベル
 	private static final String ROUTE_CLASS_LABEL = "RouteClass"; // Web.xmlのRouteクラス指定ラベル
+	private static final String SERVICE_JS_LABEL = "ServiceJs"; // Web.xmlのJavaScriptサービス指定ラベル
 
 	private static final String ENCODING = "Encoding"; // Web.xmlのエンコーディング指定ラベル
 
-	private PlaceholderFormatter phFormatter = new DefaultPlaceholderFormatter();
+	private PlaceholderFormatter phFormatter = new PrefixedPlaceholderFormatter();
 
-	private DefaultInvokerBuilderFactory invokerBuilderFactory;
+	private static final String ibfDefaultName = ":default"; // 将来的にはパス→実装クラス対応か？
+	private Map<String, InvokerBuilderFactory> path2ibf = new HashMap<String, InvokerBuilderFactory>();
 
 	/*
 	 * (non-Javadoc)
@@ -74,9 +78,15 @@ public class ControllerServlet extends HttpServlet {
 
 		UrlParserArranger parserArranger = createParserArranger(config);
 		ExtensionMultimapFactory exPolicy = createExtensionPolicy();
+		path2ibf.put(ibfDefaultName, new PatternInvokerBuilderFactory(
+				rootPackage, parserArranger, exPolicy));
 
-		invokerBuilderFactory = new DefaultInvokerBuilderFactory(rootPackage,
-				parserArranger, exPolicy);
+		String serviceJsPath = config.getInitParameter(SERVICE_JS_LABEL);
+		if (serviceJsPath != null) {
+			path2ibf.put(serviceJsPath, new JsServiceInvokerBuilderFactory(
+					rootPackage, parserArranger));
+		}
+
 	}
 
 	private CompositeUrlParserArranger createParserArranger(ServletConfig config) {
@@ -86,7 +96,8 @@ public class ControllerServlet extends HttpServlet {
 		if (routeClass != null) {
 			try {
 				Class<?> cls = Class.forName(routeClass);
-				RouteClassUrlParserArranger cdarranger = new RouteClassUrlParserArranger(phFormatter, cls);
+				RouteClassUrlParserArranger cdarranger = new RouteClassUrlParserArranger(
+						phFormatter, cls);
 				arranger.add(cdarranger);
 			} catch (ClassNotFoundException e) {
 				throw new RuntimeException(
@@ -168,13 +179,19 @@ public class ControllerServlet extends HttpServlet {
 	private Invoker getInvoker(HttpServletRequest req)
 			throws ResourceNotFoundException, MalformedURLException {
 
-		// TODO: 柔軟にするには切り出す。
+		String path = req.getRequestURI().substring(
+				req.getContextPath().length());
+		InvokerBuilderFactory factory = path2ibf.get(path);
+		if(factory == null){
+			factory = path2ibf.get(ibfDefaultName);
+		}
+
+		// TODO: 柔軟にするには切り出す。本来は初期化時に行えれば良い
 		URL url = new URL(req.getRequestURL().toString());
 		String host = url.getHost();
-		invokerBuilderFactory.setEvery(host.equals("localhost"));
+		factory.setEvery(host.equals("localhost"));
 
-		Invoker invoker = invokerBuilderFactory.getInvokerBuilder().build(this,
-				req);
+		Invoker invoker = factory.getInvokerBuilder().build(this, req);
 		return invoker;
 	}
 

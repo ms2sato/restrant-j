@@ -1,6 +1,6 @@
 package net.infopeers.restrant;
 
-import net.infopeers.restrant.engine.DefaultPlaceholderFormatter;
+import net.infopeers.restrant.engine.PrefixedPlaceholderFormatter;
 import net.infopeers.restrant.engine.PlaceholderFormatter;
 import net.infopeers.restrant.engine.parser.TextUrlParser;
 import net.infopeers.restrant.engine.parser.UrlParser;
@@ -8,7 +8,7 @@ import junit.framework.TestCase;
 
 public class TextParserTest extends TestCase {
 	
-	private PlaceholderFormatter phFormatter = new DefaultPlaceholderFormatter();
+	private PlaceholderFormatter phFormatter = new PrefixedPlaceholderFormatter();
 
 	public void testNormal() throws Exception{
 		

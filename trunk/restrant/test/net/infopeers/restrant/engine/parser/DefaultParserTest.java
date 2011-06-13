@@ -2,12 +2,12 @@ package net.infopeers.restrant.engine.parser;
 
 import junit.framework.TestCase;
 import net.infopeers.restrant.TestParams;
-import net.infopeers.restrant.engine.DefaultPlaceholderFormatter;
+import net.infopeers.restrant.engine.PrefixedPlaceholderFormatter;
 import net.infopeers.restrant.engine.parser.TextUrlParser;
 
 public class DefaultParserTest extends TestCase {
 
-	private DefaultPlaceholderFormatter phFormatter = new DefaultPlaceholderFormatter();
+	private PrefixedPlaceholderFormatter phFormatter = new PrefixedPlaceholderFormatter();
 
 	public void testNonHttpMethod() throws Exception {
 
