@@ -1,6 +1,8 @@
 package net.infopeers.restrant.engine.parser;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -53,6 +55,8 @@ public class TextUrlParser implements PatternParserWithPathFormat {
 								// @restful, :action=qqqq}
 
 	private UrlPathParser urlPathParser;
+	private List<String> methods = new ArrayList<String>();
+	
 
 	/**
 	 * コンストラクタ
@@ -70,6 +74,8 @@ public class TextUrlParser implements PatternParserWithPathFormat {
 
 		String pathFormat = section[0];
 		this.urlPathParser = new UrlPathParser(phFormatter, pathFormat);
+		
+		parseMethods(section);
 	}
 
 	/**
@@ -112,30 +118,68 @@ public class TextUrlParser implements PatternParserWithPathFormat {
 	 * @param attributes
 	 * @return
 	 */
+	private void parseMethods(String[] attributes) {
+
+		for (int i = 1; i < attributes.length; ++i) {
+
+			String attribute = attributes[i];
+			if (attribute.equals(RESTFUL_ATTRIBUTE)) {
+				methods.add(RESTFUL_ATTRIBUTE);
+				return;
+			}
+
+			String httpMethod = httpMethods.get(attribute);
+			if (httpMethod != null) {
+				// @get, @post...
+				methods.add(httpMethod);
+				continue;
+			}
+		}
+		
+//		if(methods.isEmpty()){
+//			methods.add(PatternInvokerBuilder.GET);
+//		}
+
+		return;
+	}
+	
+	/**
+	 * attributesはインデクス1以上が対象
+	 * 
+	 * @param params
+	 * @param attributes
+	 * @return
+	 */
 	private boolean parseAttributes(EditableParams params, String[] attributes) {
+
+		if(methods.isEmpty()){
+			//any methods process
+		}
+		else if(methods.contains(RESTFUL_ATTRIBUTE)){
+			params.addExtension(
+					PatternInvokerBuilder.ACTION_PLACEHOLDER_LABEL, params
+							.getMethod().toLowerCase());
+		}
+		else{
+			String pmethod = PatternParserUtils.getMethod(params);
+			if(!methods.contains(pmethod)){
+				return false;
+			}
+			
+//			params.addExtension(
+//					PatternInvokerBuilder.ACTION_PLACEHOLDER_LABEL, pmethod);
+		}
 
 		for (int i = 1; i < attributes.length; ++i) {
 
 			String attribute = attributes[i];
 			if (attribute.equals(RESTFUL_ATTRIBUTE)) {
 				// @restful
-				params.addExtension(
-						PatternInvokerBuilder.ACTION_PLACEHOLDER_LABEL, params
-								.getMethod().toLowerCase());
-
 				continue;
 			}
 
 			String httpMethod = httpMethods.get(attribute);
 			if (httpMethod != null) {
-				// @get, @post...
-
-				if (!httpMethod.equals(params.getMethod().toLowerCase())) {
-					return false;
-				}
-
-				params.addExtension(
-						PatternInvokerBuilder.ACTION_PLACEHOLDER_LABEL, httpMethod);
 				continue;
 			}
 
@@ -175,5 +219,10 @@ public class TextUrlParser implements PatternParserWithPathFormat {
 	@Override
 	public UrlPathParser getUrlPathParser() {
 		return this.urlPathParser;
+	}
+	
+	@Override
+	public List<String> getMethods() {
+		return methods;
 	}
 }

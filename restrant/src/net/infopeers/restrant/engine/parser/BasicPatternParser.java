@@ -1,9 +1,7 @@
 package net.infopeers.restrant.engine.parser;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import net.infopeers.restrant.engine.PatternInvokerBuilder;
 import net.infopeers.restrant.engine.PlaceholderFormatter;
@@ -13,7 +11,7 @@ public class BasicPatternParser implements PatternParserWithPathFormat {
 
 	List<PatternParser> parts = new ArrayList<PatternParser>();
 	UrlPathParser urlPathParser;
-	Set<String> methods = new HashSet<String>(); //target methods
+	List<String> methods = new ArrayList<String>(); //target methods
 	boolean isRestful = false;
 
 	public class WithParam implements PatternParser {
@@ -44,7 +42,7 @@ public class BasicPatternParser implements PatternParserWithPathFormat {
 
 		@Override
 		public boolean parse(EditableParams params, String path) {
-			String method = getMethod(params);
+			String method = PatternParserUtils.getMethod(params);
 			
 			params.addExtension(PatternInvokerBuilder.ACTION_PLACEHOLDER_LABEL, method.toLowerCase());
 			return true;
@@ -60,7 +58,7 @@ public class BasicPatternParser implements PatternParserWithPathFormat {
 
 		@Override
 		public boolean parse(EditableParams params, String path) {
-			String method = getMethod(params);
+			String method = PatternParserUtils.getMethod(params);
 			return methods.contains(method.toLowerCase());
 		}
 
@@ -139,12 +137,13 @@ public class BasicPatternParser implements PatternParserWithPathFormat {
 
 		if(!isRestful){
 			if(methods.isEmpty()){
-				methods.add(PatternInvokerBuilder.GET);
+				//any methods process
 			}
-			
-			String method = getMethod(params);
-			if(!methods.contains(method)){
-				return false;
+			else{
+				String method = PatternParserUtils.getMethod(params);
+				if(!methods.contains(method)){
+					return false;
+				}
 			}
 		}
 		
@@ -170,10 +169,9 @@ public class BasicPatternParser implements PatternParserWithPathFormat {
 		return this.urlPathParser;
 	}
 
-	private String getMethod(EditableParams params) {
-		String method = params.getMethod();
-		if(method == null) method = PatternInvokerBuilder.GET;
-		return method.toLowerCase();
+	@Override
+	public List<String> getMethods() {
+		return methods;
 	}
 	
 }
