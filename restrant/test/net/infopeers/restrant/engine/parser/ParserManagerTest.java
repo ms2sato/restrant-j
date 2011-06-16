@@ -5,7 +5,6 @@ import java.util.List;
 
 import junit.framework.TestCase;
 import net.infopeers.restrant.Params;
-import net.infopeers.restrant.TestParams;
 import net.infopeers.restrant.engine.PrefixedPlaceholderFormatter;
 import net.infopeers.restrant.engine.params.EditableParams;
 import net.infopeers.restrant.engine.params.ExtensionMultimapFactory;

@@ -1,4 +1,4 @@
-package net.infopeers.restrant;
+package net.infopeers.restrant.engine.parser;
 
 import java.util.Enumeration;
 import java.util.HashMap;

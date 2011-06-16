@@ -5,7 +5,7 @@ import java.io.StringWriter;
 import java.lang.reflect.Method;
 
 import net.infopeers.restrant.engine.PrefixedPlaceholderFormatter;
-import net.infopeers.restrant.engine.parser.BasicUrlParser;
+import net.infopeers.restrant.engine.parser.BasicPatternParser;
 
 import org.junit.Test;
 
@@ -23,7 +23,7 @@ public class JsServiceInvokerBuilderFactoryTest {
 		PrefixedPlaceholderFormatter phFormatter = new PrefixedPlaceholderFormatter();
 		String pathFormat = "/test/testa/myaction?to=:TO";
 		
-		BasicUrlParser bp = new BasicUrlParser(pathFormat, phFormatter);
+		BasicPatternParser bp = new BasicPatternParser(pathFormat, phFormatter);
 		t.appendClass(w, TestJsClass.class);
 		for(Method m: TestJsClass.class.getMethods()){
 			

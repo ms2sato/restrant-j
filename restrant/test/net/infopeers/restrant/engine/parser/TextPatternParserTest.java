@@ -1,7 +1,6 @@
 package net.infopeers.restrant.engine.parser;
 
 import junit.framework.TestCase;
-import net.infopeers.restrant.TestParams;
 import net.infopeers.restrant.engine.PrefixedPlaceholderFormatter;
 import net.infopeers.restrant.engine.parser.TextUrlParser;
 

@@ -1,12 +1,12 @@
-package net.infopeers.restrant;
+package net.infopeers.restrant.engine.parser;
 
 import junit.framework.TestCase;
-import net.infopeers.restrant.engine.PrefixedPlaceholderFormatter;
 import net.infopeers.restrant.engine.PlaceholderFormatter;
-import net.infopeers.restrant.engine.parser.BasicUrlParser;
-import net.infopeers.restrant.engine.parser.PatternParser;
+import net.infopeers.restrant.engine.PrefixedPlaceholderFormatter;
 
-public class CodableParserTest extends TestCase {
+import org.junit.Test;
+
+public class BasicPatternParserTest extends TestCase {
 
 	private PlaceholderFormatter phFormatter = new PrefixedPlaceholderFormatter();
 
@@ -16,7 +16,7 @@ public class CodableParserTest extends TestCase {
 		String format = "/:controller/:action/:id";
 		String path = "/con/act/uid";
 
-		PatternParser parser = new BasicUrlParser(format, phFormatter);
+		PatternParser parser = new BasicPatternParser(format, phFormatter);
 		assertTrue(parser.parse(params, path));
 
 		assertEquals("con", params.get("controller"));
@@ -30,7 +30,7 @@ public class CodableParserTest extends TestCase {
 		String format = "/:controller/:action/:id";
 		String path = "/con/act";
 
-		PatternParser parser = new BasicUrlParser(format, phFormatter);
+		PatternParser parser = new BasicPatternParser(format, phFormatter);
 		assertFalse(parser.parse(params, path));
 	}
 
@@ -40,7 +40,7 @@ public class CodableParserTest extends TestCase {
 		String format = "/con/:id";
 		String path = "/con/uid";
 
-		PatternParser parser = new BasicUrlParser(format, phFormatter).action("act")
+		PatternParser parser = new BasicPatternParser(format, phFormatter).action("act")
 				.controller("don");
 		assertTrue(parser.parse(params, path));
 
@@ -59,7 +59,7 @@ public class CodableParserTest extends TestCase {
 		params.addParams("uid2", "222");
 		assertEquals("222", params.get("uid2"));
 
-		PatternParser parser = new BasicUrlParser(format, phFormatter);
+		PatternParser parser = new BasicPatternParser(format, phFormatter);
 		assertTrue(parser.parse(params, path));
 
 		assertEquals("con", params.get("controller"));
@@ -78,7 +78,7 @@ public class CodableParserTest extends TestCase {
 		assertEquals("111", params.get("uid"));
 
 		try {
-			PatternParser parser = new BasicUrlParser(format, phFormatter);
+			PatternParser parser = new BasicPatternParser(format, phFormatter);
 			parser.parse(params, path);
 			fail("「?」が複数なら例外");
 		} catch (IllegalArgumentException e) {
@@ -96,7 +96,7 @@ public class CodableParserTest extends TestCase {
 
 		// qqqに対応する引数が存在しない
 
-		PatternParser parser = new BasicUrlParser(format, phFormatter);
+		PatternParser parser = new BasicPatternParser(format, phFormatter);
 		assertFalse(parser.parse(params, path));
 	}
 
@@ -106,7 +106,7 @@ public class CodableParserTest extends TestCase {
 		String format = "/:controller/:id";
 		String path = "/con/act/111";
 
-		PatternParser parser = new BasicUrlParser(format, phFormatter).action("get");
+		PatternParser parser = new BasicPatternParser(format, phFormatter).action("get");
 		assertFalse(parser.parse(params, path));
 	}
 
@@ -120,7 +120,7 @@ public class CodableParserTest extends TestCase {
 
 		params.setMethod("POST");
 
-		PatternParser parser = new BasicUrlParser(format, phFormatter).onRestful();
+		PatternParser parser = new BasicPatternParser(format, phFormatter).onRestful();
 		assertTrue(parser.parse(params, path));
 
 		assertEquals("con", params.get("controller"));
@@ -138,12 +138,91 @@ public class CodableParserTest extends TestCase {
 		params.addParams("id", "test");
 		params.setMethod("put");
 
-		PatternParser parser = new BasicUrlParser(format, phFormatter).onRestful();
+		PatternParser parser = new BasicPatternParser(format, phFormatter).onRestful();
 		assertTrue(parser.parse(params, path));
 
 		assertEquals("con", params.get("controller"));
 		assertEquals("put", params.get("action"));
 		assertEquals("test", params.get("id"));
 
+	}
+	
+	@Test
+	public void senarioTestGet() throws Exception {
+
+		PrefixedPlaceholderFormatter phFormatter = new PrefixedPlaceholderFormatter();
+		String pathFormat = "/test/testa/myaction?to=:TO";
+
+		BasicPatternParser bp = new BasicPatternParser(pathFormat, phFormatter);
+		bp.controller("TestClass").action("go").onGet();
+
+		TestParams params = new TestParams();
+		params.addParams("to", "REST");
+		assertTrue(bp.parse(params, "/test/testa/myaction"));
+
+		assertEquals("TestClass", params.getExtension("controller"));
+		assertEquals("go", params.getExtension("action"));
+	}
+
+	@Test
+	public void senarioTestDefault() throws Exception {
+
+		PrefixedPlaceholderFormatter phFormatter = new PrefixedPlaceholderFormatter();
+		String pathFormat = "/test/testa/myaction?to=:TO";
+
+		BasicPatternParser bp = new BasicPatternParser(pathFormat, phFormatter);
+		bp.controller("TestClass").action("go");
+
+		TestParams params = new TestParams();
+		params.setMethod("get");
+		params.addParams("to", "REST");
+		assertTrue(bp.parse(params, "/test/testa/myaction")); //default is get method
+		assertEquals("TestClass", params.getExtension("controller"));
+		assertEquals("go", params.getExtension("action"));
+	}
+
+	@Test
+	public void senarioTestPost() throws Exception {
+
+		PrefixedPlaceholderFormatter phFormatter = new PrefixedPlaceholderFormatter();
+		String pathFormat = "/test/testa/myaction?to=:TO";
+
+		BasicPatternParser bp = new BasicPatternParser(pathFormat, phFormatter);
+		bp.controller("TestClass").action("go").onPost();
+
+		TestParams params = new TestParams();
+		params.setMethod("get"); //NOTPOST
+		params.addParams("to", "REST");
+		assertFalse(bp.parse(params, "/test/testa/myaction"));
+	}
+
+	@Test
+	public void senarioTestRestful() throws Exception {
+
+		PrefixedPlaceholderFormatter phFormatter = new PrefixedPlaceholderFormatter();
+		String pathFormat = "/test/testa/myaction?to=:TO";
+
+		BasicPatternParser bp = new BasicPatternParser(pathFormat, phFormatter);
+		bp.controller("TestClass").action("go").onRestful();
+
+		{
+			TestParams params = new TestParams();
+			params.setMethod("get");
+			params.addParams("to", "REST");
+			assertTrue(bp.parse(params, "/test/testa/myaction"));
+
+			assertEquals("TestClass", params.getExtension("controller"));
+			assertEquals("go", params.getExtension("action"));
+		}
+
+		{
+			TestParams params = new TestParams();
+			params.setMethod("post");
+			params.addParams("to", "REST");
+			assertTrue(bp.parse(params, "/test/testa/myaction"));
+
+			assertEquals("TestClass", params.getExtension("controller"));
+			assertEquals("go", params.getExtension("action"));
+		}
 	}
 }

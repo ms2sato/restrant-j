@@ -9,7 +9,7 @@ import net.infopeers.restrant.engine.PatternInvokerBuilder;
 import net.infopeers.restrant.engine.PlaceholderFormatter;
 import net.infopeers.restrant.engine.params.EditableParams;
 
-public class BasicUrlParser implements PatternParserWithPathFormat {
+public class BasicPatternParser implements PatternParserWithPathFormat {
 
 	List<PatternParser> parts = new ArrayList<PatternParser>();
 	UrlPathParser urlPathParser;
@@ -70,65 +70,65 @@ public class BasicUrlParser implements PatternParserWithPathFormat {
 		}
 	}
 
-	public BasicUrlParser(String pathFormat, PlaceholderFormatter phFormatter) {
+	public BasicPatternParser(String pathFormat, PlaceholderFormatter phFormatter) {
 		this.urlPathParser = new UrlPathParser(phFormatter, pathFormat);
 
 		this.parts.add(urlPathParser);
 	}
 
-	public BasicUrlParser add(PatternParser parser) {
+	public BasicPatternParser add(PatternParser parser) {
 		this.parts.add(parser);
 		return this;
 	}
 
-	public BasicUrlParser withParam(String key, String value) {
+	public BasicPatternParser withParam(String key, String value) {
 		this.parts.add(new WithParam(key, value));
 		return this;
 	}
 
-	public BasicUrlParser onGet() {
+	public BasicPatternParser onGet() {
 		return method(PatternInvokerBuilder.GET);
 	}
 
-	public BasicUrlParser onPost() {
+	public BasicPatternParser onPost() {
 		return method(PatternInvokerBuilder.POST);
 	}
 
-	public BasicUrlParser onHead() {
+	public BasicPatternParser onHead() {
 		return method(PatternInvokerBuilder.HEAD);
 	}
 
-	public BasicUrlParser onOptions() {
+	public BasicPatternParser onOptions() {
 		return method(PatternInvokerBuilder.OPTIONS);
 	}
 
-	public BasicUrlParser onDelete() {
+	public BasicPatternParser onDelete() {
 		return method(PatternInvokerBuilder.DELETE);
 	}
 
-	public BasicUrlParser onPut() {
+	public BasicPatternParser onPut() {
 		return method(PatternInvokerBuilder.PUT);
 	}
 
-	public BasicUrlParser onRestful() {
+	public BasicPatternParser onRestful() {
 		isRestful = true;
 		this.parts.add(new OnRestful());
 		return this;
 	}
 
-	public BasicUrlParser controller(String controller) {
+	public BasicPatternParser controller(String controller) {
 		this.parts.add(new WithParam(
 				PatternInvokerBuilder.CONTROLLER_PLACEHOLDER_LABEL, controller));
 		return this;
 	}
 
-	public BasicUrlParser action(String action) {
+	public BasicPatternParser action(String action) {
 		this.parts.add(new WithParam(PatternInvokerBuilder.ACTION_PLACEHOLDER_LABEL,
 				action));
 		return this;
 	}
 
-	public BasicUrlParser method(String method) {
+	public BasicPatternParser method(String method) {
 		methods.add(method);
 		return this;
 	}
