@@ -3,7 +3,7 @@ package net.infopeers.restrant.engine;
 import java.util.HashSet;
 
 import junit.framework.TestCase;
-import net.infopeers.restrant.TestParams;
+import net.infopeers.restrant.engine.parser.TestParams;
 
 public class ReflectInvokerTest extends TestCase {
 	

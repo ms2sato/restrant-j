@@ -1,4 +1,4 @@
-package net.infopeers.restrant;
+package net.infopeers.restrant.engine.parser;
 
 import net.infopeers.restrant.engine.PrefixedPlaceholderFormatter;
 import net.infopeers.restrant.engine.PlaceholderFormatter;

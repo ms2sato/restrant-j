@@ -1,10 +1,10 @@
 package net.infopeers.restrant.route;
 
 import net.infopeers.restrant.engine.PlaceholderFormatter;
-import net.infopeers.restrant.engine.parser.BasicUrlParser;
+import net.infopeers.restrant.engine.parser.BasicPatternParser;
 import net.infopeers.restrant.engine.parser.PatternParser;
 
-public class Mapper extends BasicUrlParser {
+public class Mapper extends BasicPatternParser {
 
 	RouteMap routes;
 	
