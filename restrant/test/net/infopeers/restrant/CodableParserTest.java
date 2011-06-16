@@ -136,8 +136,9 @@ public class CodableParserTest extends TestCase {
 		String path = "/con";
 
 		params.addParams("id", "test");
+		params.setMethod("put");
 
-		PatternParser parser = new BasicUrlParser(format, phFormatter).onPut();
+		PatternParser parser = new BasicUrlParser(format, phFormatter).onRestful();
 		assertTrue(parser.parse(params, path));
 
 		assertEquals("con", params.get("controller"));
