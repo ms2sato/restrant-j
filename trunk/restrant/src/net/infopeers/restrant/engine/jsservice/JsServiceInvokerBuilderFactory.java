@@ -22,7 +22,7 @@ import net.infopeers.restrant.engine.parser.UrlPathParser;
 /**
  * 
  * 条件：@Methodが指定されていること。 パターンのURL表現の途中に:controllerのようなプレースホルダが現れず、
- * Routeクラス等で直接値指定がされていること。
+ * Routeクラス等で直接値指定がされていること。@Restfulでないこと
  * 
  * @author ms2
  * 
