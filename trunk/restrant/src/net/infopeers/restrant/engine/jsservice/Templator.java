@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
+import java.util.List;
 
 import net.infopeers.commons.io.StreamUtils;
+import net.infopeers.restrant.engine.PatternInvokerBuilder;
 import net.infopeers.restrant.engine.parser.PatternParserWithPathFormat;
 import net.infopeers.restrant.util.AnnotationUtils;
 
@@ -31,8 +33,7 @@ class Templator {
 	public void appendHeader(PrintWriter writer) throws IOException {
 		String file = "header.txt";
 		MessageFormat headerTemplate = new MessageFormat(
-				StreamUtils.toString(this.getClass().getResourceAsStream(
-						file)));
+				StreamUtils.toString(this.getClass().getResourceAsStream(file)));
 
 		writer.print(headerTemplate.format(new Object[] { namespace }));
 	}
@@ -40,8 +41,7 @@ class Templator {
 	public void appendFooter(PrintWriter writer) throws IOException {
 		String file = "footer.txt";
 		MessageFormat headerTemplate = new MessageFormat(
-				StreamUtils.toString(this.getClass().getResourceAsStream(
-						file)));
+				StreamUtils.toString(this.getClass().getResourceAsStream(file)));
 
 		writer.print(headerTemplate.format(new Object[] {}));
 	}
@@ -50,8 +50,7 @@ class Templator {
 			throws IOException {
 		String file = "class.txt";
 		MessageFormat headerTemplate = new MessageFormat(
-				StreamUtils.toString(this.getClass().getResourceAsStream(
-						file)));
+				StreamUtils.toString(this.getClass().getResourceAsStream(file)));
 
 		writer.print(headerTemplate.format(new Object[] { namespace,
 				cls.getSimpleName() }));
@@ -85,8 +84,17 @@ class Templator {
 			funcParams.append(", ").append(paramName);
 		}
 
+		List<String> httpMethods = patternParser.getHttpMethods();
+		String httpMethod;
+		if (httpMethods.isEmpty()) {
+			httpMethod = PatternInvokerBuilder.GET;
+		} else {
+			httpMethod = httpMethods.get(0);
+		}
+
 		writer.println(functionTemplate.format(new Object[] { namespace,
-				method.getDeclaringClass().getSimpleName(), name,
-				funcParams, patternParser.getUrlPathParser().getPath(), jsonParams}));
+				method.getDeclaringClass().getSimpleName(), name, funcParams,
+				patternParser.getUrlPathParser().getPath(), jsonParams,
+				httpMethod.toUpperCase() }));
 	}
 }

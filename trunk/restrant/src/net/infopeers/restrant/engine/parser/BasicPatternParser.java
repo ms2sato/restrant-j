@@ -170,7 +170,7 @@ public class BasicPatternParser implements PatternParserWithPathFormat {
 	}
 
 	@Override
-	public List<String> getMethods() {
+	public List<String> getHttpMethods() {
 		return methods;
 	}
 	
