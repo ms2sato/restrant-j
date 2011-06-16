@@ -2,12 +2,13 @@
 
 	global.{0} = '{}';
 
-	{0}.request = function(callback, error, url, params)'{'
+	{0}.request = function(callback, error, url, type, params)'{'
 		return $.ajax(
 			'{'
 				''url'': url,
 				''data'': params,
 				''success'': callback,
+				''type'': type,
 				''error'': error
 			'}'
 		);

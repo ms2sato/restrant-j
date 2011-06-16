@@ -222,7 +222,7 @@ public class TextUrlParser implements PatternParserWithPathFormat {
 	}
 	
 	@Override
-	public List<String> getMethods() {
+	public List<String> getHttpMethods() {
 		return methods;
 	}
 }
