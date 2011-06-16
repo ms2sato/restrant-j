@@ -5,7 +5,7 @@ import net.infopeers.restrant.TestParams;
 import net.infopeers.restrant.engine.PrefixedPlaceholderFormatter;
 import net.infopeers.restrant.engine.parser.TextUrlParser;
 
-public class DefaultParserTest extends TestCase {
+public class TextPatternParserTest extends TestCase {
 
 	private PrefixedPlaceholderFormatter phFormatter = new PrefixedPlaceholderFormatter();
 

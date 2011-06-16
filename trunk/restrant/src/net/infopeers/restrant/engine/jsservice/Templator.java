@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.text.MessageFormat;
 
 import net.infopeers.commons.io.StreamUtils;
+import net.infopeers.restrant.engine.PatternInvokerBuilder;
 import net.infopeers.restrant.engine.parser.PatternParserWithPathFormat;
 import net.infopeers.restrant.util.AnnotationUtils;
 
@@ -87,6 +88,6 @@ class Templator {
 
 		writer.println(functionTemplate.format(new Object[] { namespace,
 				method.getDeclaringClass().getSimpleName(), name,
-				funcParams, patternParser.getUrlPathParser().getPath(), jsonParams }));
+				funcParams, patternParser.getUrlPathParser().getPath(), jsonParams}));
 	}
 }

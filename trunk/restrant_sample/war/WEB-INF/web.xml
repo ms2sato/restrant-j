@@ -14,7 +14,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		</init-param>
 
 		<init-param>
-			<!-- RoRに倣ったURLルート情報。Routeクラスを実装することで定義できる -->
+			<!-- Route info as RoR. Implements interface Route. -->
 			<param-name>RouteClass</param-name>
 			<param-value>net.infopeers.restrant.sample.Route</param-value>
 		</init-param>
@@ -26,12 +26,12 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		</init-param>
 		
 		<init-param>
-			<!-- リクエストパラメータのエンコーディングを指定できる。 指定されていれば変換が行われる-->
+			<!-- Request parameter's encoding -->
 			<param-name>Encoding</param-name>
 			<param-value>UTF-8</param-value>
 		</init-param>
 		
-		<!-- RoRに倣ったURLルート情報。数値順に合致したものが実行される -->
+		<!-- Route info as RoR. order by RouteFormat[No] -->
 		<init-param>
 			<param-name>RouteFormat0</param-name>
 			<param-value>/:controller/args/:id :action=post</param-value>
@@ -49,7 +49,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 			<param-value>/:controller/:action/:id</param-value>
 		</init-param>
 		<init-param>
-			<!-- @restfulはactionの選び方がRESTFULな方式（get post put delete）になる -->
+			<!-- @restful makes RESTFUL action(get post put delete) -->
 			<param-name>RouteFormat30</param-name>
 			<param-value>/:controller/:id @restful</param-value>
 		</init-param>
@@ -58,7 +58,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>RestrantSample</servlet-name>
 		<url-pattern>/samples</url-pattern>
 		<url-pattern>/service.js</url-pattern>
-		<url-pattern>/jsservice/test</url-pattern>
+		<url-pattern>/jsservice/*</url-pattern>
 	</servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>

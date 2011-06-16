@@ -12,4 +12,8 @@ public class JsServiceController extends BasicController{
 		getResponse().getWriter().append(to);
 	}
 	
+	@Method({"to"})
+	public void postGo(String to) throws IOException{
+		getResponse().getWriter().append(to);
+	}
 }

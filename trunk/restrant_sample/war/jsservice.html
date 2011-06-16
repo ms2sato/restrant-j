@@ -11,9 +11,19 @@
 					
 				}, 'TO!');
 			}
+
+			function postGo(){
+				var s = new RESTRANTJS.JsServiceController();
+				s.postGo(function(dat){
+					alert(dat);
+				}, function(xhr, t, e){
+					
+				}, 'POSTTO!');
+			}
 		</script>
 	</head>
 	<body>
 		<button onclick="testGo()">testGo</button>	
+		<button onclick="postGo()">postGo</button>	
 	</body>
 </html>

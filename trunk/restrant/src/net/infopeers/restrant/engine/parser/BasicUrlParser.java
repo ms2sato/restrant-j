@@ -1,7 +1,9 @@
 package net.infopeers.restrant.engine.parser;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import net.infopeers.restrant.engine.PatternInvokerBuilder;
 import net.infopeers.restrant.engine.PlaceholderFormatter;
@@ -11,6 +13,8 @@ public class BasicUrlParser implements PatternParserWithPathFormat {
 
 	List<PatternParser> parts = new ArrayList<PatternParser>();
 	UrlPathParser urlPathParser;
+	Set<String> methods = new HashSet<String>(); //target methods
+	boolean isRestful = false;
 
 	public class WithParam implements PatternParser {
 
@@ -40,8 +44,9 @@ public class BasicUrlParser implements PatternParserWithPathFormat {
 
 		@Override
 		public boolean parse(EditableParams params, String path) {
-			params.addExtension(PatternInvokerBuilder.ACTION_PLACEHOLDER_LABEL, params
-					.getMethod().toLowerCase());
+			String method = getMethod(params);
+			
+			params.addExtension(PatternInvokerBuilder.ACTION_PLACEHOLDER_LABEL, method.toLowerCase());
 			return true;
 		}
 
@@ -49,7 +54,20 @@ public class BasicUrlParser implements PatternParserWithPathFormat {
 		public String findSpecifiedPlaceHolder(String placeHolder) {
 			return null;
 		}
+	}
+	
+	public class Method implements PatternParser{
 
+		@Override
+		public boolean parse(EditableParams params, String path) {
+			String method = getMethod(params);
+			return methods.contains(method.toLowerCase());
+		}
+
+		@Override
+		public String findSpecifiedPlaceHolder(String placeHolder) {
+			return null;
+		}
 	}
 
 	public BasicUrlParser(String pathFormat, PlaceholderFormatter phFormatter) {
@@ -69,30 +87,31 @@ public class BasicUrlParser implements PatternParserWithPathFormat {
 	}
 
 	public BasicUrlParser onGet() {
-		return action(PatternInvokerBuilder.GET);
+		return method(PatternInvokerBuilder.GET);
 	}
 
 	public BasicUrlParser onPost() {
-		return action(PatternInvokerBuilder.POST);
+		return method(PatternInvokerBuilder.POST);
 	}
 
 	public BasicUrlParser onHead() {
-		return action(PatternInvokerBuilder.HEAD);
+		return method(PatternInvokerBuilder.HEAD);
 	}
 
 	public BasicUrlParser onOptions() {
-		return action(PatternInvokerBuilder.OPTIONS);
+		return method(PatternInvokerBuilder.OPTIONS);
 	}
 
 	public BasicUrlParser onDelete() {
-		return action(PatternInvokerBuilder.DELETE);
+		return method(PatternInvokerBuilder.DELETE);
 	}
 
 	public BasicUrlParser onPut() {
-		return action(PatternInvokerBuilder.PUT);
+		return method(PatternInvokerBuilder.PUT);
 	}
 
 	public BasicUrlParser onRestful() {
+		isRestful = true;
 		this.parts.add(new OnRestful());
 		return this;
 	}
@@ -109,9 +128,26 @@ public class BasicUrlParser implements PatternParserWithPathFormat {
 		return this;
 	}
 
+	public BasicUrlParser method(String method) {
+		methods.add(method);
+		return this;
+	}
+	
+	
 	@Override
 	public boolean parse(EditableParams params, String path) {
 
+		if(!isRestful){
+			if(methods.isEmpty()){
+				methods.add(PatternInvokerBuilder.GET);
+			}
+			
+			String method = getMethod(params);
+			if(!methods.contains(method)){
+				return false;
+			}
+		}
+		
 		for (PatternParser part : parts) {
 			if (!part.parse(params, path))
 				return false;
@@ -132,6 +168,12 @@ public class BasicUrlParser implements PatternParserWithPathFormat {
 	@Override
 	public UrlPathParser getUrlPathParser() {
 		return this.urlPathParser;
+	}
+
+	private String getMethod(EditableParams params) {
+		String method = params.getMethod();
+		if(method == null) method = PatternInvokerBuilder.GET;
+		return method.toLowerCase();
 	}
 	
 }
