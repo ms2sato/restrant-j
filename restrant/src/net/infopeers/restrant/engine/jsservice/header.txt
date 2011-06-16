@@ -1,0 +1,15 @@
+(function(global)'{'
+
+	global.{0} = '{}';
+
+	{0}.request = function(callback, error, url, params)'{'
+		return $.ajax(
+			'{'
+				''url'': url,
+				''data'': params,
+				''success'': callback,
+				''error'': error
+			'}'
+		);
+	'}';
+

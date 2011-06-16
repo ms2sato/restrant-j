@@ -14,6 +14,7 @@ import net.infopeers.restrant.Method;
 import net.infopeers.restrant.Params;
 import net.infopeers.restrant.Request;
 import net.infopeers.restrant.ResourceNotFoundException;
+import net.infopeers.restrant.util.AnnotationUtils;
 import net.infopeers.util.Convertor;
 
 /**
@@ -85,21 +86,19 @@ public class ReflectInvoker implements Invoker {
 					continue;
 				}
 				
-				argLabels = ma.value();// 直接配列が指定されているケース
+//				argLabels = ma.value();// 直接配列が指定されているケース
+//				
+//				//指定がデフォルトの可能性があるなら
+//				if (argLabels.length == 0) {
+//					// ラベル指定
+//					argLabels = ma.args();
+//				}
 				
-				//指定がデフォルトの可能性があるなら
-				if (argLabels.length == 0) {
-					// ラベル指定
-					argLabels = ma.args();
-				}
+				argLabels = AnnotationUtils.getArgs(ma);
 			}
 
 			//実際のパラメータの数と、アノテーションのラベルの数が一致しなければならない
-			int parameterLen = method.getParameterTypes().length; 
-			if (parameterLen != argLabels.length) {
-				//TODO: 専用の例外か？
-				throw new RuntimeException("パラメータの数と、アノテーションのラベルの数が一致しない");
-			}
+			int parameterLen = AnnotationUtils.checkParameterLengthToAnnotationArgLabelLength(method, argLabels);
 			
 			if(parameterLen != exNames.size()){
 				if(parameterLen == 0){
@@ -124,6 +123,7 @@ public class ReflectInvoker implements Invoker {
 		
 		return defaultMethod;
 	}
+
 
 	static void removeCorePlaceholders(Set<String> exNames) {
 		exNames.remove(PatternInvokerBuilder.CONTROLLER_PLACEHOLDER_LABEL);
