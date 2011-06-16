@@ -1,0 +1,19 @@
+<html>
+	<head>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript"></script>
+		<script type="text/javascript" src="service.js"></script>
+		<script type="text/javascript">
+			function testGo(){
+				var s = new RESTRANTJS.JsServiceController();
+				s.go(function(dat){
+					alert(dat);
+				}, function(xhr, t, e){
+					
+				}, 'TO!');
+			}
+		</script>
+	</head>
+	<body>
+		<button onclick="testGo()">testGo</button>	
+	</body>
+</html>

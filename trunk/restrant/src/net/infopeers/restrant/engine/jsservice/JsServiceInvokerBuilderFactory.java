@@ -1,79 +1,34 @@
-package net.infopeers.restrant.engine;
+package net.infopeers.restrant.engine.jsservice;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
-import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import net.infopeers.commons.io.StreamUtils;
-import net.infopeers.restrant.ControllerServlet;
-import net.infopeers.restrant.ResourceNotFoundException;
+import net.infopeers.restrant.engine.AbstractInvokerBuilderFactory;
+import net.infopeers.restrant.engine.InvokerBuilder;
+import net.infopeers.restrant.engine.ParserHolder;
+import net.infopeers.restrant.engine.PatternInvokerBuilder;
 import net.infopeers.restrant.engine.parser.PatternParser;
 import net.infopeers.restrant.engine.parser.PatternParserArranger;
 import net.infopeers.restrant.engine.parser.PatternParserWithPathFormat;
 import net.infopeers.restrant.engine.parser.UrlPathParser;
 
+/**
+ * 
+ * 条件：@Methodが指定されていること。 パターンのURL表現の途中に:controllerのようなプレースホルダが現れず、
+ * Routeクラス等で直接値指定がされていること。
+ * 
+ * @author ms2
+ * 
+ */
 public class JsServiceInvokerBuilderFactory extends
 		AbstractInvokerBuilderFactory {
-
-	class InvokerBuilderImpl implements InvokerBuilder {
-
-		@Override
-		public Invoker build(ControllerServlet servlet, HttpServletRequest req)
-				throws ResourceNotFoundException {
-
-			return new Invoker() {
-
-				@Override
-				public void invoke(HttpServletRequest req,
-						HttpServletResponse resp) throws Exception {
-					// TODO Auto-generated method stub
-
-				}
-
-			};
-		}
-
-	}
-
-	static class Templator {
-		String namespace = "TEST";
-		MessageFormat functionTemplate;
-
-		public Templator() {
-			try {
-				functionTemplate = new MessageFormat(StreamUtils.toString(this
-						.getClass().getResourceAsStream("function.txt")));
-
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-		}
-
-		public void appendFunction(PrintWriter writer, Method m,
-				UrlPathParser pathParser) {
-
-			String name = m.getName();
-
-			StringBuilder params = new StringBuilder();
-			Class<?>[] types = m.getParameterTypes();
-			for (int i = 0; i < types.length; ++i) {
-				params.append(", ");
-				Class<?> type = types[i];
-				params.append(type.getSimpleName().toLowerCase() + (i + 1));
-			}
-
-			writer.println(functionTemplate.format(new Object[] { namespace,
-					m.getDeclaringClass().getSimpleName(), name, params,
-					pathParser.getPatternFormat() }));
-		}
-	}
 
 	private String rootPackage;
 	private PatternParserArranger parserArranger;
@@ -101,13 +56,20 @@ public class JsServiceInvokerBuilderFactory extends
 		Templator templator = new Templator();
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
+
+		Set<String> classNameSet = new HashSet<String>();
+
 		try {
+			templator.appendHeader(pw);
+
 			for (PatternParser p : parsers) {
 
+				PatternParserWithPathFormat pp;
 				UrlPathParser pathParser;
 				if (p instanceof PatternParserWithPathFormat) {
 					pathParser = ((PatternParserWithPathFormat) p)
 							.getUrlPathParser();
+					pp = (PatternParserWithPathFormat)p;
 				} else {
 					continue;
 				}
@@ -127,8 +89,17 @@ public class JsServiceInvokerBuilderFactory extends
 								rootPackage);
 				try {
 					Class<?> cls = Class.forName(controllerName);
+
+					if (!classNameSet.contains(controllerName)) {
+						templator.appendClass(pw, cls);
+						classNameSet.add(controllerName);
+					}
+
 					for (Method m : cls.getMethods()) {
 						if (!m.getName().equals(actionName))
+							continue;
+
+						if (m.getAnnotation(net.infopeers.restrant.Method.class) == null)
 							continue;
 
 						if (pathParser.getPlaceholderFormatter()
@@ -137,20 +108,23 @@ public class JsServiceInvokerBuilderFactory extends
 							continue;
 						}
 
-						templator.appendFunction(pw, m, pathParser);
+						templator.appendFunction(pw, m, pp);
 					}
 
-					System.out.println(sw.toString());
+					//System.out.println(sw.toString());
 				} catch (ClassNotFoundException e) {
 					throw new RuntimeException(e);
 				}
 
 			}
+
+			templator.appendFooter(pw);
+			return new InvokerBuilderImpl(sw.toString());
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		} finally {
 			pw.close();
 		}
-
-		return new InvokerBuilderImpl();
 	}
 
 }

@@ -15,12 +15,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.infopeers.restrant.engine.JsServiceInvokerBuilderFactory;
 import net.infopeers.restrant.engine.PatternInvokerBuilderFactory;
 import net.infopeers.restrant.engine.PrefixedPlaceholderFormatter;
 import net.infopeers.restrant.engine.Invoker;
 import net.infopeers.restrant.engine.InvokerBuilderFactory;
 import net.infopeers.restrant.engine.PlaceholderFormatter;
+import net.infopeers.restrant.engine.jsservice.JsServiceInvokerBuilderFactory;
 import net.infopeers.restrant.engine.params.ExtensionMultimapFactory;
 import net.infopeers.restrant.engine.parser.CompositeUrlParserArranger;
 import net.infopeers.restrant.engine.parser.PatternParserArranger;

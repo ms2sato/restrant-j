@@ -1,10 +1,13 @@
-package net.infopeers.restrant.engine;
+package net.infopeers.restrant.engine.jsservice;
+
+import net.infopeers.restrant.Method;
 
 public class TestJsClass {
 
 	/**
 	 * target of generate
 	 */
+	@Method()
 	public void go(){
 		
 	}
@@ -26,6 +29,7 @@ public class TestJsClass {
 	/**
 	 * target of generate
 	 */
+	@Method({"aaa"})
 	public void go2(String abc){
 		
 	}

@@ -1,0 +1,8 @@
+	{0}.{1} = function()'{'
+	'}';
+
+	{0}.{1}.prototype.request = function(callback, error, url, params)'{'
+		return {0}.request(callback, error, url, params);
+	'}';
+
+	
