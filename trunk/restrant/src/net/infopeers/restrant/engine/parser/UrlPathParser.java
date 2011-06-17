@@ -1,8 +1,5 @@
 package net.infopeers.restrant.engine.parser;
 
-import java.io.IOException;
-
-import net.infopeers.commons.io.StreamUtils;
 import net.infopeers.restrant.engine.PlaceholderFormatter;
 import net.infopeers.restrant.engine.params.EditableParams;
 
@@ -64,14 +61,9 @@ public class UrlPathParser implements PatternParser {
 			String query = pathAndQuery[1];
 
 			// ex: path/to/url?:body
-			if (params.isStreamContent() && !query.contains("=")
-					) {
-				try {
-					addExtension(params, query,
-							StreamUtils.toString(params.getInputStream()));
-				} catch (IOException e) {
-					throw new RuntimeException(e);
-				}
+			if (params.isStreamContent() && !query.contains("=")) {
+				String key = phFormatter.dePlaceholder(query);
+				params.addContentParamKey(key);
 				return true;
 			}
 
