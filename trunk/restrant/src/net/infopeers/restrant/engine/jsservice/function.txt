@@ -1,5 +1,0 @@
-	{0}.{1}.prototype.{2} = function(callback, error{3})'{'
-		return this.request(callback, error, ''{4}'', ''{6}'', '{'
-			{5}
-		'}');
-	'}';

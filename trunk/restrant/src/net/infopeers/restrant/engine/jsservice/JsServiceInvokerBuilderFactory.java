@@ -112,13 +112,13 @@ public class JsServiceInvokerBuilderFactory extends
 						if (m.getAnnotation(net.infopeers.restrant.Method.class) == null)
 							continue;
 
-//						if (pathParser.getPlaceholderFormatter()
-//								.hasPlaceholder(pathParser.getPath())) {
-//							// path with placeholder is not target
-//							continue;
-//						}
 						
-						templator.appendFunction(pw, m, pp);
+						if(pathParser.isFormtype()){
+							templator.appendFunction4formtype(pw, m, pp);
+						}
+						else{
+							templator.appendFunction4bodytype(pw, m, pp, pathParser.getBodyParamLabel());
+						}
 					}
 
 					//System.out.println(sw.toString());
