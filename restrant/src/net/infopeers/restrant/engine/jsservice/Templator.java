@@ -5,25 +5,33 @@ import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import net.infopeers.commons.io.StreamUtils;
+import net.infopeers.commons.regex.Replacer;
 import net.infopeers.restrant.engine.PatternInvokerBuilder;
+import net.infopeers.restrant.engine.PlaceholderFormatter;
 import net.infopeers.restrant.engine.parser.PatternParserWithPathFormat;
+import net.infopeers.restrant.engine.parser.UrlPathParser;
 import net.infopeers.restrant.util.AnnotationUtils;
 
 class Templator {
 
-	private static String DEFAULT_NS = "RESTRANTJS"; 
-	
+	private static String DEFAULT_NS = "RESTRANTJS";
+
 	String namespace;
 	MessageFormat functionTemplate;
+	PlaceholderFormatter phFormatter;
+	Pattern phPattern;
 
-	public Templator() {
-		this(DEFAULT_NS);
+	public Templator(PlaceholderFormatter phFormatter) {
+		this(DEFAULT_NS, phFormatter);
 	}
 
-	public Templator(String namespace) {
+	public Templator(String namespace, PlaceholderFormatter phFormatter) {
 		this.namespace = namespace;
+		this.phFormatter = phFormatter;
+
 		try {
 			functionTemplate = new MessageFormat(StreamUtils.toString(this
 					.getClass().getResourceAsStream("function.txt")));
@@ -31,6 +39,9 @@ class Templator {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+
+		this.phPattern = Pattern.compile(phFormatter
+				.getRegexToReplacePlaceHolders());
 	}
 
 	public void setNamespace(String namespace) {
@@ -83,10 +94,12 @@ class Templator {
 						argLabels);
 
 		for (int i = 0; i < argLength; ++i) {
-			jsonParams.append("'");
 			String paramName = argLabels[i];
-			jsonParams.append(paramName);
-			jsonParams.append("' : ").append(paramName);
+			if (i != 0) {
+				jsonParams.append(", ");	
+			}
+			jsonParams.append("'").append(paramName).append("' : ")
+					.append(paramName);
 
 			funcParams.append(", ").append(paramName);
 		}
@@ -101,7 +114,27 @@ class Templator {
 
 		writer.println(functionTemplate.format(new Object[] { namespace,
 				method.getDeclaringClass().getSimpleName(), name, funcParams,
-				patternParser.getUrlPathParser().getPath(), jsonParams,
+				toPathInScript(patternParser), jsonParams,
 				httpMethod.toUpperCase() }));
+	}
+
+	/**
+	 * change to path for script. path/to/:placeholder/format to path/to/' +
+	 * placeholder + '/format
+	 * 
+	 * @param patternParser
+	 * @return
+	 */
+	private String toPathInScript(PatternParserWithPathFormat patternParser) {
+		UrlPathParser pp = patternParser.getUrlPathParser();
+		String path = pp.getPath();
+
+		Replacer rep = new Replacer(phPattern) {
+			@Override
+			protected String replace(int groupIndex, String value) {
+				return "' + " + value + " + '";
+			}
+		};
+		return rep.replace(path);
 	}
 }

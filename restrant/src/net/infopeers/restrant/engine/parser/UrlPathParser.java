@@ -17,7 +17,7 @@ public class UrlPathParser implements PatternParser {
 	private String[] pathAndQuery; // {/:controller/:action/:id,
 									// test1=1&test2=2}
 	private String[] formatPathParts; // {:controller, :action, :id}
-
+	
 	/**
 	 * 
 	 * @param format
@@ -32,12 +32,12 @@ public class UrlPathParser implements PatternParser {
 			throw new IllegalArgumentException("「?」が複数存在してはいけません");
 		}
 
-		this.formatPathParts = pathAndQuery[0].split("[/\\.]");
+		this.formatPathParts = phFormatter.splitSeparator(pathAndQuery[0]);
 	}
 
 	@Override
 	public boolean parse(EditableParams params, String path) {
-		String[] pathParts = path.split("[/\\.]");
+		String[] pathParts = phFormatter.splitSeparator(path);
 
 		// 長さが違うなら一致しない
 		if (formatPathParts.length != pathParts.length)

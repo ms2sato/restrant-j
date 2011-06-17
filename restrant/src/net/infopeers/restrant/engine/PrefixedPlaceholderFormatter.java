@@ -8,7 +8,11 @@ package net.infopeers.restrant.engine;
 public class PrefixedPlaceholderFormatter implements PlaceholderFormatter {
 	
 	private String prefix = ":";
-	
+	private String splitRegex = "[/\\.]"; 
+	String getReplaceRegex(){
+		return "\\" + prefix + "([\\w]+)(?:" + splitRegex + "+|$)";
+	}
+
 	public PrefixedPlaceholderFormatter(){
 		
 	}
@@ -44,5 +48,15 @@ public class PrefixedPlaceholderFormatter implements PlaceholderFormatter {
 	public boolean hasPlaceholder(String text) {
 		//TODO: fix to more better
 		return text.indexOf(prefix) != -1;
+	}
+
+	@Override
+	public String[] splitSeparator(String path) {
+		return path.split(splitRegex);
+	}
+	
+	@Override
+	public String getRegexToReplacePlaceHolders() {
+		return getReplaceRegex();
 	}
 }

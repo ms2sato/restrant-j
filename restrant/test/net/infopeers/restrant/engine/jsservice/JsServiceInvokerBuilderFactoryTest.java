@@ -14,13 +14,13 @@ public class JsServiceInvokerBuilderFactoryTest {
 	@Test
 	public void senario() throws Exception{
 		
-		Templator t = new Templator();
+		PrefixedPlaceholderFormatter phFormatter = new PrefixedPlaceholderFormatter();
+		Templator t = new Templator(phFormatter);
 		StringWriter sw = new StringWriter();
 		PrintWriter w = new PrintWriter(sw);
 		
 		t.appendHeader(w);
 		
-		PrefixedPlaceholderFormatter phFormatter = new PrefixedPlaceholderFormatter();
 		String pathFormat = "/test/testa/myaction?to=:TO";
 		
 		BasicPatternParser bp = new BasicPatternParser(pathFormat, phFormatter);

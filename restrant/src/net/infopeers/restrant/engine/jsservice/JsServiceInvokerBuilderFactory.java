@@ -14,6 +14,7 @@ import net.infopeers.restrant.engine.AbstractInvokerBuilderFactory;
 import net.infopeers.restrant.engine.InvokerBuilder;
 import net.infopeers.restrant.engine.ParserHolder;
 import net.infopeers.restrant.engine.PatternInvokerBuilder;
+import net.infopeers.restrant.engine.PlaceholderFormatter;
 import net.infopeers.restrant.engine.parser.PatternParser;
 import net.infopeers.restrant.engine.parser.PatternParserArranger;
 import net.infopeers.restrant.engine.parser.PatternParserWithPathFormat;
@@ -38,12 +39,14 @@ public class JsServiceInvokerBuilderFactory extends
 	private String rootPackage;
 	private PatternParserArranger parserArranger;
 	private String namespace;
+	private PlaceholderFormatter phFormatter;
 
 	public JsServiceInvokerBuilderFactory(String rootPackage,
-			PatternParserArranger parserArranger, String serviceJsNamespace) {
+			PatternParserArranger parserArranger, String serviceJsNamespace, PlaceholderFormatter phFormatter) {
 		this.rootPackage = rootPackage;
 		this.parserArranger = parserArranger;
 		this.namespace = serviceJsNamespace;
+		this.phFormatter = phFormatter;
 	}
 
 	@Override
@@ -60,7 +63,7 @@ public class JsServiceInvokerBuilderFactory extends
 
 		parserArranger.arrange(holder);
 
-		Templator templator = new Templator(namespace);
+		Templator templator = new Templator(namespace, phFormatter);
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
 
@@ -109,12 +112,12 @@ public class JsServiceInvokerBuilderFactory extends
 						if (m.getAnnotation(net.infopeers.restrant.Method.class) == null)
 							continue;
 
-						if (pathParser.getPlaceholderFormatter()
-								.hasPlaceholder(pathParser.getPath())) {
-							// path with placeholder is not target
-							continue;
-						}
-
+//						if (pathParser.getPlaceholderFormatter()
+//								.hasPlaceholder(pathParser.getPath())) {
+//							// path with placeholder is not target
+//							continue;
+//						}
+						
 						templator.appendFunction(pw, m, pp);
 					}
 

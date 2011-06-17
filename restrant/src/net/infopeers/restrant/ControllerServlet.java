@@ -43,7 +43,7 @@ public class ControllerServlet extends HttpServlet {
 	private static final String ROUTE_CLASS_LABEL = "RouteClass"; // Web.xmlのRouteクラス指定ラベル
 	private static final String SERVICE_JS_LABEL = "ServiceJs"; // Web.xmlのJavaScriptサービス指定ラベル
 	private static final String SERVICE_JS_NAMESPACE_LABEL = "ServiceJsNamespace"; // Web.xmlのJavaScriptでJSのネームスペース指定ラベル
-	
+
 	private static final String ENCODING = "Encoding"; // Web.xmlのエンコーディング指定ラベル
 
 	private PlaceholderFormatter phFormatter = new PrefixedPlaceholderFormatter();
@@ -85,9 +85,11 @@ public class ControllerServlet extends HttpServlet {
 		String serviceJsPath = config.getInitParameter(SERVICE_JS_LABEL);
 		if (serviceJsPath != null) {
 
-			String serviceJsNamespace = config.getInitParameter(SERVICE_JS_NAMESPACE_LABEL);
+			String serviceJsNamespace = config
+					.getInitParameter(SERVICE_JS_NAMESPACE_LABEL);
 			path2ibf.put(serviceJsPath, new JsServiceInvokerBuilderFactory(
-					rootPackage, parserArranger, serviceJsNamespace));
+					rootPackage, parserArranger, serviceJsNamespace,
+					phFormatter));
 		}
 
 	}
@@ -185,7 +187,7 @@ public class ControllerServlet extends HttpServlet {
 		String path = req.getRequestURI().substring(
 				req.getContextPath().length());
 		InvokerBuilderFactory factory = path2ibf.get(path);
-		if(factory == null){
+		if (factory == null) {
 			factory = path2ibf.get(ibfDefaultName);
 		}
 

@@ -29,11 +29,21 @@
 					alert('error:' + t +'/'+ e);
 				}, 'HANDLEJSON');
 			}
+
+			function restfulPut(){
+				var s = new TESTNS.RestfulController();
+				s.put(function(dat){
+					alert(dat);
+				}, function(xhr, t, e){
+					alert('error:' + t +'/'+ e);
+				}, 'RESTFUL_PUT');
+			}
 		</script>
 	</head>
 	<body>
 		<button onclick="testGo()">testGo</button>	
 		<button onclick="postGo()">postGo</button>	
 		<button onclick="handleJson()">handleJson</button>	
+		<button onclick="restfulPut()">restfulPut</button>	
 	</body>
 </html>
