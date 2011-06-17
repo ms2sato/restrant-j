@@ -4,26 +4,36 @@
 		<script type="text/javascript" src="service.js"></script>
 		<script type="text/javascript">
 			function testGo(){
-				var s = new RESTRANTJS.JsServiceController();
+				var s = new TESTNS.JsServiceController();
 				s.go(function(dat){
 					alert(dat);
 				}, function(xhr, t, e){
-					
+					alert('error:' + t +'/'+ e);
 				}, 'TO!');
 			}
 
 			function postGo(){
-				var s = new RESTRANTJS.JsServiceController();
+				var s = new TESTNS.JsServiceController();
 				s.postGo(function(dat){
 					alert(dat);
 				}, function(xhr, t, e){
-					
+					alert('error:' + t +'/'+ e);
 				}, 'POSTTO!');
+			}
+			
+			function handleJson(){
+				var s = new TESTNS.JsonController();
+				s.handle(function(dat){
+					alert(dat.msg);
+				}, function(xhr, t, e){
+					alert('error:' + t +'/'+ e);
+				}, 'HANDLEJSON');
 			}
 		</script>
 	</head>
 	<body>
 		<button onclick="testGo()">testGo</button>	
 		<button onclick="postGo()">postGo</button>	
+		<button onclick="handleJson()">handleJson</button>	
 	</body>
 </html>

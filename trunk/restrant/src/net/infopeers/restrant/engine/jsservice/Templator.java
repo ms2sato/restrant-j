@@ -13,10 +13,17 @@ import net.infopeers.restrant.util.AnnotationUtils;
 
 class Templator {
 
-	String namespace = "RESTRANTJS";
+	private static String DEFAULT_NS = "RESTRANTJS"; 
+	
+	String namespace;
 	MessageFormat functionTemplate;
 
 	public Templator() {
+		this(DEFAULT_NS);
+	}
+
+	public Templator(String namespace) {
+		this.namespace = namespace;
 		try {
 			functionTemplate = new MessageFormat(StreamUtils.toString(this
 					.getClass().getResourceAsStream("function.txt")));

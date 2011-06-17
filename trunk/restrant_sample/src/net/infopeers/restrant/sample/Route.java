@@ -9,6 +9,7 @@ public class Route implements net.infopeers.restrant.route.Route {
 		map.path("/samples/args/:id").controller("samples").action("post").on();
 		map.path("/jsservice/test/post?to=:to").controller("jsService").action("postGo").onPost().on();
 		map.path("/jsservice/test?to=:to").controller("jsService").action("go").on();
+		map.path("/jsservice/json?input=:input").controller("json").action("handle").on();
 		//map.path("/:controller/args/:id").action("post").on();
 	}
 

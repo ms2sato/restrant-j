@@ -24,6 +24,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 			<param-name>ServiceJs</param-name>
 			<param-value>/service.js</param-value>
 		</init-param>
+
+		<init-param>
+			<param-name>ServiceJsNamespace</param-name>
+			<param-value>TESTNS</param-value>
+		</init-param>
 		
 		<init-param>
 			<!-- Request parameter's encoding -->
