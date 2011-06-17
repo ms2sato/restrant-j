@@ -25,6 +25,7 @@ class InvokerBuilderImpl implements InvokerBuilder {
 			@Override
 			public void invoke(HttpServletRequest req,
 					HttpServletResponse resp) throws Exception {
+				resp.addHeader("Content-Type", "text/javascript");
 				resp.getWriter().append(response);
 			}
 

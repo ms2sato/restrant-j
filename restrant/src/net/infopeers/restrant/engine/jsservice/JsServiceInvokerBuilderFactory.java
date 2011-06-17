@@ -21,8 +21,13 @@ import net.infopeers.restrant.engine.parser.UrlPathParser;
 
 /**
  * 
- * 条件：@Methodが指定されていること。 パターンのURL表現の途中に:controllerのようなプレースホルダが現れず、
- * Routeクラス等で直接値指定がされていること。@Restfulでないこと
+ * 条件：
+ * <ul>
+ * <li>@Methodが指定されていること。</li>
+ * <li>パターンのURL表現の途中に:controllerのようなプレースホルダが現れず、
+ * Routeクラス等で直接値指定がされていること。</li>
+ * <li>@Restfulでないこと</li>
+ * </ul>
  * 
  * @author ms2
  * 
@@ -32,11 +37,13 @@ public class JsServiceInvokerBuilderFactory extends
 
 	private String rootPackage;
 	private PatternParserArranger parserArranger;
+	private String namespace;
 
 	public JsServiceInvokerBuilderFactory(String rootPackage,
-			PatternParserArranger parserArranger) {
+			PatternParserArranger parserArranger, String serviceJsNamespace) {
 		this.rootPackage = rootPackage;
 		this.parserArranger = parserArranger;
+		this.namespace = serviceJsNamespace;
 	}
 
 	@Override
@@ -53,7 +60,7 @@ public class JsServiceInvokerBuilderFactory extends
 
 		parserArranger.arrange(holder);
 
-		Templator templator = new Templator();
+		Templator templator = new Templator(namespace);
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
 
