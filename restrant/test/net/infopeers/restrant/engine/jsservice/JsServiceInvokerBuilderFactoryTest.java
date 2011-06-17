@@ -31,7 +31,7 @@ public class JsServiceInvokerBuilderFactoryTest {
 				continue;
 			}
 			
-			t.appendFunction(w, m, bp);
+			t.appendFunction4formtype(w, m, bp);
 		}
 		t.appendFooter(w);
 

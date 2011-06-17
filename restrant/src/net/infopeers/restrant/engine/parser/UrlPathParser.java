@@ -17,7 +17,7 @@ public class UrlPathParser implements PatternParser {
 	private String[] pathAndQuery; // {/:controller/:action/:id,
 									// test1=1&test2=2}
 	private String[] formatPathParts; // {:controller, :action, :id}
-	
+
 	/**
 	 * 
 	 * @param format
@@ -61,7 +61,7 @@ public class UrlPathParser implements PatternParser {
 			String query = pathAndQuery[1];
 
 			// ex: path/to/url?:body
-			if (params.isStreamContent() && !query.contains("=")) {
+			if (!isFormtype()) {
 				String key = phFormatter.dePlaceholder(query);
 				params.addContentParamKey(key);
 				return true;
@@ -131,6 +131,18 @@ public class UrlPathParser implements PatternParser {
 
 	public PlaceholderFormatter getPlaceholderFormatter() {
 		return this.phFormatter;
+	}
+
+	public boolean isFormtype() {
+		if (this.pathAndQuery.length == 2
+				&& !this.pathAndQuery[1].contains("="))
+			return false;
+
+		return true;
+	}
+
+	public String getBodyParamLabel() {
+		return this.phFormatter.dePlaceholder(pathAndQuery[1]);
 	}
 
 }
