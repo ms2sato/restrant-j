@@ -30,8 +30,8 @@ public class RestfulController extends BasicController {
 		w.println("PUT\n" + id + "\n" + body);
 	}
 
-	@Method({ "id" })
-	public void delete(String id) throws Exception {
+	@Method(name="delete", args={ "id" })
+	public void doDelete(String id) throws Exception {
 		PrintWriter w = getResponse().getWriter();
 		w.println("DELETE\n" + id + "\n");
 	}
