@@ -1,5 +1,7 @@
 package net.infopeers.restrant;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Enumeration;
@@ -17,6 +19,18 @@ public interface Params {
 	 * HTTPメソッドを取得する
 	 */
 	String getMethod();
+
+	/**
+	 * インプットストリームで取得する
+	 * @throws IOException 
+	 */
+	InputStream getInputStream() throws IOException;
+	
+	/**
+	 * パラメータとして取得できず、
+	 * getInputStreamでのみデータが受信できるかどうか
+	 */
+	boolean isStreamContent();
 	
 	/**
 	 * 全てのパラメータの名前セットを取得する

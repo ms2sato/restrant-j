@@ -1,5 +1,8 @@
 package net.infopeers.restrant.engine.parser;
 
+import java.io.IOException;
+
+import net.infopeers.commons.io.StreamUtils;
 import net.infopeers.restrant.engine.PlaceholderFormatter;
 import net.infopeers.restrant.engine.params.EditableParams;
 
@@ -12,7 +15,7 @@ import net.infopeers.restrant.engine.params.EditableParams;
 public class UrlPathParser implements PatternParser {
 
 	private PlaceholderFormatter phFormatter;
-	
+
 	private String patternFormat;
 	private String[] pathAndQuery; // {/:controller/:action/:id,
 									// test1=1&test2=2}
@@ -58,7 +61,21 @@ public class UrlPathParser implements PatternParser {
 		}
 
 		if (pathAndQuery.length == 2) {
-			return parseReqParams(params, pathAndQuery[1].split("&"));
+			String query = pathAndQuery[1];
+
+			// ex: path/to/url?:body
+			if (params.isStreamContent() && !query.contains("=")
+					) {
+				try {
+					addExtension(params, query,
+							StreamUtils.toString(params.getInputStream()));
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+				return true;
+			}
+
+			return parseReqParams(params, query.split("&"));
 		}
 		return true;
 	}
@@ -111,17 +128,17 @@ public class UrlPathParser implements PatternParser {
 	public String findSpecifiedPlaceHolder(String placeHolder) {
 		return null;
 	}
-	
-	public String getPatternFormat(){
+
+	public String getPatternFormat() {
 		return this.patternFormat;
 	}
-	
-	public String getPath(){
+
+	public String getPath() {
 		return this.pathAndQuery[0];
 	}
-	
-	public PlaceholderFormatter getPlaceholderFormatter(){
+
+	public PlaceholderFormatter getPlaceholderFormatter() {
 		return this.phFormatter;
 	}
-	
+
 }

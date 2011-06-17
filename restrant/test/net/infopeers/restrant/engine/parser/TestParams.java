@@ -1,5 +1,7 @@
 package net.infopeers.restrant.engine.parser;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Set;
@@ -53,6 +55,17 @@ public class TestParams extends AbstractParams {
 	public Enumeration<String> getParameterNames() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public InputStream getInputStream() throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isStreamContent() {
+		return false;
 	}
 	
 }

@@ -12,6 +12,5 @@ public class JsonController extends BasicController {
 
 		getResponse().addHeader("Content-Type", "application/json");
 		getResponse().getWriter().print("{\"msg\": \"message is " + input + "\"}");
-
 	}
 }
