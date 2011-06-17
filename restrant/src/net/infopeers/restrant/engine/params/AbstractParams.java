@@ -1,11 +1,14 @@
 package net.infopeers.restrant.engine.params;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Set;
 
+import net.infopeers.commons.io.StreamUtils;
 import net.infopeers.util.Convertor;
 
 /**
@@ -17,6 +20,7 @@ import net.infopeers.util.Convertor;
 public abstract class AbstractParams implements EditableParams {
 
 	private final ExtensionMultimap exMultimap;
+	private String contentParamKey;
 
 	protected List<String> getExtensionListOf(String key) {
 		return exMultimap.getExtensionListOf(key);
@@ -98,6 +102,27 @@ public abstract class AbstractParams implements EditableParams {
 	 * java.lang.String)
 	 */
 	public Object asObject(Class<?> cls, String key) {
+
+		if (key.equals(contentParamKey)) {
+			InputStream is;
+			try {
+				is = getInputStream();
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+			
+			if (cls.isAssignableFrom(InputStream.class)) {
+				return is;
+			}
+			else{
+				try {
+					String value = StreamUtils.toString(is);
+					return Convertor.convert(value, cls);
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		}
 
 		if (cls.isArray()) {
 			if (!nameSet().contains(key)) {
@@ -249,6 +274,12 @@ public abstract class AbstractParams implements EditableParams {
 	 */
 	public void addExtension(String key, String value) {
 		exMultimap.addExtension(key, value);
+	}
+
+	@Override
+	public void addContentParamKey(String key) {
+		this.contentParamKey = key;
+		addExtension(key, "dummy"); //for search keys
 	}
 
 }

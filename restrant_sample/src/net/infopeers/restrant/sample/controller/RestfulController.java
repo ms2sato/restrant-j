@@ -1,7 +1,9 @@
 package net.infopeers.restrant.sample.controller;
 
+import java.io.InputStream;
 import java.io.PrintWriter;
 
+import net.infopeers.commons.io.StreamUtils;
 import net.infopeers.restrant.BasicController;
 import net.infopeers.restrant.Method;
 import net.infopeers.restrant.Params;
@@ -15,13 +17,15 @@ public class RestfulController extends BasicController {
 	}
 
 	@Method({"body"})
-	public void post(String body) throws Exception {
+	public void post(InputStream is) throws Exception {
+		//contents body can get as InputStream.
 		PrintWriter w = getResponse().getWriter();
-		w.println("POST\n" + body + "\n");
+		w.println("POST\n" + StreamUtils.toString(is) + "\n");
 	}
 
 	@Method({ "id", "body" })
 	public void put(String id, String body) throws Exception {
+		//contents body can get as String too.
 		PrintWriter w = getResponse().getWriter();
 		w.println("PUT\n" + id + "\n" + body);
 	}

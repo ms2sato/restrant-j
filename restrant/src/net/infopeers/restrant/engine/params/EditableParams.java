@@ -16,5 +16,9 @@ public interface EditableParams extends Params {
 	 */
 	void addExtension(String key, String value);
 
-
+	/**
+	 * コンテンツのボディとして扱われるキーを追加する
+	 * @param key
+	 */
+	void addContentParamKey(String key);
 }
