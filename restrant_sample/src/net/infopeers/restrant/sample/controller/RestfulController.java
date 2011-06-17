@@ -10,7 +10,7 @@ import net.infopeers.restrant.Params;
 
 public class RestfulController extends BasicController {
 
-	@Method({"id"})
+	@Method(name="getIt", args={"id"})
 	public void get(String id) throws Exception {
 		PrintWriter w = getResponse().getWriter();
 		w.println("GET\n" + id + "\n");
@@ -30,8 +30,8 @@ public class RestfulController extends BasicController {
 		w.println("PUT\n" + id + "\n" + body);
 	}
 
-	@Method(name="delete", args={ "id" })
-	public void doDelete(String id) throws Exception {
+	@Method(name="deleteIt", args={ "id" })
+	public void delete(String id) throws Exception {
 		PrintWriter w = getResponse().getWriter();
 		w.println("DELETE\n" + id + "\n");
 	}
