@@ -203,14 +203,14 @@ public class ControllerServlet extends HttpServlet {
 	@SuppressWarnings("unchecked")
 	private void outputRequest(HttpServletRequest req) {
 		logger.info(req.getRequestURL().toString());
-//		Enumeration<String> nameEnum = req.getParameterNames();
-//		while (nameEnum.hasMoreElements()) {
-//			String name = nameEnum.nextElement();
-//			String[] values = req.getParameterValues(name);
-//			for (int i = 0; i < values.length; ++i) {
-//				logger.info("param[" + name + "]=" + values[i]);
-//			}
-//		}
+		Enumeration<String> nameEnum = req.getParameterNames();
+		while (nameEnum.hasMoreElements()) {
+			String name = nameEnum.nextElement();
+			String[] values = req.getParameterValues(name);
+			for (int i = 0; i < values.length; ++i) {
+				logger.info("param[" + name + "]=" + values[i]);
+			}
+		}
 	}
 
 	/**
