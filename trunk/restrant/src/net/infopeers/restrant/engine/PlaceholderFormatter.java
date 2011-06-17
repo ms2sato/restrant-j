@@ -36,4 +36,17 @@ public interface PlaceholderFormatter {
 	 */
 	boolean hasPlaceholder(String text);
 
+	
+	/**
+	 * セパレート文字列で分割する
+	 * @param path
+	 * @return
+	 */
+	String[] splitSeparator(String path);
+	
+	/**
+	 * プレースホルダにマッチする正規表現を取得する
+	 */
+	String getRegexToReplacePlaceHolders();
+	
 }
