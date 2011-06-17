@@ -1,0 +1,73 @@
+<html>
+	<head>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript"></script>
+		<script type="text/javascript">
+			function testGet(){
+				
+				$.ajax({
+					url: '/restful/1234',
+					type: 'GET',
+					success: function(dat){
+						alert(dat);
+					},
+					error: function(xhr, t, e){
+						alert('error:' + t +'/'+ e);
+					}
+				});
+			}
+
+			function testPost(){
+				
+				$.ajax({
+					url: '/restful',
+					type: 'POST',
+					data: 'POSTTEST',
+					contentType: 'application/xml',
+					processData: false,
+					success: function(dat){
+						alert(dat);
+					},
+					error: function(xhr, t, e){
+						alert('error:' + t +'/'+ e);
+					}
+				});
+			}
+
+			function testPut(){
+				
+				$.ajax({
+					url: '/restful/1234',
+					type: 'PUT',
+					data: 'PUTTEST',
+					contentType: 'application/xml',
+					processData: false,
+					success: function(dat){
+						alert(dat);
+					},
+					error: function(xhr, t, e){
+						alert('error:' + t +'/'+ e);
+					}
+				});
+			}
+			function testDelete(){
+				
+				$.ajax({
+					url: '/restful/1234',
+					type: 'DELETE',
+					success: function(dat){
+						alert(dat);
+					},
+					error: function(xhr, t, e){
+						alert('error:' + t +'/'+ e);
+					}
+				});
+			}
+		</script>
+	</head>
+	<body>
+		<button onclick="testGet()">testGet</button>	
+		<button onclick="testPost()">testPost</button>	
+		<button onclick="testPut()">testPut</button>	
+		<button onclick="testDelete()">testDelete</button>	
+	</body>
+</html>
