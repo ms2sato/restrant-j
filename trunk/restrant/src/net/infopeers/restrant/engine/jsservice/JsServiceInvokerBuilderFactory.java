@@ -106,18 +106,22 @@ public class JsServiceInvokerBuilderFactory extends
 					}
 
 					for (Method m : cls.getMethods()) {
-						if (!m.getName().equals(actionName))
+
+						net.infopeers.restrant.Method ma = m.getAnnotation(net.infopeers.restrant.Method.class); 
+						if (ma == null)
 							continue;
 
-						if (m.getAnnotation(net.infopeers.restrant.Method.class) == null)
-							continue;
-
+						if (!m.getName().equals(actionName)){
+							if(!ma.name().equals(actionName)){
+								continue;
+							}
+						}
 						
 						if(pathParser.isFormtype()){
-							templator.appendFunction4formtype(pw, m, pp);
+							templator.appendFunction4formtype(pw, actionName, m, pp);
 						}
 						else{
-							templator.appendFunction4bodytype(pw, m, pp, pathParser.getBodyParamLabel());
+							templator.appendFunction4bodytype(pw, actionName, m, pp, pathParser.getBodyParamLabel());
 						}
 					}
 
