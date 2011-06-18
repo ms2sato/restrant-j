@@ -29,8 +29,8 @@ class Templator {
 			this.format = format;
 		}
 
-		public void append(PrintWriter writer, String actionName, Method method,
-				PatternParserWithPathFormat patternParser) {
+		public void append(PrintWriter writer, String actionName,
+				Method method, PatternParserWithPathFormat patternParser) {
 
 			net.infopeers.restrant.Method ma = method
 					.getAnnotation(net.infopeers.restrant.Method.class);
@@ -63,10 +63,11 @@ class Templator {
 
 			StringBuilder jsonParams = new StringBuilder();
 			createParams(argLabels, usedParam, jsonParams);
+
 			writer.println(format.format(new Object[] { namespace,
 					method.getDeclaringClass().getSimpleName(), actionName,
 					funcParams, path4Script, jsonParams,
-					httpMethod.toUpperCase() }));
+					httpMethod.toUpperCase(), patternParser.getContentType() }));
 		}
 
 		protected abstract void createParams(String[] argLabels,
@@ -123,7 +124,7 @@ class Templator {
 	class FunctionAppender4bodytype extends FunctionAppender {
 
 		String bodyParamLabel;
-		
+
 		FunctionAppender4bodytype(MessageFormat format, String bodyParamLabel) {
 			super(format);
 			this.bodyParamLabel = bodyParamLabel;
@@ -134,15 +135,15 @@ class Templator {
 			jsonParams.append(bodyParamLabel);
 		}
 	}
-	
+
 	String namespace;
 
 	PlaceholderFormatter phFormatter;
 	Pattern phPattern;
-	
+
 	MessageFormat formtypeFunctionTemplate;
 	MessageFormat bodytypeFunctionTemplate;
-	
+
 	public Templator(PlaceholderFormatter phFormatter) {
 		this(DEFAULT_NS, phFormatter);
 	}
@@ -198,15 +199,16 @@ class Templator {
 				cls.getSimpleName() }));
 	}
 
-	public void appendFunction4formtype(PrintWriter writer, String actionName, Method method,
-			PatternParserWithPathFormat patternParser) {
+	public void appendFunction4formtype(PrintWriter writer, String actionName,
+			Method method, PatternParserWithPathFormat patternParser) {
 		FunctionAppender4formtype formtypeFunction = new FunctionAppender4formtype(
 				formtypeFunctionTemplate);
 		formtypeFunction.append(writer, actionName, method, patternParser);
 	}
 
-	public void appendFunction4bodytype(PrintWriter writer, String actionName, Method method,
-			PatternParserWithPathFormat patternParser, String bodyParamLabel) {
+	public void appendFunction4bodytype(PrintWriter writer, String actionName,
+			Method method, PatternParserWithPathFormat patternParser,
+			String bodyParamLabel) {
 		FunctionAppender4bodytype bodytypeFunction = new FunctionAppender4bodytype(
 				bodytypeFunctionTemplate, bodyParamLabel);
 		bodytypeFunction.append(writer, actionName, method, patternParser);

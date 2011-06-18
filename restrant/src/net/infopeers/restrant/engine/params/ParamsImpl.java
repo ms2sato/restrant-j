@@ -82,12 +82,17 @@ public class ParamsImpl extends AbstractParams {
 
 	@Override
 	public boolean isStreamContent() {
-		String type = req.getHeader("Content-Type");
+		String type = getContentType(); 
 		if (type == null)
 			return false;
 		if (type.equals("www-form-urlencoded"))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String getContentType() {
+		return req.getHeader("Content-Type");
 	}
 
 }

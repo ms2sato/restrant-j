@@ -7,4 +7,6 @@ public interface PatternParserWithPathFormat extends PatternParser {
 	UrlPathParser getUrlPathParser();
 	
 	List<String> getHttpMethods();
+	
+	String getContentType();
 }

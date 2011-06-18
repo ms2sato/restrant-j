@@ -35,6 +35,8 @@ public class TextUrlParser implements PatternParserWithPathFormat {
 	private static final String DELETE_METHOD_ATTRIBUTE = "@delete";
 	private static final String HEAD_METHOD_ATTRIBUTE = "@head";
 	private static final String OPTIONS_METHOD_ATTRIBUTE = "@options";
+	
+	private static final String CONTENT_TYPE_ATTRIBUTE = "@type";
 
 	private static HashMap<String, String> httpMethods = new HashMap<String, String>();
 
@@ -56,6 +58,7 @@ public class TextUrlParser implements PatternParserWithPathFormat {
 
 	private UrlPathParser urlPathParser;
 	private List<String> methods = new ArrayList<String>();
+	private String type;
 	
 
 	/**
@@ -165,9 +168,6 @@ public class TextUrlParser implements PatternParserWithPathFormat {
 			if(!methods.contains(pmethod)){
 				return false;
 			}
-			
-//			params.addExtension(
-//					PatternInvokerBuilder.ACTION_PLACEHOLDER_LABEL, pmethod);
 		}
 
 		for (int i = 1; i < attributes.length; ++i) {
@@ -186,7 +186,11 @@ public class TextUrlParser implements PatternParserWithPathFormat {
 			String[] argPair = attribute.split("=");
 			String key = argPair[0];
 			String value = argPair[1];
-			if (phFormatter.isPlaceholder(key)) {
+			
+			if(key.equals(CONTENT_TYPE_ATTRIBUTE)){
+				type = value;
+			}
+			else if (phFormatter.isPlaceholder(key)) {
 				addExtension(params, key, value);
 			}
 		}
@@ -224,5 +228,16 @@ public class TextUrlParser implements PatternParserWithPathFormat {
 	@Override
 	public List<String> getHttpMethods() {
 		return methods;
+	}
+
+	@Override
+	public String getContentType() {
+		return type;
+	}
+
+	@Override
+	public void validate() {
+		// TODO Auto-generated method stub
+		
 	}
 }

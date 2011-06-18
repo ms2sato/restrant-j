@@ -82,6 +82,12 @@ public class Mapper extends BasicPatternParser {
 		super.action(action);
 		return this;
 	}
+	
+	@Override 
+	public Mapper onType(String type){
+		super.onType(type);
+		return this;
+	}
 
 	public void off(){
 		//nop

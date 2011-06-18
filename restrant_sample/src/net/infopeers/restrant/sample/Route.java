@@ -14,8 +14,8 @@ public class Route implements net.infopeers.restrant.route.Route {
 		
 		map.path("/restful/:id").controller("restful").action("getIt").onGet().on();
 		map.path("/restful/:id").controller("restful").action("deleteIt").onDelete().on();
-		map.path("/restful/:id?:body").controller("restful").action("put").onPut().on();
-		map.path("/restful?:body").controller("restful").action("post").onPost().on();
+		map.path("/restful/:id?:body").controller("restful").action("put").onType("application/json").onPut().on();
+		map.path("/restful?:body").controller("restful").action("post").onType("application/json").onPost().on();
 		
 		map.path("/:controller/args/:id").action("args").on();
 	}

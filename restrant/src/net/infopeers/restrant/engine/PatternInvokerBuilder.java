@@ -91,6 +91,7 @@ public class PatternInvokerBuilder implements ParserHolder, InvokerBuilder{
 	 *            Parser
 	 */
 	public void addParser(PatternParser parser) {
+		parser.validate();
 		parsers.add(parser);
 	}
 
