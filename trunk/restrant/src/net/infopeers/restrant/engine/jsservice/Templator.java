@@ -154,11 +154,11 @@ class Templator {
 
 		try {
 			formtypeFunctionTemplate = new MessageFormat(
-					StreamUtils.toString(this.getClass().getResourceAsStream(
+					StreamUtils.toString(Templator.class.getResourceAsStream(
 							"function_form.txt")));
 
 			bodytypeFunctionTemplate = new MessageFormat(
-					StreamUtils.toString(this.getClass().getResourceAsStream(
+					StreamUtils.toString(Templator.class.getResourceAsStream(
 							"function_body.txt")));
 
 		} catch (IOException e) {
@@ -176,7 +176,7 @@ class Templator {
 	public void appendHeader(PrintWriter writer) throws IOException {
 		String file = "header.txt";
 		MessageFormat headerTemplate = new MessageFormat(
-				StreamUtils.toString(this.getClass().getResourceAsStream(file)));
+				StreamUtils.toString(Templator.class.getResourceAsStream(file)));
 
 		writer.print(headerTemplate.format(new Object[] { namespace }));
 	}
@@ -184,7 +184,7 @@ class Templator {
 	public void appendFooter(PrintWriter writer) throws IOException {
 		String file = "footer.txt";
 		MessageFormat headerTemplate = new MessageFormat(
-				StreamUtils.toString(this.getClass().getResourceAsStream(file)));
+				StreamUtils.toString(Templator.class.getResourceAsStream(file)));
 
 		writer.print(headerTemplate.format(new Object[] {}));
 	}
@@ -193,7 +193,7 @@ class Templator {
 			throws IOException {
 		String file = "class.txt";
 		MessageFormat headerTemplate = new MessageFormat(
-				StreamUtils.toString(this.getClass().getResourceAsStream(file)));
+				StreamUtils.toString(Templator.class.getResourceAsStream(file)));
 
 		writer.print(headerTemplate.format(new Object[] { namespace,
 				cls.getSimpleName() }));
