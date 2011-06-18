@@ -5,7 +5,7 @@
 			''success'': callback,
 			''type'': ''{6}'',
 			''error'': error,
-			''contentType'': ''application/xml'',
+			''contentType'': ''{7}'',
 			''processData'': false,
 			''data'': {5}
 		'}');

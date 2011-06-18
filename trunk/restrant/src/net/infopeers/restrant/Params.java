@@ -21,6 +21,11 @@ public interface Params {
 	String getMethod();
 
 	/**
+	 * Content-Type
+	 */
+	String getContentType();
+	
+	/**
 	 * インプットストリームで取得する
 	 * @throws IOException 
 	 */

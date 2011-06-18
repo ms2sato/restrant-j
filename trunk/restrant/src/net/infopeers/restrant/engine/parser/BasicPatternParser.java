@@ -11,8 +11,9 @@ public class BasicPatternParser implements PatternParserWithPathFormat {
 
 	List<PatternParser> parts = new ArrayList<PatternParser>();
 	UrlPathParser urlPathParser;
-	List<String> methods = new ArrayList<String>(); //target methods
+	List<String> methods = new ArrayList<String>(); // target methods
 	boolean isRestful = false;
+	String type;
 
 	public class WithParam implements PatternParser {
 
@@ -32,8 +33,13 @@ public class BasicPatternParser implements PatternParserWithPathFormat {
 
 		@Override
 		public String findSpecifiedPlaceHolder(String placeHolder) {
-			if(key.equals(placeHolder)) return value;
+			if (key.equals(placeHolder))
+				return value;
 			return null;
+		}
+
+		@Override
+		public void validate() {
 		}
 
 	}
@@ -43,8 +49,9 @@ public class BasicPatternParser implements PatternParserWithPathFormat {
 		@Override
 		public boolean parse(EditableParams params, String path) {
 			String method = PatternParserUtils.getMethod(params);
-			
-			params.addExtension(PatternInvokerBuilder.ACTION_PLACEHOLDER_LABEL, method.toLowerCase());
+
+			params.addExtension(PatternInvokerBuilder.ACTION_PLACEHOLDER_LABEL,
+					method.toLowerCase());
 			return true;
 		}
 
@@ -52,9 +59,13 @@ public class BasicPatternParser implements PatternParserWithPathFormat {
 		public String findSpecifiedPlaceHolder(String placeHolder) {
 			return null;
 		}
+
+		@Override
+		public void validate() {
+		}
 	}
-	
-	public class Method implements PatternParser{
+
+	public class Method implements PatternParser {
 
 		@Override
 		public boolean parse(EditableParams params, String path) {
@@ -66,9 +77,38 @@ public class BasicPatternParser implements PatternParserWithPathFormat {
 		public String findSpecifiedPlaceHolder(String placeHolder) {
 			return null;
 		}
+
+		@Override
+		public void validate() {
+		}
 	}
 
-	public BasicPatternParser(String pathFormat, PlaceholderFormatter phFormatter) {
+	public class ContentType implements PatternParser {
+
+		ContentType(String type) {
+			BasicPatternParser.this.type = type;
+		}
+
+		@Override
+		public boolean parse(EditableParams params, String path) {
+			if (type.equals(params.getContentType())) {
+				return true;
+			}
+			return false;
+		}
+
+		@Override
+		public String findSpecifiedPlaceHolder(String placeHolder) {
+			return null;
+		}
+
+		@Override
+		public void validate() {
+		}
+	}
+
+	public BasicPatternParser(String pathFormat,
+			PlaceholderFormatter phFormatter) {
 		this.urlPathParser = new UrlPathParser(phFormatter, pathFormat);
 
 		this.parts.add(urlPathParser);
@@ -115,14 +155,16 @@ public class BasicPatternParser implements PatternParserWithPathFormat {
 	}
 
 	public BasicPatternParser controller(String controller) {
-		this.parts.add(new WithParam(
-				PatternInvokerBuilder.CONTROLLER_PLACEHOLDER_LABEL, controller));
+		this.parts
+				.add(new WithParam(
+						PatternInvokerBuilder.CONTROLLER_PLACEHOLDER_LABEL,
+						controller));
 		return this;
 	}
 
 	public BasicPatternParser action(String action) {
-		this.parts.add(new WithParam(PatternInvokerBuilder.ACTION_PLACEHOLDER_LABEL,
-				action));
+		this.parts.add(new WithParam(
+				PatternInvokerBuilder.ACTION_PLACEHOLDER_LABEL, action));
 		return this;
 	}
 
@@ -130,23 +172,26 @@ public class BasicPatternParser implements PatternParserWithPathFormat {
 		methods.add(method);
 		return this;
 	}
-	
-	
+
+	public BasicPatternParser onType(String type) {
+		this.parts.add(new ContentType(type));
+		return this;
+	}
+
 	@Override
 	public boolean parse(EditableParams params, String path) {
 
-		if(!isRestful){
-			if(methods.isEmpty()){
-				//any methods process
-			}
-			else{
+		if (!isRestful) {
+			if (methods.isEmpty()) {
+				// any methods process
+			} else {
 				String method = PatternParserUtils.getMethod(params);
-				if(!methods.contains(method)){
+				if (!methods.contains(method)) {
 					return false;
 				}
 			}
 		}
-		
+
 		for (PatternParser part : parts) {
 			if (!part.parse(params, path))
 				return false;
@@ -159,7 +204,8 @@ public class BasicPatternParser implements PatternParserWithPathFormat {
 	public String findSpecifiedPlaceHolder(String placeHolder) {
 		for (PatternParser part : parts) {
 			String ph = part.findSpecifiedPlaceHolder(placeHolder);
-			if(ph != null) return ph;
+			if (ph != null)
+				return ph;
 		}
 		return null;
 	}
@@ -173,5 +219,19 @@ public class BasicPatternParser implements PatternParserWithPathFormat {
 	public List<String> getHttpMethods() {
 		return methods;
 	}
-	
+
+	@Override
+	public String getContentType() {
+		return type;
+	}
+
+	@Override
+	public void validate() {
+		if (!urlPathParser.isFormtype()
+				&& (type == null || type
+						.equals("application/x-www-form-urlencoded"))) {
+			throw new IllegalStateException("if pattern is not form parameter style(ex: /path/to/url?:body), Must set content type by Mapper.onType() method. ");
+		}
+	}
+
 }

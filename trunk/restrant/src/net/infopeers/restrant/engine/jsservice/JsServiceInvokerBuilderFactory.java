@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-
 import net.infopeers.restrant.engine.AbstractInvokerBuilderFactory;
 import net.infopeers.restrant.engine.InvokerBuilder;
 import net.infopeers.restrant.engine.ParserHolder;
@@ -25,8 +24,7 @@ import net.infopeers.restrant.engine.parser.UrlPathParser;
  * 条件：
  * <ul>
  * <li>@Methodが指定されていること。</li>
- * <li>パターンのURL表現の途中に:controllerのようなプレースホルダが現れず、
- * Routeクラス等で直接値指定がされていること。</li>
+ * <li>パターンのURL表現の途中に:controllerのようなプレースホルダが現れず、 Routeクラス等で直接値指定がされていること。</li>
  * <li>@Restfulでないこと</li>
  * </ul>
  * 
@@ -42,7 +40,8 @@ public class JsServiceInvokerBuilderFactory extends
 	private PlaceholderFormatter phFormatter;
 
 	public JsServiceInvokerBuilderFactory(String rootPackage,
-			PatternParserArranger parserArranger, String serviceJsNamespace, PlaceholderFormatter phFormatter) {
+			PatternParserArranger parserArranger, String serviceJsNamespace,
+			PlaceholderFormatter phFormatter) {
 		this.rootPackage = rootPackage;
 		this.parserArranger = parserArranger;
 		this.namespace = serviceJsNamespace;
@@ -57,6 +56,7 @@ public class JsServiceInvokerBuilderFactory extends
 		ParserHolder holder = new ParserHolder() {
 			@Override
 			public void addParser(PatternParser parser) {
+				parser.validate();
 				parsers.add(parser);
 			}
 		};
@@ -79,7 +79,7 @@ public class JsServiceInvokerBuilderFactory extends
 				if (p instanceof PatternParserWithPathFormat) {
 					pathParser = ((PatternParserWithPathFormat) p)
 							.getUrlPathParser();
-					pp = (PatternParserWithPathFormat)p;
+					pp = (PatternParserWithPathFormat) p;
 				} else {
 					continue;
 				}
@@ -107,25 +107,27 @@ public class JsServiceInvokerBuilderFactory extends
 
 					for (Method m : cls.getMethods()) {
 
-						net.infopeers.restrant.Method ma = m.getAnnotation(net.infopeers.restrant.Method.class); 
+						net.infopeers.restrant.Method ma = m
+								.getAnnotation(net.infopeers.restrant.Method.class);
 						if (ma == null)
 							continue;
 
-						if (!m.getName().equals(actionName)){
-							if(!ma.name().equals(actionName)){
+						if (!m.getName().equals(actionName)) {
+							if (!ma.name().equals(actionName)) {
 								continue;
 							}
 						}
-						
-						if(pathParser.isFormtype()){
-							templator.appendFunction4formtype(pw, actionName, m, pp);
-						}
-						else{
-							templator.appendFunction4bodytype(pw, actionName, m, pp, pathParser.getBodyParamLabel());
+
+						if (pathParser.isFormtype()) {
+							templator.appendFunction4formtype(pw, actionName,
+									m, pp);
+						} else {
+							templator.appendFunction4bodytype(pw, actionName,
+									m, pp, pathParser.getBodyParamLabel());
 						}
 					}
 
-					//System.out.println(sw.toString());
+					// System.out.println(sw.toString());
 				} catch (ClassNotFoundException e) {
 					throw new RuntimeException(e);
 				}

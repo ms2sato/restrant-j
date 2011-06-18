@@ -145,4 +145,10 @@ public class UrlPathParser implements PatternParser {
 		return this.phFormatter.dePlaceholder(pathAndQuery[1]);
 	}
 
+	@Override
+	public void validate() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

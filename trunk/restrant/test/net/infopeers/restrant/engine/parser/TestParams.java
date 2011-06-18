@@ -67,5 +67,11 @@ public class TestParams extends AbstractParams {
 	public boolean isStreamContent() {
 		return false;
 	}
+
+	@Override
+	public String getContentType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

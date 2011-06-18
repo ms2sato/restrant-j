@@ -23,4 +23,9 @@ public interface PatternParser {
 	 * @return
 	 */
 	String findSpecifiedPlaceHolder(String placeHolder);
+	
+	/**
+	 * 矛盾ないかチェックする
+	 */
+	void validate();
 }
