@@ -7,28 +7,32 @@
     <property name="jarname" value="${name}-${version}.jar"/>
     <property name="build" value="build"/>
     <property name="dist" value="dist"/>
-    
+    <property name="src" value="src"/>
+	
     <property name="jardest" value="${dist}/${jarname}"/>
     <property name="classes" value="${build}/classes"/>
     
     <target name="all">
         
+        <delete dir="${classes}"/>
         <mkdir dir="${classes}"/>
         
         <javac destdir="${classes}" encoding="UTF-8"
          debug="true" debuglevel="lines, vars, and source">
-            <src path="src"/>
+            <src path="${src}"/>
             <classpath>
                 <pathelement path="lib/servlet-api.jar"/>
                 <pathelement path="lib/google-collect-1.0.jar"/>
                 <pathelement path="lib/appengine-api-1.0-sdk-1.4.3.jar"/>
             </classpath>
         </javac>
-        
+        <copy todir="${classes}">
+        	<fileset dir="${src}" excludes="**/*.java"/>
+        </copy>
+		
         <mkdir dir="${dist}"/>
         <jar destfile="${jardest}" basedir="${classes}"/>
         
-        <delete dir="${classes}"/>
     </target>
 </project>
 
