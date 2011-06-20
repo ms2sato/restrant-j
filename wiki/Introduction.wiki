@@ -1,0 +1,14 @@
+#Introduction about restrant-j
+
+= What is restrant-j? =
+
+This is a framework for JavaEE. 
+Easy to mapping from url to controller's method. 
+mapping format is similar to route.rb on RoR.
+not support for databases now(it will be support by some sub projects).
+
+and have a auto generating controller class to JavaScript's class.
+
+= Details =
+
+  * GettingStart
