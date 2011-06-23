@@ -157,6 +157,7 @@ public class RestfulController extends BasicController {
 = JsService(Optional) =
 restrant-j can provide JavaScript stub classes, Which is related to controller class. 
 
+/service.js(as param of ServiceJs on web.xml):
 {{{
 (function(global){
 
@@ -236,7 +237,7 @@ restrant-j can provide JavaScript stub classes, Which is related to controller c
 })(this);
 }}}
 
-Now(ver0.90), generated methods have primive arguments only. If you need arguments of some object, you can generate to string of JSON using JSON.stringify, and Regenerate to Java Object using JSON library fo Java as {http://jsonic.sourceforge.jp/ JSONIC}. maybe provide soon.
+Now(ver0.90), generated methods have primive arguments only. If you need arguments of some object, you can generate to string of JSON using JSON.stringify, and Regenerate to Java Object using JSON library fo Java as [http://jsonic.sourceforge.jp/ JSONIC]. maybe provide soon.
 but will require some JSON library.
 
 
