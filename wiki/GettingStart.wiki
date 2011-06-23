@@ -11,7 +11,7 @@
 
 = Download =
 
-You can download latest jar from [http://code.google.com/p/restrant-j/downloads/list Downloads].restrant-xx.jar is a core module of restrant-j. and need google collection library. appengine has already include it.
+You can download latest jar from [http://code.google.com/p/restrant-j/downloads/list Downloads].restrant-xx.jar is a core module of restrant-j. and need [http://code.google.com/p/google-collections/ google collections library]. appengine has already include it.
 
 = Setting =
 
