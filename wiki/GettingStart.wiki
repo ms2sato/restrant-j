@@ -153,6 +153,7 @@ public class RestfulController extends BasicController {
   * controller class must implements net.infopeers.restrant.Controller interface. usualy extends net.infoppers.restrant.BasicController.
   * controller has some public methods, which called at request process.
   * you can set @Method annotation to define name and args(and explicit called by Route class), which related to url and request parameters. 'name' is action name, 'args' is placeholder name at RouteMap. and controller's method has parameters to get extracted placeholder of url pattern at RouteMap.
+  * controller is created on each request(can implement mutable.)
 
 = JsService(Optional) =
 restrant-j can provide JavaScript stub classes, Which is related to controller class. 
