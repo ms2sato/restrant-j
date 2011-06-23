@@ -5,11 +5,13 @@
   * Download
   * Setting
   * Coding
+  * JsService(Optional)
+  
 
 
 = Download =
 
-You can download latest jar from [http://code.google.com/p/restrant-j/downloads/list Downloads].restrant-xx.jar is a core module of restrant-j. any other library is not required(at 2011/6/21).
+You can download latest jar from [http://code.google.com/p/restrant-j/downloads/list Downloads].restrant-xx.jar is a core module of restrant-j. and need google collection library. appengine has already include it.
 
 = Setting =
 
@@ -151,6 +153,91 @@ public class RestfulController extends BasicController {
   * controller class must implements net.infopeers.restrant.Controller interface. usualy extends net.infoppers.restrant.BasicController.
   * controller has some public methods, which called at request process.
   * you can set @Method annotation to define name and args(and explicit called by Route class), which related to url and request parameters. 'name' is action name, 'args' is placeholder name at RouteMap. and controller's method has parameters to get extracted placeholder of url pattern at RouteMap.
+
+= JsService(Optional) =
+restrant-j can provide JavaScript stub classes, Which is related to controller class. 
+
+{{{
+(function(global){
+
+	global.TESTNS = {};
+
+	TESTNS.request = function(options){
+		return $.ajax(options);
+	};
+
+	...
+
+
+	TESTNS.RestfulController = function(){
+	};
+
+	TESTNS.RestfulController.prototype.request = function(options){
+		return TESTNS.request(options);
+	};
+
+	
+	TESTNS.RestfulController.prototype.getIt = function(callback, error, id){
+	
+		return this.request({
+			'url': '/restful/' + id + '',
+			'success': callback,
+			'type': 'GET',
+			'error': error,
+			'data': {
+				
+			}
+		});
+
+	};
+
+	TESTNS.RestfulController.prototype.deleteIt = function(callback, error, id){
+	
+		return this.request({
+			'url': '/restful/' + id + '',
+			'success': callback,
+			'type': 'DELETE',
+			'error': error,
+			'data': {
+				
+			}
+		});
+
+	};
+
+	TESTNS.RestfulController.prototype.put = function(callback, error, id, body){
+	
+		return this.request({
+			'url': '/restful/' + id + '',
+			'success': callback,
+			'type': 'PUT',
+			'error': error,
+			'contentType': 'application/json',
+			'processData': false,
+			'data': body
+		});
+
+	};
+
+	TESTNS.RestfulController.prototype.post = function(callback, error, body){
+	
+		return this.request({
+			'url': '/restful',
+			'success': callback,
+			'type': 'POST',
+			'error': error,
+			'contentType': 'application/json',
+			'processData': false,
+			'data': body
+		});
+
+	};
+
+})(this);
+}}}
+
+Now(ver0.90), generated methods have primive arguments only. If you need arguments of some object, you can generate to string of JSON using JSON.stringify, and Regenerate to Java Object using JSON library fo Java as {http://jsonic.sourceforge.jp/ JSONIC}. maybe provide soon.
+but will require some JSON library.
 
 
 enjoy!
