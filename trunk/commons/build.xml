@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<project name="project" default="all">
+    
+    <property name="version" value="0.20"/>
+    <property name="name" value="restrant-commons"/>
+    
+    <property name="jarname" value="${name}-${version}.jar"/>
+    <property name="build" value="build"/>
+    <property name="dist" value="dist"/>
+    <property name="src" value="src"/>
+	
+    <property name="jardest" value="${dist}/${jarname}"/>
+    <property name="classes" value="${build}/classes"/>
+    
+    <target name="all">
+        
+        <delete dir="${classes}"/>
+        <mkdir dir="${classes}"/>
+        
+        <javac destdir="${classes}" 
+         debug="true" debuglevel="lines, vars, and source">
+            <src path="${src}"/>
+            <classpath>
+                <pathelement path="lib/servlet-api.jar"/>
+            </classpath>
+        </javac>
+        <copy todir="${classes}">
+        	<fileset dir="${src}" excludes="**/*.java"/>
+        </copy>
+		
+        <mkdir dir="${dist}"/>
+        <jar destfile="${jardest}" basedir="${classes}"/>
+        
+    </target>
+</project>
+
