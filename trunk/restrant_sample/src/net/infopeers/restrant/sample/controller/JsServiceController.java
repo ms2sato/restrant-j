@@ -11,6 +11,11 @@ public class JsServiceController extends BasicController{
 	public void go(String to) throws IOException{
 		getResponse().getWriter().append(to);
 	}
+
+	@Method({"to"})
+	public void goWithDummy(String to) throws IOException{
+		getResponse().getWriter().append(to + " with dummy");
+	}
 	
 	@Method({"to"})
 	public void postGo(String to) throws IOException{

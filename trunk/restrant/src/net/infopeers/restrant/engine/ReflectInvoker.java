@@ -47,7 +47,7 @@ public class ReflectInvoker implements Invoker {
 	 * @throws ResourceNotFoundException
 	 */
 	public ReflectInvoker(ControllerServlet servlet, Controller controller, String methodName,
-			Params params){
+			Params params) throws ResourceNotFoundException{
 		this.servlet = servlet;
 		this.controller = controller;
 		this.params = params;
@@ -56,7 +56,7 @@ public class ReflectInvoker implements Invoker {
 	}
 
 	private java.lang.reflect.Method getMethod(Controller controller,
-			String methodName) {
+			String methodName) throws ResourceNotFoundException {
 		Class<?> cls = controller.getClass();
 
 		Set<String> exNames = params.getExtensionNames();
@@ -118,7 +118,7 @@ public class ReflectInvoker implements Invoker {
 		}
 		
 		if(defaultMethod == null){
-			throw new IllegalStateException("Method not found");
+			throw new ResourceNotFoundException("Method not found: " + cls.getName() + "#" + methodName);
 		}
 		
 		return defaultMethod;
