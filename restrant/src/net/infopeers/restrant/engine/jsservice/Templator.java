@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import net.infopeers.commons.io.StreamUtils;
@@ -52,8 +50,7 @@ class Templator {
 				httpMethod = httpMethods.get(0);
 			}
 
-			Set<String> usedParam = new HashSet<String>();
-			String path4Script = toPath4Script(usedParam, patternParser);
+			String path4Script = toPath4Script(patternParser);
 
 			StringBuilder funcParams = new StringBuilder();
 			for (int i = 0; i < argLabels.length; ++i) {
@@ -62,7 +59,7 @@ class Templator {
 			}
 
 			StringBuilder jsonParams = new StringBuilder();
-			createParams(argLabels, usedParam, jsonParams);
+			createParams(patternParser, jsonParams);
 
 			writer.println(format.format(new Object[] { namespace,
 					method.getDeclaringClass().getSimpleName(), actionName,
@@ -70,8 +67,8 @@ class Templator {
 					httpMethod.toUpperCase(), patternParser.getContentType() }));
 		}
 
-		protected abstract void createParams(String[] argLabels,
-				Set<String> usedParam, StringBuilder jsonParams);
+		protected abstract void createParams(PatternParserWithPathFormat patternParser, 
+				StringBuilder jsonParams);
 
 		/**
 		 * change to path for script. path/to/:placeholder/format to path/to/' +
@@ -80,7 +77,7 @@ class Templator {
 		 * @param patternParser
 		 * @return
 		 */
-		private String toPath4Script(final Set<String> usedParam,
+		private String toPath4Script(
 				PatternParserWithPathFormat patternParser) {
 			UrlPathParser pp = patternParser.getUrlPathParser();
 			String path = pp.getPath();
@@ -88,7 +85,6 @@ class Templator {
 			Replacer rep = new Replacer(phPattern) {
 				@Override
 				protected String replace(int groupIndex, String value) {
-					usedParam.add(value);
 					return "' + " + value + " + '";
 				}
 			};
@@ -102,22 +98,38 @@ class Templator {
 			super(format);
 		}
 
-		protected void createParams(String[] argLabels, Set<String> usedParam,
+		protected void createParams(PatternParserWithPathFormat patternParser, 
 				StringBuilder jsonParams) {
+			
 			int count = 0;
-			for (int i = 0; i < argLabels.length; ++i) {
-				String paramName = argLabels[i];
-				if (usedParam.contains(paramName))
-					continue;
-
-				if (count != 0) {
+			UrlPathParser pp = patternParser.getUrlPathParser();
+			String query = pp.getQuery();
+			if(query.trim().length() == 0){
+				return;
+			}
+			
+			String[] params = query.split("&");
+			for(String param : params){
+				String[] kv = param.split("=");
+				String key = kv[0].trim();
+				String value = kv[1].trim();
+				
+				if(phFormatter.isPlaceholder(value)){
+					value = phFormatter.dePlaceholder(value);
+				}
+				else{
+					value = "'" + value + "'"; 
+				}
+				
+				if(count != 0){
 					jsonParams.append(", ");
 				}
-				jsonParams.append("'").append(paramName).append("' : ")
-						.append(paramName);
-
+				
+				jsonParams.append("'").append(key).append("': ").append(value);
+				
 				count++;
 			}
+
 		}
 	}
 
@@ -130,7 +142,7 @@ class Templator {
 			this.bodyParamLabel = bodyParamLabel;
 		}
 
-		protected void createParams(String[] argLabels, Set<String> usedParam,
+		protected void createParams(PatternParserWithPathFormat patternParser, 
 				StringBuilder jsonParams) {
 			jsonParams.append(bodyParamLabel);
 		}

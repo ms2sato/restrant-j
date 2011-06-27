@@ -141,6 +141,8 @@ public class PatternInvokerBuilder implements ParserHolder, InvokerBuilder{
 			throw new RuntimeException(e);
 		} catch (InstantiationException e) {
 			throw new RuntimeException(e);
+		} catch (ResourceNotFoundException e){
+			throw new ResourceNotFoundException("Resource not found for " + selectedParser, e); 
 		}
 	}
 

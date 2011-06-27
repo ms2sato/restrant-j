@@ -128,6 +128,13 @@ public class UrlPathParser implements PatternParser {
 	public String getPath() {
 		return this.pathAndQuery[0];
 	}
+	
+	public String getQuery(){
+		if(pathAndQuery.length < 2){
+			return "";
+		}
+		return pathAndQuery[1];
+	}
 
 	public PlaceholderFormatter getPlaceholderFormatter() {
 		return this.phFormatter;
