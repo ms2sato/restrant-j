@@ -88,7 +88,7 @@ public class ControllerServlet extends HttpServlet {
 			String serviceJsNamespace = config
 					.getInitParameter(SERVICE_JS_NAMESPACE_LABEL);
 			path2ibf.put(serviceJsPath, new JsServiceInvokerBuilderFactory(
-					rootPackage, parserArranger, serviceJsNamespace,
+					getServletContext().getContextPath(), rootPackage, parserArranger, serviceJsNamespace,
 					phFormatter));
 		}
 

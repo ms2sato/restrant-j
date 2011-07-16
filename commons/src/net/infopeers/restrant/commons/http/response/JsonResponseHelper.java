@@ -57,17 +57,41 @@ public abstract class JsonResponseHelper {
 	public void responseFailer(HttpServletResponse response, String errorMessage, String detail,
 			FailerCauses cause, int statusCode, boolean crossDomain) throws IOException {
 	
+		Map<String, Object> res = createFailerStruct(statusCode, cause,
+				errorMessage, detail);
+	
+		response.setStatus(statusCode);
+		responseJson(response, res, crossDomain);
+	}
+
+	public void responseFailer(HttpServletResponse response, String errorMessage, Exception detail,
+			FailerCauses cause, int statusCode, boolean crossDomain) throws IOException {
+		
+		Map<String, Object> res = createFailerStruct(statusCode, cause,
+				errorMessage, detail);
+	
+		response.setStatus(statusCode);
+		responseJson(response, res, crossDomain);
+	}	
+	
+	protected Map<String, Object> createFailerStruct(int statusCode,
+			FailerCauses cause, String errorMessage, String detail) {
 		Map<String, Object> res = new HashMap<String, Object>();
 		res.put(STATUS, Status.NG.toString());
 		res.put(MESSAGE, errorMessage);
 		res.put(DETAIL, detail);
 		res.put(CAUSE, cause.toString());
 		res.put(STATUSCODE, statusCode);
-	
-		response.setStatus(statusCode);
-		responseJson(response, res, crossDomain);
+		return res;
 	}
 
+	protected Map<String, Object> createFailerStruct(int statusCode,
+			FailerCauses cause, String errorMessage, Exception e) {
+		return createFailerStruct(
+				statusCode, cause, errorMessage, e.getMessage());
+	}
+	
+	
 	public <T> void responseSuccess(HttpServletResponse response,
 			T resObj) throws IOException {
 		responseSuccess(response, resObj, false);
