@@ -5,4 +5,7 @@
 		return {0}.request(options);
 	'}';
 
+	{0}.{1}.prototype.path = function(src)'{'
+		return {0}.path(src);
+	'}';
 	

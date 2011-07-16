@@ -149,6 +149,7 @@ class Templator {
 	}
 
 	String namespace;
+	String contextPath;
 
 	PlaceholderFormatter phFormatter;
 	Pattern phPattern;
@@ -156,11 +157,12 @@ class Templator {
 	MessageFormat formtypeFunctionTemplate;
 	MessageFormat bodytypeFunctionTemplate;
 
-	public Templator(PlaceholderFormatter phFormatter) {
-		this(DEFAULT_NS, phFormatter);
+	public Templator(String contextPath, PlaceholderFormatter phFormatter) {
+		this(contextPath, DEFAULT_NS, phFormatter);
 	}
 
-	public Templator(String namespace, PlaceholderFormatter phFormatter) {
+	public Templator(String contextPath, String namespace, PlaceholderFormatter phFormatter) {
+		this.contextPath = contextPath;
 		this.namespace = namespace;
 		this.phFormatter = phFormatter;
 
@@ -190,7 +192,7 @@ class Templator {
 		MessageFormat headerTemplate = new MessageFormat(
 				StreamUtils.toString(Templator.class.getResourceAsStream(file)));
 
-		writer.print(headerTemplate.format(new Object[] { namespace }));
+		writer.print(headerTemplate.format(new Object[] { namespace, contextPath }));
 	}
 
 	public void appendFooter(PrintWriter writer) throws IOException {

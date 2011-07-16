@@ -15,7 +15,7 @@ public class JsServiceInvokerBuilderFactoryTest {
 	public void senario() throws Exception{
 		
 		PrefixedPlaceholderFormatter phFormatter = new PrefixedPlaceholderFormatter();
-		Templator t = new Templator(phFormatter);
+		Templator t = new Templator("root", phFormatter);
 		StringWriter sw = new StringWriter();
 		PrintWriter w = new PrintWriter(sw);
 		

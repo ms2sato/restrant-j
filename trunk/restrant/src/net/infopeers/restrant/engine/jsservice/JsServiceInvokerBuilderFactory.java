@@ -34,14 +34,16 @@ import net.infopeers.restrant.engine.parser.UrlPathParser;
 public class JsServiceInvokerBuilderFactory extends
 		AbstractInvokerBuilderFactory {
 
+	private String contextPath;
 	private String rootPackage;
 	private PatternParserArranger parserArranger;
 	private String namespace;
 	private PlaceholderFormatter phFormatter;
 
-	public JsServiceInvokerBuilderFactory(String rootPackage,
+	public JsServiceInvokerBuilderFactory(String contextPath, String rootPackage,
 			PatternParserArranger parserArranger, String serviceJsNamespace,
 			PlaceholderFormatter phFormatter) {
+		this.contextPath = contextPath;
 		this.rootPackage = rootPackage;
 		this.parserArranger = parserArranger;
 		this.namespace = serviceJsNamespace;
@@ -63,7 +65,7 @@ public class JsServiceInvokerBuilderFactory extends
 
 		parserArranger.arrange(holder);
 
-		Templator templator = new Templator(namespace, phFormatter);
+		Templator templator = new Templator(contextPath, namespace, phFormatter);
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
 

@@ -1,7 +1,7 @@
 	{0}.{1}.prototype.{2} = function(callback, error{3})'{'
 	
 		return this.request('{'
-			''url'': ''{4}'',
+			''url'': this.path(''{4}''),
 			''success'': callback,
 			''type'': ''{6}'',
 			''error'': error,

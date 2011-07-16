@@ -2,7 +2,12 @@
 
 	global.{0} = '{}';
 
+	{0}.CONTEXT_PATH = ''{1}'';
+
 	{0}.request = function(options)'{'
 		return $.ajax(options);
 	'}';
 
+	{0}.path = function(src)'{'
+		return {0}.CONTEXT_PATH + src;
+	'}';
