@@ -74,30 +74,36 @@ public class EntityManagerFactoryBuilder {
 
 	public EntityManagerFactory build() {
 
-		InputStream credentialsFile = getClass().getClassLoader()
-				.getResourceAsStream("AwsCredentials.properties");
-		if (credentialsFile != null) {
-			// if not null, SimpleJPA ignore variant properties.
-			logger.info("AwsCredentials.properties on class path. SimpleJPA read this one only.");
-
-			if (readMyPropertiesOnly) {
-				throw new RuntimeException(
-						"AwsCredentials.properties found on class path. if your process continue, readMyPropertiesOnly option off. otherwise delete AwsCredentials.properties");
-			}
-		} else {
-			logger.info("AwsCredentials.properties not found on class path. read properties.");
-
-			if (accessKey == null) {
-				throw new RuntimeException("accessKey not found.");
-			}
-			
-			if (secretKey == null){
-				throw new RuntimeException("secretKey not found.");
-			}
-
+//		InputStream credentialsFile = getClass().getClassLoader()
+//				.getResourceAsStream("AwsCredentials.properties");
+//		if (credentialsFile != null) {
+//			// if not null, SimpleJPA ignore variant properties.
+//			logger.info("AwsCredentials.properties on class path. SimpleJPA read this one only.");
+//
+//			if (readMyPropertiesOnly) {
+//				throw new RuntimeException(
+//						"AwsCredentials.properties found on class path. if your process continue, readMyPropertiesOnly option off. otherwise delete AwsCredentials.properties");
+//			}
+//		} else {
+//			logger.info("AwsCredentials.properties not found on class path. read properties.");
+//
+//			if (accessKey == null) {
+//				throw new RuntimeException("accessKey not found.");
+//			}
+//			
+//			if (secretKey == null){
+//				throw new RuntimeException("secretKey not found.");
+//			}
+//
+//			properties.put("accessKey", accessKey);
+//			properties.put("secretKey", secretKey);
+//
+//		}
+		
+		
+		if(accessKey != null && secretKey != null){
 			properties.put("accessKey", accessKey);
 			properties.put("secretKey", secretKey);
-
 		}
 
 		if (lobBucketName != null) {
