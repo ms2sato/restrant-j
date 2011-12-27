@@ -16,6 +16,10 @@ public class EntityUtils {
 
 	private static Long schemaVersion = 1L;
 
+	public static long getSchemeVersion(){
+		return schemaVersion;
+	}
+	
 	public static void setSchemeVersion(Long version) {
 		schemaVersion = version;
 	}

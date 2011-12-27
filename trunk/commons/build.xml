@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <project name="project" default="all">
     
-    <property name="version" value="0.21"/>
+    <property name="version" value="0.30"/>
     <property name="name" value="restrant-commons"/>
     
     <property name="jarname" value="${name}-${version}.jar"/>
