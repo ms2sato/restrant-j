@@ -1,6 +1,8 @@
 (function(global)'{'
 
-	global.{0} = '{}';
+	if( typeof(global.{0}) == ''undefined'')'{'
+		global.{0} = '{}';
+	'}';
 
 	{0}.CONTEXT_PATH = ''{1}'';
 
