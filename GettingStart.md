@@ -1,0 +1,243 @@
+# Summary #
+
+  * Download
+  * Setting
+  * Coding
+  * JsService(Optional)
+
+
+
+# Download #
+
+You can download latest jar from [Downloads](http://code.google.com/p/restrant-j/downloads/list).restrant-xx.jar is a core module of restrant-j. and need [google collections library](http://code.google.com/p/google-collections/). appengine has already include it.
+
+# Setting #
+
+copy restrant-xx.jar to your /WEB-INF/lib on JavaEE Application.
+and write some configurations to your web.xml follow:
+
+```
+  <servlet>
+    <servlet-name>RestrantSample</servlet-name>
+    <servlet-class>net.infopeers.restrant.ControllerServlet</servlet-class>
+    <init-param>
+      <!-- root package implements of controllers -->
+      <param-name>RootPackage</param-name>
+      <param-value>net.infopeers.restrant.sample.controller</param-value>
+    </init-param>
+
+    <init-param>
+      <!-- Route info as RoR. Implements interface Route. -->
+      <param-name>RouteClass</param-name>
+      <param-value>net.infopeers.restrant.sample.Route</param-value>
+    </init-param>
+
+    <init-param>
+      <!-- Controller as a JavaScript Service Object(optional) -->
+      <param-name>ServiceJs</param-name>
+      <param-value>/service.js</param-value>
+    </init-param>
+
+    <init-param>
+      <param-name>ServiceJsNamespace(optional)</param-name>
+      <param-value>TESTNS</param-value>
+    </init-param>
+    
+    <init-param>
+      <!-- Request parameter's encoding(optional) -->
+      <param-name>Encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+
+    ...
+
+```
+
+
+# Coding #
+
+The first, you should lean about the Route class, which is similar to route.rb on RoR. This is connect from url to controller class by pattern matching.
+
+```
+package net.infopeers.restrant.sample;
+
+import net.infopeers.restrant.route.RouteMap;
+
+public class Route implements net.infopeers.restrant.route.Route {
+
+  @Override
+  public void define(RouteMap map) {
+    map.path("/samples/args/:id").controller("samples").action("args").on();
+    
+    map.path("/jsservice/test/post?to=:to").controller("jsService").action("postGo").onPost().on();
+    map.path("/jsservice/test?dummy=test&to=:to").controller("jsService").action("goWithDummy").on();
+    map.path("/jsservice/test?to=:to").controller("jsService").action("go").on();
+    map.path("/jsservice/json?input=:input").controller("json").action("handle").on();
+    
+    map.path("/restful/:id").controller("restful").action("getIt").onGet().on();
+    map.path("/restful/:id").controller("restful").action("deleteIt").onDelete().on();
+    map.path("/restful/:id?:body").controller("restful").action("put").onType("application/json").onPut().on();
+    map.path("/restful?:body").controller("restful").action("post").onType("application/json").onPost().on();
+    
+    map.path("/:controller/args/:id").action("args").on();
+  }
+
+}
+
+```
+
+  * RouteMap.path is pattern of url with request parameters. Wheher http method of get or post(and put, delete), you can write as get parameters('?' and '&' separated pattern).
+  * ':' is a placeholder prefix. placeholder can parsed by restrant-j and provide to you easier to access. ':controller' and ':action' are reserved for select controller class and method. other name(ex :id, :body) named what you want.
+  * controller() method exists for specify a controller class name. for example, 'restful' express RestfulController class. action() method specify a method name of controller class.
+  * onGet(), onPost() methods express http method. onType() method express Content-Type of request.
+  * restrant-j apply map patterns from top to bottom to select controller class and it's method(action). if pattern is match, called controller class's method.
+
+
+Second, write controller class. class on the net.infopeers.restrant.sample.controller package as RootPackage of web.xml. Now this is a sample class.
+
+```
+package net.infopeers.restrant.sample.controller;
+
+import java.io.InputStream;
+import java.io.PrintWriter;
+
+import net.infopeers.commons.io.StreamUtils;
+import net.infopeers.restrant.BasicController;
+import net.infopeers.restrant.Method;
+import net.infopeers.restrant.Params;
+
+public class RestfulController extends BasicController {
+
+	@Method(name="getIt", args={"id"})
+	public void get(String id) throws Exception {
+		PrintWriter w = getResponse().getWriter();
+		w.println("GET\n" + id + "\n");
+	}
+
+	@Method({"body"})
+	public void post(InputStream is) throws Exception {
+		//contents body can get as InputStream.
+		PrintWriter w = getResponse().getWriter();
+		w.println("POST\n" + StreamUtils.toString(is) + "\n");
+	}
+
+	@Method({ "id", "body" })
+	public void put(String id, String body) throws Exception {
+		//contents body can get as String too.
+		PrintWriter w = getResponse().getWriter();
+		w.println("PUT\n" + id + "\n" + body);
+	}
+
+	@Method(name="deleteIt", args={ "id" })
+	public void delete(String id) throws Exception {
+		PrintWriter w = getResponse().getWriter();
+		w.println("DELETE\n" + id + "\n");
+	}
+
+	public void search() throws Exception {
+		PrintWriter w = getResponse().getWriter();
+		w.println("SEARCH\n");
+
+		Params params = getParams();
+		for (String name : params.nameSet()) {
+			w.println(name + ":" + params.get(name) + "\n");
+		}
+	}
+
+}
+
+```
+
+  * controller class must implements net.infopeers.restrant.Controller interface. usualy extends net.infoppers.restrant.BasicController.
+  * controller has some public methods, which called at request process.
+  * you can set @Method annotation to define name and args(and explicit called by Route class), which related to url and request parameters. 'name' is action name, 'args' is placeholder name at RouteMap. and controller's method has parameters to get extracted placeholder of url pattern at RouteMap.
+  * controller is created on each request(can implement mutable.)
+
+# JsService(Optional) #
+restrant-j can provide JavaScript stub classes, Which is related to controller class.
+
+/service.js(as param of ServiceJs on web.xml):
+```
+(function(global){
+
+	global.TESTNS = {};
+
+	TESTNS.request = function(options){
+		return $.ajax(options);
+	};
+
+	...
+
+
+	TESTNS.RestfulController = function(){
+	};
+
+	TESTNS.RestfulController.prototype.request = function(options){
+		return TESTNS.request(options);
+	};
+
+	
+	TESTNS.RestfulController.prototype.getIt = function(callback, error, id){
+	
+		return this.request({
+			'url': '/restful/' + id + '',
+			'success': callback,
+			'type': 'GET',
+			'error': error,
+			'data': {
+				
+			}
+		});
+
+	};
+
+	TESTNS.RestfulController.prototype.deleteIt = function(callback, error, id){
+	
+		return this.request({
+			'url': '/restful/' + id + '',
+			'success': callback,
+			'type': 'DELETE',
+			'error': error,
+			'data': {
+				
+			}
+		});
+
+	};
+
+	TESTNS.RestfulController.prototype.put = function(callback, error, id, body){
+	
+		return this.request({
+			'url': '/restful/' + id + '',
+			'success': callback,
+			'type': 'PUT',
+			'error': error,
+			'contentType': 'application/json',
+			'processData': false,
+			'data': body
+		});
+
+	};
+
+	TESTNS.RestfulController.prototype.post = function(callback, error, body){
+	
+		return this.request({
+			'url': '/restful',
+			'success': callback,
+			'type': 'POST',
+			'error': error,
+			'contentType': 'application/json',
+			'processData': false,
+			'data': body
+		});
+
+	};
+
+})(this);
+```
+
+Now(ver0.90), generated methods have primive arguments only. If you need arguments of some object, you can generate to string of JSON using JSON.stringify, and Regenerate to Java Object using JSON library fo Java as [JSONIC](http://jsonic.sourceforge.jp/). maybe provide soon.
+but will require some JSON library.
+
+
+enjoy!
